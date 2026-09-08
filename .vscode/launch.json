@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug PicoOS",
+            "type": "cortex-debug",
+            "request": "launch",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            },
+
+            "servertype": "external",
+            "gdbTarget": "localhost:3333",
+
+            "executable": "${workspaceFolder}/output/kernel.elf",
+            "gdbPath": "arm-none-eabi-gdb",
+
+            "device": "RP2040",
+            "cwd": "${workspaceFolder}",
+
+            "svdFile": "${workspaceFolder}/specs/RP2040.svd",
+
+            "showDevDebugOutput": "raw"
+        }
+    ]
+}

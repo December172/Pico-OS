@@ -1,0 +1,33 @@
+#![allow(dead_code)]
+// PPB
+pub const PPB_BASE:                                 u32 = 0xE000_0000;
+pub const PPB_SYST_CSR:                             u32 = PPB_BASE + 0xE010;
+pub const PPB_SYST_RVR:                             u32 = PPB_BASE + 0xE014;
+pub const PPB_SYST_CVR:                             u32 = PPB_BASE + 0xE018;
+pub const PPB_SYST_CALIB:                           u32 = PPB_BASE + 0xE01C;
+pub const PPB_NVIC_ISER:                            u32 = PPB_BASE + 0xE100;
+pub const PPB_NVIC_ICER:                            u32 = PPB_BASE + 0xE180;
+pub const PPB_NVIC_ISPR:                            u32 = PPB_BASE + 0xE200;
+pub const PPB_NVIC_ICPR:                            u32 = PPB_BASE + 0xE280;
+pub const PPB_NVIC_IPR0:                            u32 = PPB_BASE + 0xE400;
+pub const PPB_NVIC_IPR1:                            u32 = PPB_BASE + 0xE404;
+pub const PPB_NVIC_IPR2:                            u32 = PPB_BASE + 0xE408;
+pub const PPB_NVIC_IPR3:                            u32 = PPB_BASE + 0xE40C;
+pub const PPB_NVIC_IPR4:                            u32 = PPB_BASE + 0xE410;
+pub const PPB_NVIC_IPR5:                            u32 = PPB_BASE + 0xE414;
+pub const PPB_NVIC_IPR6:                            u32 = PPB_BASE + 0xE418;
+pub const PPB_NVIC_IPR7:                            u32 = PPB_BASE + 0xE41C;
+pub const PPB_CPUID:                                u32 = PPB_BASE + 0xED00;
+pub const PPB_ICSR:                                 u32 = PPB_BASE + 0xED04;
+pub const PPB_VTOR:                                 u32 = PPB_BASE + 0xED08;
+pub const PPB_AIRCR:                                u32 = PPB_BASE + 0xED0C;
+pub const PPB_SCR:                                  u32 = PPB_BASE + 0xED10;
+pub const PPB_CCR:                                  u32 = PPB_BASE + 0xED14;
+pub const PPB_SHPR2:                                u32 = PPB_BASE + 0xED1C;
+pub const PPB_SHPR3:                                u32 = PPB_BASE + 0xED20;
+pub const PPB_SHCSR:                                u32 = PPB_BASE + 0xED24;
+pub const PPB_MPU_TYPE:                             u32 = PPB_BASE + 0xED90;
+pub const PPB_MPU_CTRL:                             u32 = PPB_BASE + 0xED94;
+pub const PPB_MPU_RNR:                              u32 = PPB_BASE + 0xED98;
+pub const PPB_MPU_RBAR:                             u32 = PPB_BASE + 0xED9C;
+pub const PPB_MPU_RASR:                             u32 = PPB_BASE + 0xEDA0;
