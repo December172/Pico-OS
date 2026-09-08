@@ -2,11 +2,11 @@ type Handler = unsafe extern "C" fn() -> !;
 
 #[repr(C)]
 pub struct VectorTable {
-    pub initial_sp: u32,
+    pub initialSp: u32,
 
     pub reset: Handler,
     pub nmi: Handler,
-    pub hard_fault: Handler,
+    pub hardFault: Handler,
 
     pub reserved: [u32; 7],
 
@@ -15,38 +15,38 @@ pub struct VectorTable {
     pub reserved2: [u32; 2],
 
     pub pendsv: Handler,
-    pub systick: Handler,
+    pub sysTick: Handler,
 
     pub irq: [Handler; 32],
 }
 
-extern "C" {
+unsafe extern "C" {
     fn _start() -> !;
 }
 
 #[unsafe(link_section = ".vector_table")]
 #[unsafe(no_mangle)]
-pub static VECTOR_TABLE: VectorTable = VectorTable {
-    initial_sp: 0x20042000,
+pub static vectorTable: VectorTable = VectorTable {
+    initialSp: 0x20042000,
 
     reset: _start,
-    nmi: default_handler,
-    hard_fault: default_handler,
+    nmi: defaultHandler,
+    hardFault: defaultHandler,
 
     reserved: [0; 7],
 
-    svcall: default_handler,
+    svcall: defaultHandler,
 
     reserved2: [0; 2],
 
-    pendsv: default_handler,
-    systick: default_handler,
+    pendsv: defaultHandler,
+    sysTick: defaultHandler,
 
-    irq: [default_handler; 32],
+    irq: [defaultHandler; 32],
 };
 
 #[unsafe(no_mangle)]
-pub extern "C" fn default_handler() -> ! {
+pub extern "C" fn defaultHandler() -> ! {
     loop {
         unsafe {
            core::arch::asm!("wfi");

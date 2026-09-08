@@ -1,0 +1,31 @@
+#![allow(dead_code)]
+// SSI
+pub const SSI_BASE:                                 u32 = 0x1800_0000;
+pub const SSI_CTRLR0:                               u32 = SSI_BASE + 0x0;
+pub const SSI_CTRLR1:                               u32 = SSI_BASE + 0x4;
+pub const SSI_SSIENR:                               u32 = SSI_BASE + 0x8;
+pub const SSI_MWCR:                                 u32 = SSI_BASE + 0xC;
+pub const SSI_SER:                                  u32 = SSI_BASE + 0x10;
+pub const SSI_BAUDR:                                u32 = SSI_BASE + 0x14;
+pub const SSI_TXFTLR:                               u32 = SSI_BASE + 0x18;
+pub const SSI_RXFTLR:                               u32 = SSI_BASE + 0x1C;
+pub const SSI_TXFLR:                                u32 = SSI_BASE + 0x20;
+pub const SSI_RXFLR:                                u32 = SSI_BASE + 0x24;
+pub const SSI_SR:                                   u32 = SSI_BASE + 0x28;
+pub const SSI_IMR:                                  u32 = SSI_BASE + 0x2C;
+pub const SSI_ISR:                                  u32 = SSI_BASE + 0x30;
+pub const SSI_RISR:                                 u32 = SSI_BASE + 0x34;
+pub const SSI_TXOICR:                               u32 = SSI_BASE + 0x38;
+pub const SSI_RXOICR:                               u32 = SSI_BASE + 0x3C;
+pub const SSI_RXUICR:                               u32 = SSI_BASE + 0x40;
+pub const SSI_MSTICR:                               u32 = SSI_BASE + 0x44;
+pub const SSI_ICR:                                  u32 = SSI_BASE + 0x48;
+pub const SSI_DMACR:                                u32 = SSI_BASE + 0x4C;
+pub const SSI_DMATDLR:                              u32 = SSI_BASE + 0x50;
+pub const SSI_DMARDLR:                              u32 = SSI_BASE + 0x54;
+pub const SSI_IDR:                                  u32 = SSI_BASE + 0x58;
+pub const SSI_SSI_VERSION_ID:                       u32 = SSI_BASE + 0x5C;
+pub const SSI_DR0:                                  u32 = SSI_BASE + 0x60;
+pub const SSI_RX_SAMPLE_DLY:                        u32 = SSI_BASE + 0xF0;
+pub const SSI_SPI_CTRLR0:                           u32 = SSI_BASE + 0xF4;
+pub const SSI_TXD_DRIVE_EDGE:                       u32 = SSI_BASE + 0xF8;

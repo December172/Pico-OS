@@ -1,12 +1,22 @@
 [package]
 name = "Pico-OS"
 version = "0.0.1"
-edition = "2021"
+edition = "2024"
+
+[features]
+default = ["Pico_16M"]
+Pico_16M = []
 
 [profile.dev]
 panic = "abort"
+debug = 2
+opt-level = 0
 
 [profile.release]
 panic = "abort"
 opt-level = "z"
 lto = true
+
+[[bin]]
+name = "kernel"
+path = "src/main.rs"

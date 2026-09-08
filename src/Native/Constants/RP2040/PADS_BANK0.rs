@@ -1,0 +1,36 @@
+#![allow(dead_code)]
+// PADS_BANK0
+pub const PADS_BANK0_BASE:                          u32 = 0x4001_C000;
+pub const PADS_BANK0_VOLTAGE_SELECT:                u32 = PADS_BANK0_BASE + 0x0;
+pub const PADS_BANK0_GPIO0:                         u32 = PADS_BANK0_BASE + 0x4;
+pub const PADS_BANK0_GPIO1:                         u32 = PADS_BANK0_BASE + 0x8;
+pub const PADS_BANK0_GPIO2:                         u32 = PADS_BANK0_BASE + 0xC;
+pub const PADS_BANK0_GPIO3:                         u32 = PADS_BANK0_BASE + 0x10;
+pub const PADS_BANK0_GPIO4:                         u32 = PADS_BANK0_BASE + 0x14;
+pub const PADS_BANK0_GPIO5:                         u32 = PADS_BANK0_BASE + 0x18;
+pub const PADS_BANK0_GPIO6:                         u32 = PADS_BANK0_BASE + 0x1C;
+pub const PADS_BANK0_GPIO7:                         u32 = PADS_BANK0_BASE + 0x20;
+pub const PADS_BANK0_GPIO8:                         u32 = PADS_BANK0_BASE + 0x24;
+pub const PADS_BANK0_GPIO9:                         u32 = PADS_BANK0_BASE + 0x28;
+pub const PADS_BANK0_GPIO10:                        u32 = PADS_BANK0_BASE + 0x2C;
+pub const PADS_BANK0_GPIO11:                        u32 = PADS_BANK0_BASE + 0x30;
+pub const PADS_BANK0_GPIO12:                        u32 = PADS_BANK0_BASE + 0x34;
+pub const PADS_BANK0_GPIO13:                        u32 = PADS_BANK0_BASE + 0x38;
+pub const PADS_BANK0_GPIO14:                        u32 = PADS_BANK0_BASE + 0x3C;
+pub const PADS_BANK0_GPIO15:                        u32 = PADS_BANK0_BASE + 0x40;
+pub const PADS_BANK0_GPIO16:                        u32 = PADS_BANK0_BASE + 0x44;
+pub const PADS_BANK0_GPIO17:                        u32 = PADS_BANK0_BASE + 0x48;
+pub const PADS_BANK0_GPIO18:                        u32 = PADS_BANK0_BASE + 0x4C;
+pub const PADS_BANK0_GPIO19:                        u32 = PADS_BANK0_BASE + 0x50;
+pub const PADS_BANK0_GPIO20:                        u32 = PADS_BANK0_BASE + 0x54;
+pub const PADS_BANK0_GPIO21:                        u32 = PADS_BANK0_BASE + 0x58;
+pub const PADS_BANK0_GPIO22:                        u32 = PADS_BANK0_BASE + 0x5C;
+pub const PADS_BANK0_GPIO23:                        u32 = PADS_BANK0_BASE + 0x60;
+pub const PADS_BANK0_GPIO24:                        u32 = PADS_BANK0_BASE + 0x64;
+pub const PADS_BANK0_GPIO25:                        u32 = PADS_BANK0_BASE + 0x68;
+pub const PADS_BANK0_GPIO26:                        u32 = PADS_BANK0_BASE + 0x6C;
+pub const PADS_BANK0_GPIO27:                        u32 = PADS_BANK0_BASE + 0x70;
+pub const PADS_BANK0_GPIO28:                        u32 = PADS_BANK0_BASE + 0x74;
+pub const PADS_BANK0_GPIO29:                        u32 = PADS_BANK0_BASE + 0x78;
+pub const PADS_BANK0_SWCLK:                         u32 = PADS_BANK0_BASE + 0x7C;
+pub const PADS_BANK0_SWD:                           u32 = PADS_BANK0_BASE + 0x80;

@@ -1,9 +1,17 @@
 #!/bin/bash
 
 build(){
-    cargo build --release
-    mv target/thumbv6m-none-eabi/release/Pico-OS output/Pico-OS.elf
-    ./tools/picotool uf2 convert output/Pico-OS.elf output/Pico-OS.uf2
+    profile="release"
+    if [ "$1" == "dev" ]; then
+        profile="debug"
+    fi
+    if [ ! -d "output" ]; then
+        mkdir output
+    fi
+    cargo build --profile $1
+    rm -rf output/*
+    mv target/thumbv6m-none-eabi/$profile/kernel output/kernel.elf
+    ./tools/picotool uf2 convert output/kernel.elf output/kernel.uf2
 }
 
 clean(){
@@ -14,6 +22,7 @@ clean(){
 
 case "$1" in 
     clean) clean ;;
-    build) build ;;
-    *) build ;;
+    dev) build dev;;
+    release) build release;;
+    *) build dev;;
 esac
