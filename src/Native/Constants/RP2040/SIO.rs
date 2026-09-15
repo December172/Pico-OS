@@ -75,7 +75,7 @@ pub const SIO_INTERP1_ACCUM0_ADD: u32 = SIO_BASE + 0xF4;
 pub const SIO_INTERP1_ACCUM1_ADD: u32 = SIO_BASE + 0xF8;
 pub const SIO_INTERP1_BASE_1AND0: u32 = SIO_BASE + 0xFC;
 
-pub const fn sioSpinlock(n: u32) -> u32 {
+pub fn SIO_SPINLOCK(n: u32) -> u32 {
     if n > 31 {
         panic!("Spinlock number must be between 0 and 31");
     }

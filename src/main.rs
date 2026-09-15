@@ -2,22 +2,52 @@
 #![no_main]
 #![allow(non_snake_case)]
 
+#![allow(unused)]
+
 mod Native;
+mod HAL;
+mod Kernel;
+
+use crate::HAL::GPIO::*;
+use crate::Kernel::Services::Pin::PinService::PinService;
+use crate::Kernel::Services::GPIO::GPIOService::GPIOService;
+
 use crate::Native::Boot::RP2040::Init::init;
-use crate::Native::Constants::RP2040::SIO::*;
+#[cfg(feature = "RP2040")]
+use crate::Native::Drivers::RP2040::GPIODriver::_GPIODriver;
 
 #[unsafe(no_mangle)]
 pub extern "C" fn kernelMain() -> ! {
     init();
-    unsafe {
-        let gpioXor = SIO_GPIO_OUT_XOR as *mut u32;
-        loop {
-            gpioXor.write_volatile(1 << 25);
+    let gpioDriver = _GPIODriver::new();
+    let mut pinService = PinService::new();
+    let gpioService = GPIOService::new(&gpioDriver);
+    let led = gpioService.claim(&mut pinService, 24)
+                                   .unwrap_or_else(|| panic!("GPIO initialization Failed"));
+    let button = gpioService.claim(&mut pinService, 18)
+                                      .unwrap_or_else(|| panic!("GPIO initialization failed"));
+    led.setMode(GPIOMode::Out);
+    button.setMode(GPIOMode::In);
+                                            
+    loop {
+        // debounce
+        if !button.read() {
 
-            // for dev profile loop
-            for _ in 0..10000 {
-                core::hint::spin_loop();
+            delay();
+
+            if !button.read() {
+                led.toggle();
+
+                while !button.read() {
+                    // wait for release
+                }
             }
         }
+    }
+}
+
+pub fn delay() {
+    for _ in 1..100 {
+        core::hint::spin_loop();
     }
 }

@@ -35,3 +35,5 @@ pub mod VREG_AND_CHIP_RESET;
 pub mod WATCHDOG;
 pub mod XIP_CTRL;
 pub mod XOSC;
+
+pub mod Config;

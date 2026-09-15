@@ -5,7 +5,9 @@ edition = "2024"
 
 [features]
 default = ["Pico_16M"]
-Pico_16M = []
+Pico_16M = ["RP2040"]
+RP2040 = []
+RP2350 = []
 
 [profile.dev]
 panic = "abort"
@@ -20,3 +22,5 @@ lto = true
 [[bin]]
 name = "kernel"
 path = "src/main.rs"
+test = false
+bench = false
