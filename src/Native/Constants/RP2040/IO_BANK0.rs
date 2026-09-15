@@ -44,10 +44,10 @@ pub const IO_BANK0_DORMANT_WAKE_INTS2:              u32 = IO_BANK0_BASE + 0x188;
 pub const IO_BANK0_DORMANT_WAKE_INTS3:              u32 = IO_BANK0_BASE + 0x18C;
 
 
-pub const fn ioBank0GpioCtrl(pin: u32) -> u32 {
+pub fn IO_BANK0_GPIO_CTRL(pin: u32) -> u32 {
      IO_BANK0_BASE + 0x04 + pin * 8
 }
 
-pub const fn ioBank0GpioStatus(pin: u32) -> u32 {
+pub fn IO_BANK0_GPIO_STATUS(pin: u32) -> u32 {
     IO_BANK0_BASE + 0x08 + pin * 8
 }
