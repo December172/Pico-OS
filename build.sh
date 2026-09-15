@@ -8,7 +8,7 @@ build(){
     if [ ! -d "output" ]; then
         mkdir output
     fi
-    cargo build --profile $1
+    cargo build --profile $1 -Zjson-target-spec
     rm -rf output/*
     mv target/thumbv6m-none-eabi/$profile/kernel output/kernel.elf
     ./tools/picotool uf2 convert output/kernel.elf output/kernel.uf2

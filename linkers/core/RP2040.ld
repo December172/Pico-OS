@@ -5,13 +5,6 @@ PHDRS
     flash PT_LOAD;
 }
 
-MEMORY
-{
-    FLASH(rx) : ORIGIN = 0x10000000, LENGTH = 2048K
-    RAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 264K
-}
-
-
 SECTIONS
 {
     .boot2 :
