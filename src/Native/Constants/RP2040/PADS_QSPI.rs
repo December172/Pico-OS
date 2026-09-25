@@ -8,3 +8,64 @@ pub const PADS_QSPI_GPIO_QSPI_SD1:                  u32 = PADS_QSPI_BASE + 0xC;
 pub const PADS_QSPI_GPIO_QSPI_SD2:                  u32 = PADS_QSPI_BASE + 0x10;
 pub const PADS_QSPI_GPIO_QSPI_SD3:                  u32 = PADS_QSPI_BASE + 0x14;
 pub const PADS_QSPI_GPIO_QSPI_SS:                   u32 = PADS_QSPI_BASE + 0x18;
+
+// ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// VOLTAGE_SELECT
+pub const PADS_QSPI_VOLTAGE_SELECT_BIT:             u32 = 0;
+// GPIO_QSPI_SCLK
+pub const PADS_QSPI_GPIO_QSPI_SCLK_OD_BIT:          u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_IE_BIT:          u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_LOW:       u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_HIGH:      u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_PUE_BIT:         u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_PDE_BIT:         u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_SCHMITT_BIT:     u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_SLEWFAST_BIT:    u32 = 0;
+// GPIO_QSPI_SD0
+pub const PADS_QSPI_GPIO_QSPI_SD0_OD_BIT:           u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SD0_IE_BIT:           u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SD0_DRIVE_LOW:        u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SD0_DRIVE_HIGH:       u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SD0_PUE_BIT:          u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SD0_PDE_BIT:          u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SD0_SCHMITT_BIT:      u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SD0_SLEWFAST_BIT:     u32 = 0;
+// GPIO_QSPI_SD1
+pub const PADS_QSPI_GPIO_QSPI_SD1_OD_BIT:           u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SD1_IE_BIT:           u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SD1_DRIVE_LOW:        u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SD1_DRIVE_HIGH:       u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SD1_PUE_BIT:          u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SD1_PDE_BIT:          u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SD1_SCHMITT_BIT:      u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SD1_SLEWFAST_BIT:     u32 = 0;
+// GPIO_QSPI_SD2
+pub const PADS_QSPI_GPIO_QSPI_SD2_OD_BIT:           u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SD2_IE_BIT:           u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SD2_DRIVE_LOW:        u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SD2_DRIVE_HIGH:       u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SD2_PUE_BIT:          u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SD2_PDE_BIT:          u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SD2_SCHMITT_BIT:      u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SD2_SLEWFAST_BIT:     u32 = 0;
+// GPIO_QSPI_SD3
+pub const PADS_QSPI_GPIO_QSPI_SD3_OD_BIT:           u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SD3_IE_BIT:           u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SD3_DRIVE_LOW:        u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SD3_DRIVE_HIGH:       u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SD3_PUE_BIT:          u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SD3_PDE_BIT:          u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SD3_SCHMITT_BIT:      u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SD3_SLEWFAST_BIT:     u32 = 0;
+// GPIO_QSPI_SS
+pub const PADS_QSPI_GPIO_QSPI_SS_OD_BIT:            u32 = 7;
+pub const PADS_QSPI_GPIO_QSPI_SS_IE_BIT:            u32 = 6;
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_LOW:         u32 = 4;
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_HIGH:        u32 = 5;
+pub const PADS_QSPI_GPIO_QSPI_SS_PUE_BIT:           u32 = 3;
+pub const PADS_QSPI_GPIO_QSPI_SS_PDE_BIT:           u32 = 2;
+pub const PADS_QSPI_GPIO_QSPI_SS_SCHMITT_BIT:       u32 = 1;
+pub const PADS_QSPI_GPIO_QSPI_SS_SLEWFAST_BIT:      u32 = 0;
+// ==== END AUTO-GENERATED FIELD BIT RANGES ====
