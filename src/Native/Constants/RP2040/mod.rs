@@ -11,8 +11,7 @@ pub mod PADS_BANK0;
 pub mod PADS_QSPI;
 pub mod PIO0;
 pub mod PIO1;
-pub mod PLL_SYS;
-pub mod PLL_USB;
+pub mod PLL;
 pub mod PPB;
 pub mod PSM;
 pub mod PWM;
@@ -36,4 +35,5 @@ pub mod WATCHDOG;
 pub mod XIP_CTRL;
 pub mod XOSC;
 
+// For non-predefined user values
 pub mod Config;
