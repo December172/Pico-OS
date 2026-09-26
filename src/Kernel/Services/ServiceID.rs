@@ -5,5 +5,6 @@ pub enum ServiceID {
     SPIService,
     UARTService,
 
-    ClockService
+    ClockService,
+    TimerService
 }

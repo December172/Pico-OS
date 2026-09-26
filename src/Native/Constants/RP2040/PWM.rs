@@ -1,46 +1,25 @@
 #![allow(dead_code)]
 // PWM
 pub const PWM_BASE:                                 u32 = 0x4005_0000;
-pub const PWM_CH0_CSR:                              u32 = PWM_BASE + 0x0;
-pub const PWM_CH0_DIV:                              u32 = PWM_BASE + 0x4;
-pub const PWM_CH0_CTR:                              u32 = PWM_BASE + 0x8;
-pub const PWM_CH0_CC:                               u32 = PWM_BASE + 0xC;
-pub const PWM_CH0_TOP:                              u32 = PWM_BASE + 0x10;
-pub const PWM_CH1_CSR:                              u32 = PWM_BASE + 0x14;
-pub const PWM_CH1_DIV:                              u32 = PWM_BASE + 0x18;
-pub const PWM_CH1_CTR:                              u32 = PWM_BASE + 0x1C;
-pub const PWM_CH1_CC:                               u32 = PWM_BASE + 0x20;
-pub const PWM_CH1_TOP:                              u32 = PWM_BASE + 0x24;
-pub const PWM_CH2_CSR:                              u32 = PWM_BASE + 0x28;
-pub const PWM_CH2_DIV:                              u32 = PWM_BASE + 0x2C;
-pub const PWM_CH2_CTR:                              u32 = PWM_BASE + 0x30;
-pub const PWM_CH2_CC:                               u32 = PWM_BASE + 0x34;
-pub const PWM_CH2_TOP:                              u32 = PWM_BASE + 0x38;
-pub const PWM_CH3_CSR:                              u32 = PWM_BASE + 0x3C;
-pub const PWM_CH3_DIV:                              u32 = PWM_BASE + 0x40;
-pub const PWM_CH3_CTR:                              u32 = PWM_BASE + 0x44;
-pub const PWM_CH3_CC:                               u32 = PWM_BASE + 0x48;
-pub const PWM_CH3_TOP:                              u32 = PWM_BASE + 0x4C;
-pub const PWM_CH4_CSR:                              u32 = PWM_BASE + 0x50;
-pub const PWM_CH4_DIV:                              u32 = PWM_BASE + 0x54;
-pub const PWM_CH4_CTR:                              u32 = PWM_BASE + 0x58;
-pub const PWM_CH4_CC:                               u32 = PWM_BASE + 0x5C;
-pub const PWM_CH4_TOP:                              u32 = PWM_BASE + 0x60;
-pub const PWM_CH5_CSR:                              u32 = PWM_BASE + 0x64;
-pub const PWM_CH5_DIV:                              u32 = PWM_BASE + 0x68;
-pub const PWM_CH5_CTR:                              u32 = PWM_BASE + 0x6C;
-pub const PWM_CH5_CC:                               u32 = PWM_BASE + 0x70;
-pub const PWM_CH5_TOP:                              u32 = PWM_BASE + 0x74;
-pub const PWM_CH6_CSR:                              u32 = PWM_BASE + 0x78;
-pub const PWM_CH6_DIV:                              u32 = PWM_BASE + 0x7C;
-pub const PWM_CH6_CTR:                              u32 = PWM_BASE + 0x80;
-pub const PWM_CH6_CC:                               u32 = PWM_BASE + 0x84;
-pub const PWM_CH6_TOP:                              u32 = PWM_BASE + 0x88;
-pub const PWM_CH7_CSR:                              u32 = PWM_BASE + 0x8C;
-pub const PWM_CH7_DIV:                              u32 = PWM_BASE + 0x90;
-pub const PWM_CH7_CTR:                              u32 = PWM_BASE + 0x94;
-pub const PWM_CH7_CC:                               u32 = PWM_BASE + 0x98;
-pub const PWM_CH7_TOP:                              u32 = PWM_BASE + 0x9C;
+pub fn PWM_CH_CSR(ch: u32) -> u32 {
+    return PWM_BASE + 0x0 + ch * 0x14
+}
+
+pub fn PWM_CH_DIV(ch: u32) -> u32 {
+    return PWM_BASE + 0x4 + ch * 0x14
+}
+
+pub fn PWM_CH_CTR(ch: u32) -> u32 {
+    return PWM_BASE + 0x8 + ch * 0x14
+}
+
+pub fn PWM_CH_CC(ch: u32) -> u32 {
+    return PWM_BASE + 0xC + ch * 0x14
+}
+
+pub fn PWM_CH_TOP(ch: u32) -> u32 {
+    return PWM_BASE + 0x10 + ch * 0x14
+}
 pub const PWM_EN:                                   u32 = PWM_BASE + 0xA0;
 pub const PWM_INTR:                                 u32 = PWM_BASE + 0xA4;
 pub const PWM_INTE:                                 u32 = PWM_BASE + 0xA8;
@@ -296,3 +275,13 @@ pub const PWM_INTS_CH2_BIT:                         u32 = 2;
 pub const PWM_INTS_CH1_BIT:                         u32 = 1;
 pub const PWM_INTS_CH0_BIT:                         u32 = 0;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// CH0_CSR..CH7_CSR: DIVMODE
+pub const PWM_CH_CSR_DIVMODE_DIV:                   u32 = 0x0;
+pub const PWM_CH_CSR_DIVMODE_LEVEL:                 u32 = 0x1;
+pub const PWM_CH_CSR_DIVMODE_RISE:                  u32 = 0x2;
+pub const PWM_CH_CSR_DIVMODE_FALL:                  u32 = 0x3;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

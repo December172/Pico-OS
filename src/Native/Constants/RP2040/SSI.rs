@@ -155,3 +155,29 @@ pub const SSI_SPI_CTRLR0_TRANS_TYPE_HIGH:           u32 = 1;
 pub const SSI_TXD_DRIVE_EDGE_TDE_LOW:               u32 = 0;
 pub const SSI_TXD_DRIVE_EDGE_TDE_HIGH:              u32 = 7;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// CTRLR0: SPI_FRF
+pub const SSI_CTRLR_SPI_FRF_STD:                    u32 = 0x0;
+pub const SSI_CTRLR_SPI_FRF_DUAL:                   u32 = 0x1;
+pub const SSI_CTRLR_SPI_FRF_QUAD:                   u32 = 0x2;
+
+// CTRLR0: TMOD
+pub const SSI_CTRLR_TMOD_TX_AND_RX:                 u32 = 0x0;
+pub const SSI_CTRLR_TMOD_TX_ONLY:                   u32 = 0x1;
+pub const SSI_CTRLR_TMOD_RX_ONLY:                   u32 = 0x2;
+pub const SSI_CTRLR_TMOD_EEPROM_READ:               u32 = 0x3;
+
+// SPI_CTRLR0: INST_L
+pub const SSI_SPI_CTRLR_INST_L_NONE:                u32 = 0x0;
+pub const SSI_SPI_CTRLR_INST_L_4B:                  u32 = 0x1;
+pub const SSI_SPI_CTRLR_INST_L_8B:                  u32 = 0x2;
+pub const SSI_SPI_CTRLR_INST_L_16B:                 u32 = 0x3;
+
+// SPI_CTRLR0: TRANS_TYPE
+pub const SSI_SPI_CTRLR_TRANS_TYPE_1C1A:            u32 = 0x0;
+pub const SSI_SPI_CTRLR_TRANS_TYPE_1C2A:            u32 = 0x1;
+pub const SSI_SPI_CTRLR_TRANS_TYPE_2C2A:            u32 = 0x2;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

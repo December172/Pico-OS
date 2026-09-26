@@ -27,7 +27,7 @@ unsafe extern "C" {
 #[unsafe(link_section = ".vector_table")]
 #[unsafe(no_mangle)]
 pub static vectorTable: VectorTable = VectorTable {
-    initialSp: 0x20042000,
+    initialSp: 0x2004_2000,
 
     reset: _start,
     nmi: defaultHandler,

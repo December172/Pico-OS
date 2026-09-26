@@ -2,54 +2,52 @@
 // IO_BANK0
 pub const IO_BANK0_BASE:                            u32 = 0x4001_4000;
 
-pub const IO_BANK0_INTR0:                           u32 = IO_BANK0_BASE + 0xF0;
-pub const IO_BANK0_INTR1:                           u32 = IO_BANK0_BASE + 0xF4;
-pub const IO_BANK0_INTR2:                           u32 = IO_BANK0_BASE + 0xF8;
-pub const IO_BANK0_INTR3:                           u32 = IO_BANK0_BASE + 0xFC;
-pub const IO_BANK0_PROC0_INTE0:                     u32 = IO_BANK0_BASE + 0x100;
-pub const IO_BANK0_PROC0_INTE1:                     u32 = IO_BANK0_BASE + 0x104;
-pub const IO_BANK0_PROC0_INTE2:                     u32 = IO_BANK0_BASE + 0x108;
-pub const IO_BANK0_PROC0_INTE3:                     u32 = IO_BANK0_BASE + 0x10C;
-pub const IO_BANK0_PROC0_INTF0:                     u32 = IO_BANK0_BASE + 0x110;
-pub const IO_BANK0_PROC0_INTF1:                     u32 = IO_BANK0_BASE + 0x114;
-pub const IO_BANK0_PROC0_INTF2:                     u32 = IO_BANK0_BASE + 0x118;
-pub const IO_BANK0_PROC0_INTF3:                     u32 = IO_BANK0_BASE + 0x11C;
-pub const IO_BANK0_PROC0_INTS0:                     u32 = IO_BANK0_BASE + 0x120;
-pub const IO_BANK0_PROC0_INTS1:                     u32 = IO_BANK0_BASE + 0x124;
-pub const IO_BANK0_PROC0_INTS2:                     u32 = IO_BANK0_BASE + 0x128;
-pub const IO_BANK0_PROC0_INTS3:                     u32 = IO_BANK0_BASE + 0x12C;
-pub const IO_BANK0_PROC1_INTE0:                     u32 = IO_BANK0_BASE + 0x130;
-pub const IO_BANK0_PROC1_INTE1:                     u32 = IO_BANK0_BASE + 0x134;
-pub const IO_BANK0_PROC1_INTE2:                     u32 = IO_BANK0_BASE + 0x138;
-pub const IO_BANK0_PROC1_INTE3:                     u32 = IO_BANK0_BASE + 0x13C;
-pub const IO_BANK0_PROC1_INTF0:                     u32 = IO_BANK0_BASE + 0x140;
-pub const IO_BANK0_PROC1_INTF1:                     u32 = IO_BANK0_BASE + 0x144;
-pub const IO_BANK0_PROC1_INTF2:                     u32 = IO_BANK0_BASE + 0x148;
-pub const IO_BANK0_PROC1_INTF3:                     u32 = IO_BANK0_BASE + 0x14C;
-pub const IO_BANK0_PROC1_INTS0:                     u32 = IO_BANK0_BASE + 0x150;
-pub const IO_BANK0_PROC1_INTS1:                     u32 = IO_BANK0_BASE + 0x154;
-pub const IO_BANK0_PROC1_INTS2:                     u32 = IO_BANK0_BASE + 0x158;
-pub const IO_BANK0_PROC1_INTS3:                     u32 = IO_BANK0_BASE + 0x15C;
-pub const IO_BANK0_DORMANT_WAKE_INTE0:              u32 = IO_BANK0_BASE + 0x160;
-pub const IO_BANK0_DORMANT_WAKE_INTE1:              u32 = IO_BANK0_BASE + 0x164;
-pub const IO_BANK0_DORMANT_WAKE_INTE2:              u32 = IO_BANK0_BASE + 0x168;
-pub const IO_BANK0_DORMANT_WAKE_INTE3:              u32 = IO_BANK0_BASE + 0x16C;
-pub const IO_BANK0_DORMANT_WAKE_INTF0:              u32 = IO_BANK0_BASE + 0x170;
-pub const IO_BANK0_DORMANT_WAKE_INTF1:              u32 = IO_BANK0_BASE + 0x174;
-pub const IO_BANK0_DORMANT_WAKE_INTF2:              u32 = IO_BANK0_BASE + 0x178;
-pub const IO_BANK0_DORMANT_WAKE_INTF3:              u32 = IO_BANK0_BASE + 0x17C;
-pub const IO_BANK0_DORMANT_WAKE_INTS0:              u32 = IO_BANK0_BASE + 0x180;
-pub const IO_BANK0_DORMANT_WAKE_INTS1:              u32 = IO_BANK0_BASE + 0x184;
-pub const IO_BANK0_DORMANT_WAKE_INTS2:              u32 = IO_BANK0_BASE + 0x188;
-pub const IO_BANK0_DORMANT_WAKE_INTS3:              u32 = IO_BANK0_BASE + 0x18C;
+pub fn IO_BANK0_INTR(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0xF0 + n * 4
+}
 
+pub fn IO_BANK0_PROC0_INTE(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x100 + n * 4
+}
+
+pub fn IO_BANK0_PROC0_INTF(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x110 + n * 4
+}
+
+pub fn IO_BANK0_PROC0_INTS(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x120 + n * 4
+}
+
+pub fn IO_BANK0_PROC1_INTE(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x130 + n * 4
+}
+
+pub fn IO_BANK0_PROC1_INTF(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x140 + n * 4
+}
+
+pub fn IO_BANK0_PROC1_INTS(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x150 + n * 4
+}
+
+pub fn IO_BANK0_DORMANT_WAKE_INTE(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x160 + n * 4
+}
+
+pub fn IO_BANK0_DORMANT_WAKE_INTF(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x170 + n * 4
+}
+
+pub fn IO_BANK0_DORMANT_WAKE_INTS(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x180 + n * 4
+}
 
 pub fn IO_BANK0_GPIO_CTRL(pin: u32) -> u32 {
-     IO_BANK0_BASE + 0x04 + pin * 8
+    return IO_BANK0_BASE + 0x04 + pin * 8
 }
 
 pub fn IO_BANK0_GPIO_STATUS(pin: u32) -> u32 {
-    IO_BANK0_BASE + 0x08 + pin * 8
+    return IO_BANK0_BASE + 0x08 + pin * 8
 }
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
@@ -1896,3 +1894,184 @@ pub const IO_BANK0_DORMANT_WAKE_INTS3_GPIO24_EDGE_LOW_BIT:u32 = 2;
 pub const IO_BANK0_DORMANT_WAKE_INTS3_GPIO24_LEVEL_HIGH_BIT:u32 = 1;
 pub const IO_BANK0_DORMANT_WAKE_INTS3_GPIO24_LEVEL_LOW_BIT:u32 = 0;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// GPIO0_CTRL..GPIO29_CTRL: IRQOVER
+pub const IO_BANK0_GPIO_CTRL_IRQOVER_NORMAL:        u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_IRQOVER_INVERT:        u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_IRQOVER_LOW:           u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_IRQOVER_HIGH:          u32 = 0x3;
+
+// GPIO0_CTRL..GPIO29_CTRL: INOVER
+pub const IO_BANK0_GPIO_CTRL_INOVER_NORMAL:         u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_INOVER_INVERT:         u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_INOVER_LOW:            u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_INOVER_HIGH:           u32 = 0x3;
+
+// GPIO0_CTRL..GPIO29_CTRL: OEOVER
+pub const IO_BANK0_GPIO_CTRL_OEOVER_NORMAL:         u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_OEOVER_INVERT:         u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_OEOVER_DISABLE:        u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_OEOVER_ENABLE:         u32 = 0x3;
+
+// GPIO0_CTRL..GPIO29_CTRL: OUTOVER
+pub const IO_BANK0_GPIO_CTRL_OUTOVER_NORMAL:        u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_OUTOVER_INVERT:        u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_OUTOVER_LOW:           u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_OUTOVER_HIGH:          u32 = 0x3;
+
+// GPIO0_CTRL..GPIO29_CTRL: FUNCSEL
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_JTAG_TCK:      u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI0_RX:       u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART0_TX:      u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_I2C0_SDA:      u32 = 0x3;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_0:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_0:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_0:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_0:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_OVERCURR_DETECT:u32 = 0x9;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_NULL:          u32 = 0x1F;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_JTAG_TMS:      u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI0_SS_N:     u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART0_RX:      u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_I2C0_SCL:      u32 = 0x3;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_0:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_1:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_1:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_1:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_VBUS_DETECT:u32 = 0x9;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_JTAG_TDI:      u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI0_SCLK:     u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART0_CTS:     u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_I2C1_SDA:      u32 = 0x3;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_1:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_2:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_2:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_2:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_VBUS_EN:u32 = 0x9;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_JTAG_TDO:      u32 = 0x0;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI0_TX:       u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART0_RTS:     u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_I2C1_SCL:      u32 = 0x3;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_1:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_3:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_3:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_3:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART1_TX:      u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_2:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_4:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_4:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_4:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART1_RX:      u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_2:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_5:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_5:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_5:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART1_CTS:     u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_3:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_6:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_6:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_6:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SOFTCON:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_UART1_RTS:     u32 = 0x2;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_3:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_7:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_7:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_7:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_OE_N:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI1_RX:       u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_4:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_8:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_8:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_8:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_RCV:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI1_SS_N:     u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_4:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_9:         u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_9:        u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_9:        u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VP:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI1_SCLK:     u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_5:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_10:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_10:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_10:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VM:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SPI1_TX:       u32 = 0x1;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_5:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_11:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_11:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_11:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SUSPND:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_6:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_12:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_12:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_12:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_SPEED:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_6:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_13:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_13:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_13:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VPO:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_A_7:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_14:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_14:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_14:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_EXTPHY_VMO:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PWM_B_7:       u32 = 0x4;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_15:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_15:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_15:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_DIGITAL_DP:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_16:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_16:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_16:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_USB_MUXING_DIGITAL_DM:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_17:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_17:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_17:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_18:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_18:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_18:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_19:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_19:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_19:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_20:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_20:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_20:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPIN_0: u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_21:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_21:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_21:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPOUT_0:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_22:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_22:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_22:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPIN_1: u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_23:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_23:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_23:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPOUT_1:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_24:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_24:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_24:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPOUT_2:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_25:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_25:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_25:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_CLOCKS_GPOUT_3:u32 = 0x8;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_26:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_26:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_26:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_27:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_27:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_27:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_28:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_28:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_28:       u32 = 0x7;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_SIO_29:        u32 = 0x5;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO0_29:       u32 = 0x6;
+pub const IO_BANK0_GPIO_CTRL_FUNCSEL_PIO1_29:       u32 = 0x7;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

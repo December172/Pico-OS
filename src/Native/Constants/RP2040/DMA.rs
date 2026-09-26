@@ -1,198 +1,54 @@
 #![allow(dead_code)]
 // DMA
 pub const DMA_BASE:                                 u32 = 0x5000_0000;
-pub const DMA_CH0_READ_ADDR:                        u32 = DMA_BASE + 0x0;
-pub const DMA_CH0_WRITE_ADDR:                       u32 = DMA_BASE + 0x4;
-pub const DMA_CH0_TRANS_COUNT:                      u32 = DMA_BASE + 0x8;
-pub const DMA_CH0_CTRL_TRIG:                        u32 = DMA_BASE + 0xC;
-pub const DMA_CH0_AL1_CTRL:                         u32 = DMA_BASE + 0x10;
-pub const DMA_CH0_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x14;
-pub const DMA_CH0_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x18;
-pub const DMA_CH0_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x1C;
-pub const DMA_CH0_AL2_CTRL:                         u32 = DMA_BASE + 0x20;
-pub const DMA_CH0_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x24;
-pub const DMA_CH0_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x28;
-pub const DMA_CH0_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x2C;
-pub const DMA_CH0_AL3_CTRL:                         u32 = DMA_BASE + 0x30;
-pub const DMA_CH0_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x34;
-pub const DMA_CH0_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x38;
-pub const DMA_CH0_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x3C;
-pub const DMA_CH1_READ_ADDR:                        u32 = DMA_BASE + 0x40;
-pub const DMA_CH1_WRITE_ADDR:                       u32 = DMA_BASE + 0x44;
-pub const DMA_CH1_TRANS_COUNT:                      u32 = DMA_BASE + 0x48;
-pub const DMA_CH1_CTRL_TRIG:                        u32 = DMA_BASE + 0x4C;
-pub const DMA_CH1_AL1_CTRL:                         u32 = DMA_BASE + 0x50;
-pub const DMA_CH1_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x54;
-pub const DMA_CH1_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x58;
-pub const DMA_CH1_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x5C;
-pub const DMA_CH1_AL2_CTRL:                         u32 = DMA_BASE + 0x60;
-pub const DMA_CH1_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x64;
-pub const DMA_CH1_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x68;
-pub const DMA_CH1_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x6C;
-pub const DMA_CH1_AL3_CTRL:                         u32 = DMA_BASE + 0x70;
-pub const DMA_CH1_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x74;
-pub const DMA_CH1_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x78;
-pub const DMA_CH1_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x7C;
-pub const DMA_CH2_READ_ADDR:                        u32 = DMA_BASE + 0x80;
-pub const DMA_CH2_WRITE_ADDR:                       u32 = DMA_BASE + 0x84;
-pub const DMA_CH2_TRANS_COUNT:                      u32 = DMA_BASE + 0x88;
-pub const DMA_CH2_CTRL_TRIG:                        u32 = DMA_BASE + 0x8C;
-pub const DMA_CH2_AL1_CTRL:                         u32 = DMA_BASE + 0x90;
-pub const DMA_CH2_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x94;
-pub const DMA_CH2_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x98;
-pub const DMA_CH2_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x9C;
-pub const DMA_CH2_AL2_CTRL:                         u32 = DMA_BASE + 0xA0;
-pub const DMA_CH2_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0xA4;
-pub const DMA_CH2_AL2_READ_ADDR:                    u32 = DMA_BASE + 0xA8;
-pub const DMA_CH2_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0xAC;
-pub const DMA_CH2_AL3_CTRL:                         u32 = DMA_BASE + 0xB0;
-pub const DMA_CH2_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0xB4;
-pub const DMA_CH2_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0xB8;
-pub const DMA_CH2_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0xBC;
-pub const DMA_CH3_READ_ADDR:                        u32 = DMA_BASE + 0xC0;
-pub const DMA_CH3_WRITE_ADDR:                       u32 = DMA_BASE + 0xC4;
-pub const DMA_CH3_TRANS_COUNT:                      u32 = DMA_BASE + 0xC8;
-pub const DMA_CH3_CTRL_TRIG:                        u32 = DMA_BASE + 0xCC;
-pub const DMA_CH3_AL1_CTRL:                         u32 = DMA_BASE + 0xD0;
-pub const DMA_CH3_AL1_READ_ADDR:                    u32 = DMA_BASE + 0xD4;
-pub const DMA_CH3_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0xD8;
-pub const DMA_CH3_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0xDC;
-pub const DMA_CH3_AL2_CTRL:                         u32 = DMA_BASE + 0xE0;
-pub const DMA_CH3_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0xE4;
-pub const DMA_CH3_AL2_READ_ADDR:                    u32 = DMA_BASE + 0xE8;
-pub const DMA_CH3_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0xEC;
-pub const DMA_CH3_AL3_CTRL:                         u32 = DMA_BASE + 0xF0;
-pub const DMA_CH3_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0xF4;
-pub const DMA_CH3_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0xF8;
-pub const DMA_CH3_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0xFC;
-pub const DMA_CH4_READ_ADDR:                        u32 = DMA_BASE + 0x100;
-pub const DMA_CH4_WRITE_ADDR:                       u32 = DMA_BASE + 0x104;
-pub const DMA_CH4_TRANS_COUNT:                      u32 = DMA_BASE + 0x108;
-pub const DMA_CH4_CTRL_TRIG:                        u32 = DMA_BASE + 0x10C;
-pub const DMA_CH4_AL1_CTRL:                         u32 = DMA_BASE + 0x110;
-pub const DMA_CH4_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x114;
-pub const DMA_CH4_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x118;
-pub const DMA_CH4_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x11C;
-pub const DMA_CH4_AL2_CTRL:                         u32 = DMA_BASE + 0x120;
-pub const DMA_CH4_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x124;
-pub const DMA_CH4_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x128;
-pub const DMA_CH4_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x12C;
-pub const DMA_CH4_AL3_CTRL:                         u32 = DMA_BASE + 0x130;
-pub const DMA_CH4_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x134;
-pub const DMA_CH4_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x138;
-pub const DMA_CH4_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x13C;
-pub const DMA_CH5_READ_ADDR:                        u32 = DMA_BASE + 0x140;
-pub const DMA_CH5_WRITE_ADDR:                       u32 = DMA_BASE + 0x144;
-pub const DMA_CH5_TRANS_COUNT:                      u32 = DMA_BASE + 0x148;
-pub const DMA_CH5_CTRL_TRIG:                        u32 = DMA_BASE + 0x14C;
-pub const DMA_CH5_AL1_CTRL:                         u32 = DMA_BASE + 0x150;
-pub const DMA_CH5_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x154;
-pub const DMA_CH5_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x158;
-pub const DMA_CH5_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x15C;
-pub const DMA_CH5_AL2_CTRL:                         u32 = DMA_BASE + 0x160;
-pub const DMA_CH5_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x164;
-pub const DMA_CH5_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x168;
-pub const DMA_CH5_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x16C;
-pub const DMA_CH5_AL3_CTRL:                         u32 = DMA_BASE + 0x170;
-pub const DMA_CH5_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x174;
-pub const DMA_CH5_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x178;
-pub const DMA_CH5_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x17C;
-pub const DMA_CH6_READ_ADDR:                        u32 = DMA_BASE + 0x180;
-pub const DMA_CH6_WRITE_ADDR:                       u32 = DMA_BASE + 0x184;
-pub const DMA_CH6_TRANS_COUNT:                      u32 = DMA_BASE + 0x188;
-pub const DMA_CH6_CTRL_TRIG:                        u32 = DMA_BASE + 0x18C;
-pub const DMA_CH6_AL1_CTRL:                         u32 = DMA_BASE + 0x190;
-pub const DMA_CH6_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x194;
-pub const DMA_CH6_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x198;
-pub const DMA_CH6_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x19C;
-pub const DMA_CH6_AL2_CTRL:                         u32 = DMA_BASE + 0x1A0;
-pub const DMA_CH6_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x1A4;
-pub const DMA_CH6_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x1A8;
-pub const DMA_CH6_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x1AC;
-pub const DMA_CH6_AL3_CTRL:                         u32 = DMA_BASE + 0x1B0;
-pub const DMA_CH6_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x1B4;
-pub const DMA_CH6_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x1B8;
-pub const DMA_CH6_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x1BC;
-pub const DMA_CH7_READ_ADDR:                        u32 = DMA_BASE + 0x1C0;
-pub const DMA_CH7_WRITE_ADDR:                       u32 = DMA_BASE + 0x1C4;
-pub const DMA_CH7_TRANS_COUNT:                      u32 = DMA_BASE + 0x1C8;
-pub const DMA_CH7_CTRL_TRIG:                        u32 = DMA_BASE + 0x1CC;
-pub const DMA_CH7_AL1_CTRL:                         u32 = DMA_BASE + 0x1D0;
-pub const DMA_CH7_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x1D4;
-pub const DMA_CH7_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x1D8;
-pub const DMA_CH7_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x1DC;
-pub const DMA_CH7_AL2_CTRL:                         u32 = DMA_BASE + 0x1E0;
-pub const DMA_CH7_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x1E4;
-pub const DMA_CH7_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x1E8;
-pub const DMA_CH7_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x1EC;
-pub const DMA_CH7_AL3_CTRL:                         u32 = DMA_BASE + 0x1F0;
-pub const DMA_CH7_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x1F4;
-pub const DMA_CH7_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x1F8;
-pub const DMA_CH7_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x1FC;
-pub const DMA_CH8_READ_ADDR:                        u32 = DMA_BASE + 0x200;
-pub const DMA_CH8_WRITE_ADDR:                       u32 = DMA_BASE + 0x204;
-pub const DMA_CH8_TRANS_COUNT:                      u32 = DMA_BASE + 0x208;
-pub const DMA_CH8_CTRL_TRIG:                        u32 = DMA_BASE + 0x20C;
-pub const DMA_CH8_AL1_CTRL:                         u32 = DMA_BASE + 0x210;
-pub const DMA_CH8_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x214;
-pub const DMA_CH8_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x218;
-pub const DMA_CH8_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x21C;
-pub const DMA_CH8_AL2_CTRL:                         u32 = DMA_BASE + 0x220;
-pub const DMA_CH8_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x224;
-pub const DMA_CH8_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x228;
-pub const DMA_CH8_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x22C;
-pub const DMA_CH8_AL3_CTRL:                         u32 = DMA_BASE + 0x230;
-pub const DMA_CH8_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x234;
-pub const DMA_CH8_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x238;
-pub const DMA_CH8_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x23C;
-pub const DMA_CH9_READ_ADDR:                        u32 = DMA_BASE + 0x240;
-pub const DMA_CH9_WRITE_ADDR:                       u32 = DMA_BASE + 0x244;
-pub const DMA_CH9_TRANS_COUNT:                      u32 = DMA_BASE + 0x248;
-pub const DMA_CH9_CTRL_TRIG:                        u32 = DMA_BASE + 0x24C;
-pub const DMA_CH9_AL1_CTRL:                         u32 = DMA_BASE + 0x250;
-pub const DMA_CH9_AL1_READ_ADDR:                    u32 = DMA_BASE + 0x254;
-pub const DMA_CH9_AL1_WRITE_ADDR:                   u32 = DMA_BASE + 0x258;
-pub const DMA_CH9_AL1_TRANS_COUNT_TRIG:             u32 = DMA_BASE + 0x25C;
-pub const DMA_CH9_AL2_CTRL:                         u32 = DMA_BASE + 0x260;
-pub const DMA_CH9_AL2_TRANS_COUNT:                  u32 = DMA_BASE + 0x264;
-pub const DMA_CH9_AL2_READ_ADDR:                    u32 = DMA_BASE + 0x268;
-pub const DMA_CH9_AL2_WRITE_ADDR_TRIG:              u32 = DMA_BASE + 0x26C;
-pub const DMA_CH9_AL3_CTRL:                         u32 = DMA_BASE + 0x270;
-pub const DMA_CH9_AL3_WRITE_ADDR:                   u32 = DMA_BASE + 0x274;
-pub const DMA_CH9_AL3_TRANS_COUNT:                  u32 = DMA_BASE + 0x278;
-pub const DMA_CH9_AL3_READ_ADDR_TRIG:               u32 = DMA_BASE + 0x27C;
-pub const DMA_CH10_READ_ADDR:                       u32 = DMA_BASE + 0x280;
-pub const DMA_CH10_WRITE_ADDR:                      u32 = DMA_BASE + 0x284;
-pub const DMA_CH10_TRANS_COUNT:                     u32 = DMA_BASE + 0x288;
-pub const DMA_CH10_CTRL_TRIG:                       u32 = DMA_BASE + 0x28C;
-pub const DMA_CH10_AL1_CTRL:                        u32 = DMA_BASE + 0x290;
-pub const DMA_CH10_AL1_READ_ADDR:                   u32 = DMA_BASE + 0x294;
-pub const DMA_CH10_AL1_WRITE_ADDR:                  u32 = DMA_BASE + 0x298;
-pub const DMA_CH10_AL1_TRANS_COUNT_TRIG:            u32 = DMA_BASE + 0x29C;
-pub const DMA_CH10_AL2_CTRL:                        u32 = DMA_BASE + 0x2A0;
-pub const DMA_CH10_AL2_TRANS_COUNT:                 u32 = DMA_BASE + 0x2A4;
-pub const DMA_CH10_AL2_READ_ADDR:                   u32 = DMA_BASE + 0x2A8;
-pub const DMA_CH10_AL2_WRITE_ADDR_TRIG:             u32 = DMA_BASE + 0x2AC;
-pub const DMA_CH10_AL3_CTRL:                        u32 = DMA_BASE + 0x2B0;
-pub const DMA_CH10_AL3_WRITE_ADDR:                  u32 = DMA_BASE + 0x2B4;
-pub const DMA_CH10_AL3_TRANS_COUNT:                 u32 = DMA_BASE + 0x2B8;
-pub const DMA_CH10_AL3_READ_ADDR_TRIG:              u32 = DMA_BASE + 0x2BC;
-pub const DMA_CH11_READ_ADDR:                       u32 = DMA_BASE + 0x2C0;
-pub const DMA_CH11_WRITE_ADDR:                      u32 = DMA_BASE + 0x2C4;
-pub const DMA_CH11_TRANS_COUNT:                     u32 = DMA_BASE + 0x2C8;
-pub const DMA_CH11_CTRL_TRIG:                       u32 = DMA_BASE + 0x2CC;
-pub const DMA_CH11_AL1_CTRL:                        u32 = DMA_BASE + 0x2D0;
-pub const DMA_CH11_AL1_READ_ADDR:                   u32 = DMA_BASE + 0x2D4;
-pub const DMA_CH11_AL1_WRITE_ADDR:                  u32 = DMA_BASE + 0x2D8;
-pub const DMA_CH11_AL1_TRANS_COUNT_TRIG:            u32 = DMA_BASE + 0x2DC;
-pub const DMA_CH11_AL2_CTRL:                        u32 = DMA_BASE + 0x2E0;
-pub const DMA_CH11_AL2_TRANS_COUNT:                 u32 = DMA_BASE + 0x2E4;
-pub const DMA_CH11_AL2_READ_ADDR:                   u32 = DMA_BASE + 0x2E8;
-pub const DMA_CH11_AL2_WRITE_ADDR_TRIG:             u32 = DMA_BASE + 0x2EC;
-pub const DMA_CH11_AL3_CTRL:                        u32 = DMA_BASE + 0x2F0;
-pub const DMA_CH11_AL3_WRITE_ADDR:                  u32 = DMA_BASE + 0x2F4;
-pub const DMA_CH11_AL3_TRANS_COUNT:                 u32 = DMA_BASE + 0x2F8;
-pub const DMA_CH11_AL3_READ_ADDR_TRIG:              u32 = DMA_BASE + 0x2FC;
+pub fn DMA_CH_READ_ADDR(ch: u32) -> u32 {
+    return DMA_BASE + 0x0 + ch * 0x40
+}
+pub fn DMA_CH_WRITE_ADDR(ch: u32) -> u32 { 
+    return DMA_BASE + 0x4 + ch * 0x40 
+}
+pub fn DMA_CH_TRANS_COUNT(ch: u32) -> u32 { 
+    return DMA_BASE + 0x8 + ch * 0x40
+}
+pub fn DMA_CH_CTRL_TRIG(ch: u32) -> u32 {
+    return DMA_BASE + 0xc + ch * 0x40
+}
+pub fn DMA_CH_AL1_CTRL(ch: u32) -> u32 { 
+    return DMA_BASE + 0x10 + ch * 0x40
+}
+pub fn DMA_CH_AL1_READ_ADDR(ch: u32) -> u32 { 
+    return DMA_BASE + 0x14 + ch * 0x40
+}
+pub fn DMA_CH_AL1_WRITE_ADDR(ch: u32) -> u32 { 
+    return DMA_BASE + 0x18 + ch * 0x40
+}
+pub fn DMA_CH_AL1_TRANS_COUNT_TRIG(ch: u32) -> u32 { 
+    return DMA_BASE + 0x1c + ch * 0x40 
+}
+pub fn DMA_CH_AL2_CTRL(ch: u32) -> u32 {
+    return DMA_BASE + 0x20 + ch * 0x40 
+}
+pub fn DMA_CH_AL2_TRANS_COUNT(ch: u32) -> u32 {
+    return DMA_BASE + 0x24 + ch * 0x40 
+}
+pub fn DMA_CH_AL2_READ_ADDR(ch: u32) -> u32 { 
+    return DMA_BASE + 0x28 + ch * 0x40 
+}
+pub fn DMA_CH_AL2_WRITE_ADDR_TRIG(ch: u32) -> u32 { 
+    return DMA_BASE + 0x2c + ch * 0x40 
+}
+pub fn DMA_CH_AL3_CTRL(ch: u32) -> u32 { 
+    return DMA_BASE + 0x30 + ch * 0x40 
+}
+pub fn DMA_CH_AL3_WRITE_ADDR(ch: u32) -> u32 { 
+    return DMA_BASE + 0x34 + ch * 0x40 
+}
+pub fn DMA_CH_AL3_TRANS_COUNT(ch: u32) -> u32 { 
+    return DMA_BASE + 0x38 + ch * 0x40 
+}
+pub fn DMA_CH_AL3_READ_ADDR_TRIG(ch: u32) -> u32 { 
+    return DMA_BASE + 0x3c + ch * 0x40 
+}
 pub const DMA_INTR:                                 u32 = DMA_BASE + 0x400;
 pub const DMA_INTE0:                                u32 = DMA_BASE + 0x404;
 pub const DMA_INTF0:                                u32 = DMA_BASE + 0x408;
@@ -210,30 +66,6 @@ pub const DMA_SNIFF_DATA:                           u32 = DMA_BASE + 0x438;
 pub const DMA_FIFO_LEVELS:                          u32 = DMA_BASE + 0x440;
 pub const DMA_CHAN_ABORT:                           u32 = DMA_BASE + 0x444;
 pub const DMA_N_CHANNELS:                           u32 = DMA_BASE + 0x448;
-pub const DMA_CH0_DBG_CTDREQ:                       u32 = DMA_BASE + 0x800;
-pub const DMA_CH0_DBG_TCR:                          u32 = DMA_BASE + 0x804;
-pub const DMA_CH1_DBG_CTDREQ:                       u32 = DMA_BASE + 0x840;
-pub const DMA_CH1_DBG_TCR:                          u32 = DMA_BASE + 0x844;
-pub const DMA_CH2_DBG_CTDREQ:                       u32 = DMA_BASE + 0x880;
-pub const DMA_CH2_DBG_TCR:                          u32 = DMA_BASE + 0x884;
-pub const DMA_CH3_DBG_CTDREQ:                       u32 = DMA_BASE + 0x8C0;
-pub const DMA_CH3_DBG_TCR:                          u32 = DMA_BASE + 0x8C4;
-pub const DMA_CH4_DBG_CTDREQ:                       u32 = DMA_BASE + 0x900;
-pub const DMA_CH4_DBG_TCR:                          u32 = DMA_BASE + 0x904;
-pub const DMA_CH5_DBG_CTDREQ:                       u32 = DMA_BASE + 0x940;
-pub const DMA_CH5_DBG_TCR:                          u32 = DMA_BASE + 0x944;
-pub const DMA_CH6_DBG_CTDREQ:                       u32 = DMA_BASE + 0x980;
-pub const DMA_CH6_DBG_TCR:                          u32 = DMA_BASE + 0x984;
-pub const DMA_CH7_DBG_CTDREQ:                       u32 = DMA_BASE + 0x9C0;
-pub const DMA_CH7_DBG_TCR:                          u32 = DMA_BASE + 0x9C4;
-pub const DMA_CH8_DBG_CTDREQ:                       u32 = DMA_BASE + 0xA00;
-pub const DMA_CH8_DBG_TCR:                          u32 = DMA_BASE + 0xA04;
-pub const DMA_CH9_DBG_CTDREQ:                       u32 = DMA_BASE + 0xA40;
-pub const DMA_CH9_DBG_TCR:                          u32 = DMA_BASE + 0xA44;
-pub const DMA_CH10_DBG_CTDREQ:                      u32 = DMA_BASE + 0xA80;
-pub const DMA_CH10_DBG_TCR:                         u32 = DMA_BASE + 0xA84;
-pub const DMA_CH11_DBG_CTDREQ:                      u32 = DMA_BASE + 0xAC0;
-pub const DMA_CH11_DBG_TCR:                         u32 = DMA_BASE + 0xAC4;
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -1172,3 +1004,70 @@ pub const DMA_CH11_DBG_CTDREQ_HIGH:                 u32 = 5;
 pub const DMA_CH11_DBG_TCR_LOW:                     u32 = 0;
 pub const DMA_CH11_DBG_TCR_HIGH:                    u32 = 31;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// CH0_CTRL_TRIG..CH11_CTRL_TRIG: TREQ_SEL
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_TX0:       u32 = 0x0;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_TX1:       u32 = 0x1;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_TX2:       u32 = 0x2;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_TX3:       u32 = 0x3;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_RX0:       u32 = 0x4;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_RX1:       u32 = 0x5;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_RX2:       u32 = 0x6;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO0_RX3:       u32 = 0x7;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_TX0:       u32 = 0x8;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_TX1:       u32 = 0x9;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_TX2:       u32 = 0xA;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_TX3:       u32 = 0xB;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_RX0:       u32 = 0xC;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_RX1:       u32 = 0xD;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_RX2:       u32 = 0xE;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PIO1_RX3:       u32 = 0xF;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_SPI0_TX:        u32 = 0x10;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_SPI0_RX:        u32 = 0x11;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_SPI1_TX:        u32 = 0x12;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_SPI1_RX:        u32 = 0x13;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_UART0_TX:       u32 = 0x14;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_UART0_RX:       u32 = 0x15;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_UART1_TX:       u32 = 0x16;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_UART1_RX:       u32 = 0x17;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP0:      u32 = 0x18;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP1:      u32 = 0x19;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP2:      u32 = 0x1A;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP3:      u32 = 0x1B;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP4:      u32 = 0x1C;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP5:      u32 = 0x1D;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP6:      u32 = 0x1E;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PWM_WRAP7:      u32 = 0x1F;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_I2C0_TX:        u32 = 0x20;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_I2C0_RX:        u32 = 0x21;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_I2C1_TX:        u32 = 0x22;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_I2C1_RX:        u32 = 0x23;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_ADC:            u32 = 0x24;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_XIP_STREAM:     u32 = 0x25;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_XIP_SSITX:      u32 = 0x26;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_XIP_SSIRX:      u32 = 0x27;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_TIMER0:         u32 = 0x3B;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_TIMER1:         u32 = 0x3C;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_TIMER2:         u32 = 0x3D;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_TIMER3:         u32 = 0x3E;
+pub const DMA_CH_CTRL_TRIG_TREQ_SEL_PERMANENT:      u32 = 0x3F;
+
+// CH0_CTRL_TRIG..CH11_CTRL_TRIG: RING_SIZE
+pub const DMA_CH_CTRL_TRIG_RING_SIZE_RING_NONE:     u32 = 0x0;
+
+// CH0_CTRL_TRIG..CH11_CTRL_TRIG: DATA_SIZE
+pub const DMA_CH_CTRL_TRIG_DATA_SIZE_SIZE_BYTE:     u32 = 0x0;
+pub const DMA_CH_CTRL_TRIG_DATA_SIZE_SIZE_HALFWORD: u32 = 0x1;
+pub const DMA_CH_CTRL_TRIG_DATA_SIZE_SIZE_WORD:     u32 = 0x2;
+
+// SNIFF_CTRL: CALC
+pub const DMA_SNIFF_CTRL_CALC_CRC32:                u32 = 0x0;
+pub const DMA_SNIFF_CTRL_CALC_CRC32R:               u32 = 0x1;
+pub const DMA_SNIFF_CTRL_CALC_CRC16:                u32 = 0x2;
+pub const DMA_SNIFF_CTRL_CALC_CRC16R:               u32 = 0x3;
+pub const DMA_SNIFF_CTRL_CALC_EVEN:                 u32 = 0xE;
+pub const DMA_SNIFF_CTRL_CALC_SUM:                  u32 = 0xF;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

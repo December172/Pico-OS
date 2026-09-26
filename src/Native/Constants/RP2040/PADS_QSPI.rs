@@ -69,3 +69,29 @@ pub const PADS_QSPI_GPIO_QSPI_SS_PDE_BIT:           u32 = 2;
 pub const PADS_QSPI_GPIO_QSPI_SS_SCHMITT_BIT:       u32 = 1;
 pub const PADS_QSPI_GPIO_QSPI_SS_SLEWFAST_BIT:      u32 = 0;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// VOLTAGE_SELECT: VOLTAGE_SELECT
+pub const PADS_QSPI_VOLTAGE_SELECT_3V3:             u32 = 0x0;
+pub const PADS_QSPI_VOLTAGE_SELECT_1V8:             u32 = 0x1;
+
+// GPIO_QSPI_SCLK: DRIVE
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_2MA:       u32 = 0x0;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_4MA:       u32 = 0x1;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_8MA:       u32 = 0x2;
+pub const PADS_QSPI_GPIO_QSPI_SCLK_DRIVE_12MA:      u32 = 0x3;
+
+// GPIO_QSPI_SD0..GPIO_QSPI_SD3: DRIVE
+pub const PADS_QSPI_GPIO_QSPI_SD_DRIVE_2MA:         u32 = 0x0;
+pub const PADS_QSPI_GPIO_QSPI_SD_DRIVE_4MA:         u32 = 0x1;
+pub const PADS_QSPI_GPIO_QSPI_SD_DRIVE_8MA:         u32 = 0x2;
+pub const PADS_QSPI_GPIO_QSPI_SD_DRIVE_12MA:        u32 = 0x3;
+
+// GPIO_QSPI_SS: DRIVE
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_2MA:         u32 = 0x0;
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_4MA:         u32 = 0x1;
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_8MA:         u32 = 0x2;
+pub const PADS_QSPI_GPIO_QSPI_SS_DRIVE_12MA:        u32 = 0x3;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

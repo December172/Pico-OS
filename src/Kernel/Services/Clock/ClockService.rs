@@ -13,7 +13,7 @@ impl Service for ClockService<'_> {
 } 
 
 impl<'a> ClockService<'a> {
-    pub fn new(driver: &'a dyn ClockDriver) -> Self {
+    pub const fn new(driver: &'a dyn ClockDriver) -> Self {
        Self {
             driver
        }
