@@ -17,6 +17,9 @@ pub struct _XOSCDriver {
     xoscStartup : Register
 }
 
+/// private tool poll()
+/// used before clock system successfully initialized
+/// at this point, we cannot trust hardware tick counter
 fn poll(count: u32, func: impl Fn() -> bool) -> bool {
     let mut counter = count;
     while !func() {
@@ -32,7 +35,7 @@ fn poll(count: u32, func: impl Fn() -> bool) -> bool {
 impl ClockDriver for _XOSCDriver {
     fn init(&self) -> bool {
         // XOSC enable
-        self.xoscCtrl.write(XOSC_ENABLE_MASK);
+        self.xoscCtrl.write(XOSC_CTRL_ENABLE_ENABLE);
         // TODO: Figure out exact startup delay
         if !poll(10000, || self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT)) {
             return false;
@@ -184,7 +187,7 @@ impl _XOSCDriver {
             return false;
         }
 
-        true
+        return true;
     }
 
     fn verifyClocks(&self) -> bool {
@@ -208,12 +211,12 @@ impl _XOSCDriver {
         let expectedPllSys = self.pllSysDriver.getFrequency(XOSC_BASE_FREQ) / 1000;
         let expectedPllUsb = self.pllUSBDriver.getFrequency(XOSC_BASE_FREQ) / 1000;
 
-        return self.measureFrequency(0x5, expectedXosc)
-            && self.measureFrequency(0x8, expectedXosc)
-            && self.measureFrequency(0x1, expectedPllSys)
-            && self.measureFrequency(0x2, expectedPllUsb)
-            && self.measureFrequency(0x9, expectedPllSys)
-            && self.measureFrequency(0xA, expectedPllSys)
-            && self.measureFrequency(0xB, expectedPllUsb);     
+        return self.measureFrequency(CLOCKS_FC_SRC_XOSC_CLKSRC, expectedXosc)
+            && self.measureFrequency(CLOCKS_FC_SRC_CLK_REF, expectedXosc)
+            && self.measureFrequency(CLOCKS_FC_SRC_PLL_SYS_CLKSRC_PRIMARY, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC_SRC_PLL_USB_CLKSRC_PRIMARY, expectedPllUsb)
+            && self.measureFrequency(CLOCKS_FC_SRC_CLK_SYS, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC_SRC_CLK_PERI, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC_SRC_CLK_USB, expectedPllUsb);     
     }
 }

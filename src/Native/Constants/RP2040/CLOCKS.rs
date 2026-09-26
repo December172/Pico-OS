@@ -50,9 +50,6 @@ pub const CLOCKS_INTR:                              u32 = CLOCKS_BASE + 0xB8;
 pub const CLOCKS_INTE:                              u32 = CLOCKS_BASE + 0xBC;
 pub const CLOCKS_INTF:                              u32 = CLOCKS_BASE + 0xC0;
 pub const CLOCKS_INTS:                              u32 = CLOCKS_BASE + 0xC4;
-/// CLOCKS_CLK_<user>_CTRL: [7:5] sets up the clock source for the user
-/// usage: CLOCKS_CLK_<user>_CTRL.write_volatile(CLOCKS_<source>_SOURCE << CLOCKS_SOURCE_SHIFT)
-pub const CLOCKS_SOURCE_SHIFT:                      u32 = 5;
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -397,7 +394,7 @@ pub const CLOCKS_INTF_CLK_SYS_RESUS_BIT:            u32 = 0;
 pub const CLOCKS_INTS_CLK_SYS_RESUS_BIT:            u32 = 0;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
 
-// ==== BEGIN AUTO-GENERATED AUXSRC ENUMERATED VALUES (tools/gen_auxsrc_enums.py) ====
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
 
 // CLK_GPOUT0_CTRL, CLK_GPOUT1_CTRL, CLK_GPOUT2_CTRL, CLK_GPOUT3_CTRL.AUXSRC [8:5]
@@ -468,4 +465,20 @@ pub const CLOCKS_CLK_RTC_ROSC_PH_AUXSOURCE:         u32 = 0x2;
 pub const CLOCKS_CLK_RTC_XOSC_AUXSOURCE:            u32 = 0x3;
 pub const CLOCKS_CLK_RTC_GPIN0_AUXSOURCE:           u32 = 0x4;
 pub const CLOCKS_CLK_RTC_GPIN1_AUXSOURCE:           u32 = 0x5;
-// ==== END AUTO-GENERATED AUXSRC ENUMERATED VALUES ====
+
+// FC0_SRC: FC_SRC
+pub const CLOCKS_FC_SRC_NULL:                       u32 = 0x0;
+pub const CLOCKS_FC_SRC_PLL_SYS_CLKSRC_PRIMARY:     u32 = 0x1;
+pub const CLOCKS_FC_SRC_PLL_USB_CLKSRC_PRIMARY:     u32 = 0x2;
+pub const CLOCKS_FC_SRC_ROSC_CLKSRC:                u32 = 0x3;
+pub const CLOCKS_FC_SRC_ROSC_CLKSRC_PH:             u32 = 0x4;
+pub const CLOCKS_FC_SRC_XOSC_CLKSRC:                u32 = 0x5;
+pub const CLOCKS_FC_SRC_CLKSRC_GPIN0:               u32 = 0x6;
+pub const CLOCKS_FC_SRC_CLKSRC_GPIN1:               u32 = 0x7;
+pub const CLOCKS_FC_SRC_CLK_REF:                    u32 = 0x8;
+pub const CLOCKS_FC_SRC_CLK_SYS:                    u32 = 0x9;
+pub const CLOCKS_FC_SRC_CLK_PERI:                   u32 = 0xA;
+pub const CLOCKS_FC_SRC_CLK_USB:                    u32 = 0xB;
+pub const CLOCKS_FC_SRC_CLK_ADC:                    u32 = 0xC;
+pub const CLOCKS_FC_SRC_CLK_RTC:                    u32 = 0xD;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

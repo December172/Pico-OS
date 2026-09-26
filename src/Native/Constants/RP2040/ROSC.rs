@@ -65,3 +65,30 @@ pub const ROSC_RANDOMBIT_BIT:                       u32 = 0;
 pub const ROSC_COUNT_LOW:                           u32 = 0;
 pub const ROSC_COUNT_HIGH:                          u32 = 7;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// CTRL: ENABLE
+pub const ROSC_CTRL_ENABLE_DISABLE:                 u32 = 0xD1E;
+pub const ROSC_CTRL_ENABLE_ENABLE:                  u32 = 0xFAB;
+
+// CTRL: FREQ_RANGE
+pub const ROSC_CTRL_FREQ_RANGE_LOW_1:               u32 = 0xFA4;
+pub const ROSC_CTRL_FREQ_RANGE_MEDIUM:              u32 = 0xFA5;
+pub const ROSC_CTRL_FREQ_RANGE_HIGH_1:              u32 = 0xFA7;
+pub const ROSC_CTRL_FREQ_RANGE_TOOHIGH:             u32 = 0xFA6;
+
+// FREQA: PASSWD
+pub const ROSC_FREQA_PASSWD_PASS:                   u32 = 0x9696;
+
+// FREQB: PASSWD
+pub const ROSC_FREQB_PASSWD_PASS:                   u32 = 0x9696;
+
+// DORMANT: DORMANT
+pub const ROSC_DORMANT_DORMANT:                     u32 = 0x636F6D61;
+pub const ROSC_DORMANT_WAKE:                        u32 = 0x77616B65;
+
+// DIV: DIV
+pub const ROSC_DIV_PASS:                            u32 = 0xAA0;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

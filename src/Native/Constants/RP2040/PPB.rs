@@ -9,14 +9,9 @@ pub const PPB_NVIC_ISER:                            u32 = PPB_BASE + 0xE100;
 pub const PPB_NVIC_ICER:                            u32 = PPB_BASE + 0xE180;
 pub const PPB_NVIC_ISPR:                            u32 = PPB_BASE + 0xE200;
 pub const PPB_NVIC_ICPR:                            u32 = PPB_BASE + 0xE280;
-pub const PPB_NVIC_IPR0:                            u32 = PPB_BASE + 0xE400;
-pub const PPB_NVIC_IPR1:                            u32 = PPB_BASE + 0xE404;
-pub const PPB_NVIC_IPR2:                            u32 = PPB_BASE + 0xE408;
-pub const PPB_NVIC_IPR3:                            u32 = PPB_BASE + 0xE40C;
-pub const PPB_NVIC_IPR4:                            u32 = PPB_BASE + 0xE410;
-pub const PPB_NVIC_IPR5:                            u32 = PPB_BASE + 0xE414;
-pub const PPB_NVIC_IPR6:                            u32 = PPB_BASE + 0xE418;
-pub const PPB_NVIC_IPR7:                            u32 = PPB_BASE + 0xE41C;
+pub fn PPB_NVIC_IPR(n: u32) -> u32 {
+    return PPB_BASE + 0xE400 + n * 4
+}
 pub const PPB_CPUID:                                u32 = PPB_BASE + 0xED00;
 pub const PPB_ICSR:                                 u32 = PPB_BASE + 0xED04;
 pub const PPB_VTOR:                                 u32 = PPB_BASE + 0xED08;

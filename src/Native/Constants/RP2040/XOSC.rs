@@ -7,9 +7,6 @@ pub const XOSC_DORMANT:                             u32 = XOSC_BASE + 0x8;
 pub const XOSC_STARTUP:                             u32 = XOSC_BASE + 0xC;
 pub const XOSC_COUNT:                               u32 = XOSC_BASE + 0x1C;
 
-pub const XOSC_ENABLE_MASK:                         u32 = 0xFAB;
-pub const XOSC_DISABLE_MASK:                        u32 = 0xD1E;
-
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
 
@@ -35,3 +32,27 @@ pub const XOSC_STARTUP_DELAY_HIGH:                  u32 = 13;
 pub const XOSC_COUNT_LOW:                           u32 = 0;
 pub const XOSC_COUNT_HIGH:                          u32 = 7;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
+// CTRL: ENABLE
+pub const XOSC_CTRL_ENABLE_DISABLE:                 u32 = 0xD1E;
+pub const XOSC_CTRL_ENABLE_ENABLE:                  u32 = 0xFAB;
+
+// CTRL: FREQ_RANGE
+pub const XOSC_CTRL_FREQ_RANGE_1_15MHZ:             u32 = 0xAA0;
+pub const XOSC_CTRL_FREQ_RANGE_RESERVED_1:          u32 = 0xAA1;
+pub const XOSC_CTRL_FREQ_RANGE_RESERVED_2:          u32 = 0xAA2;
+pub const XOSC_CTRL_FREQ_RANGE_RESERVED_3:          u32 = 0xAA3;
+
+// STATUS: FREQ_RANGE
+pub const XOSC_STATUS_FREQ_RANGE_1_15MHZ:           u32 = 0x0;
+pub const XOSC_STATUS_FREQ_RANGE_RESERVED_1:        u32 = 0x1;
+pub const XOSC_STATUS_FREQ_RANGE_RESERVED_2:        u32 = 0x2;
+pub const XOSC_STATUS_FREQ_RANGE_RESERVED_3:        u32 = 0x3;
+
+// DORMANT: DORMANT
+pub const XOSC_DORMANT_DORMANT:                     u32 = 0x636F6D61;
+pub const XOSC_DORMANT_WAKE:                        u32 = 0x77616B65;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

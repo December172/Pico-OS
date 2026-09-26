@@ -21,9 +21,11 @@ Naming:
   * All identifiers are uppercase snake_case following Rust naming conventions;
     any non-alphanumeric source character is folded to '_'.
 
-Peripherals that only carry a `derivedFrom` attribute (I2C1, PIO1, PLL_USB,
-SPI1, UART1) inherit the register/field layout of their base peripheral but keep
-their own name prefix.
+Peripherals that share an identical register/field layout can be merged into a
+single file (see MERGED).  The merged file carries one <NAME>_BASE constant per
+instance, the shared <PERIPHERAL>_<REGISTER>_OFFSET constants (mirroring PLL.rs)
+and the shared field bit-range constants.  Sibling instances are discovered via
+the SVD `derivedFrom` attribute (e.g. PIO1 derives from PIO0).
 
 The generated block is delimited so it can be regenerated idempotently.
 """
@@ -39,6 +41,16 @@ CONST_DIR = os.path.join(ROOT, "src", "Native", "Constants", "RP2040")
 
 BEGIN = "// ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ===="
 END = "// ==== END AUTO-GENERATED FIELD BIT RANGES ===="
+
+# Peripherals sharing an identical register/field layout emitted into one file.
+# Maps output file stem -> primary peripheral; sibling instances are discovered
+# via `derivedFrom` (e.g. PIO1 derives from PIO0).
+MERGED = {
+    "PIO": "PIO0",
+    "I2C": "I2C0",
+    "UART": "UART0",
+    "SPI": "SPI0",
+}
 
 IDENT = re.compile(r"[^0-9A-Za-z_]")
 BITRANGE = re.compile(r"\[(\d+):(\d+)\]")
@@ -88,22 +100,55 @@ def collect_fields(peripheral):
     return out
 
 
+def collect_registers(peripheral):
+    """Yield (register_name, address_offset) in document order."""
+    out = []
+    for reg in peripheral.findall("./registers/register"):
+        off = reg.findtext("addressOffset")
+        out.append((reg.findtext("name"), int(off, 0) if off is not None else 0))
+    return out
+
+
+def fmt_base(value):
+    """Format a peripheral base address as 0xAAAA_BBBB."""
+    return f"0x{value >> 16:04X}_{value & 0xFFFF:04X}"
+
+
 def existing_constants(text):
     """Names of pub const identifiers already present in the file (outside generated block)."""
     head = text.split(BEGIN, 1)[0]
     return set(re.findall(r"pub const\s+([0-9A-Za-z_]+)\s*:", head))
 
 
-def build_block(peripheral_name, fields, reserved):
+def build_block(peripheral_name, fields, reserved, bases=None, registers=None):
     """Return the generated lines for one peripheral and report name conflicts.
 
     Every constant is fully qualified as <PERIPHERAL>_<REGISTER>_<FIELD>_LOW/_HIGH.
     When the field name repeats its register name the redundant component is
     dropped (PLL_SYS.FBDIV_INT.FBDIV_INT -> PLL_SYS_FBDIV_INT_LOW/_HIGH).
+
+    For merged peripherals `bases` lists the per-instance <NAME>_BASE constants
+    and `registers` the shared <PERIPHERAL>_<REG>_OFFSET constants; both are
+    emitted ahead of the shared field bit-range lines (mirroring PLL.rs).
     """
     used = set(reserved)
     lines = []
     warnings = []
+
+    for base_name, addr in (bases or []):
+        const = base_name + "_BASE"
+        used.add(const)
+        lines.append(f"pub const {const}:".ljust(52) + f"u32 = {fmt_base(addr)};")
+    if bases:
+        lines.append("")
+
+    for reg_name, off in (registers or []):
+        const = f"{peripheral_name}_{sanitize(reg_name)}_OFFSET"
+        used.add(const)
+        lines.append(f"pub const {const}:".ljust(52) + f"u32 = 0x{off:X};")
+    if registers:
+        lines.append("")
+
     last_reg = None
     for reg_name, fld_name, high, low in fields:
         reg = sanitize(reg_name)
@@ -140,6 +185,27 @@ def build_block(peripheral_name, fields, reserved):
     return lines, warnings
 
 
+def build_outputs(periphs):
+    """Return [(file_stem, primary_name, [alias_names])] with the MERGED map applied."""
+    merged_primary = {}
+    for stem, primary in MERGED.items():
+        aliases = [n for n, p in periphs.items()
+                   if n != primary and p.get("derivedFrom") == primary]
+        merged_primary[primary] = (stem, primary, aliases)
+    handled = set()
+    outputs = []
+    for name in periphs:
+        if name in merged_primary:
+            stem, primary, aliases = merged_primary[name]
+            outputs.append((stem, primary, aliases))
+            handled.add(primary)
+            handled.update(aliases)
+    for name in periphs:
+        if name not in handled:
+            outputs.append((name, name, []))
+    return outputs
+
+
 def main():
     periphs = {}
     root = ET.parse(SVD).getroot()
@@ -148,19 +214,29 @@ def main():
 
     total_lines = 0
     all_warnings = []
-    for name in periphs:
-        path = os.path.join(CONST_DIR, name + ".rs")
-        if not os.path.isfile(path):
-            print(f"  ! no constants file for peripheral {name} (skipped)", file=sys.stderr)
+    for stem, primary, aliases in build_outputs(periphs):
+        path = os.path.join(CONST_DIR, stem + ".rs")
+        exists = os.path.isfile(path)
+        if not exists and not aliases:
+            print(f"  ! no constants file for peripheral {primary} (skipped)", file=sys.stderr)
             continue
 
-        peripheral = resolve(periphs, name)
+        peripheral = resolve(periphs, primary)
         fields = collect_fields(peripheral)
-        with open(path, "r") as fh:
-            content = fh.read()
+
+        if aliases:
+            registers = collect_registers(peripheral)
+            bases = [(primary, int(periphs[primary].findtext("baseAddress"), 0))]
+            bases += [(a, int(periphs[a].findtext("baseAddress"), 0)) for a in aliases]
+            content = open(path).read() if exists else f"#![allow(dead_code)]\n// {stem}\n"
+        else:
+            registers = None
+            bases = None
+            with open(path, "r") as fh:
+                content = fh.read()
 
         reserved = existing_constants(content)
-        body, warnings = build_block(name, fields, reserved)
+        body, warnings = build_block(stem, fields, reserved, bases, registers)
         all_warnings += warnings
 
         block = "\n".join(
@@ -175,7 +251,7 @@ def main():
 
         n_consts = len([l for l in body if l.startswith("pub const")])
         total_lines += n_consts
-        print(f"  {name:24} fields={len(fields):4}  -> {n_consts} constants")
+        print(f"  {stem:24} fields={len(fields):4}  -> {n_consts} constants")
 
     print(f"\nTotal generated constants: {total_lines}")
     if all_warnings:
