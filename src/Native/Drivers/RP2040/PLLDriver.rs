@@ -1,6 +1,10 @@
+use crate::Util::Register::Register;
+use crate::Util::LowLevel::_poll;
+
 use crate::Native::Constants::Config::*;
 use crate::Native::Constants::RP2040::PLL::*;
-use crate::Util::Register::Register;
+
+
 
 #[derive(Clone, Copy)]
 pub struct PLLConfig {
@@ -46,28 +50,28 @@ impl PLLDriver {
         }
     }
 
-    /// TODO: Putting these fxxking reg shifts to corresponding constants files
-    pub fn init(&self, sourceFreq: u32) {
+    pub fn init(&self, sourceFreq: u32) -> bool {
+        /// Note that all fields with suffix `_PD` mean powerdown - `true` for disable, and `false` for enable
         self.cs.fieldSet(PLL_CS_REFDIV_HIGH,PLL_CS_REFDIV_LOW, self.config.refdiv);
 
         // set 125MHz for fbdiv
         self.fbdiv_int.write(self.config.fbdiv);
 
         // power up vco & pll
-        self.pwr.bitSet(PLL_PWR_PD_BIT, true);
-        self.pwr.bitSet(PLL_PWR_VCOPD_BIT, true);
+        self.pwr.bitSet(PLL_PWR_PD_BIT, false);
+        self.pwr.bitSet(PLL_PWR_VCOPD_BIT, false);
 
-        
-        while self.cs.bitGet(PLL_CS_LOCK_BIT) {
-            // Stub here
-            // not sure whether to make it noreturn
+        // Return to ROSC if lock failed
+        if !_poll(1_000_000, || self.cs.bitGet(PLL_CS_LOCK_BIT)) {
+            return false;
         }
+
         self.prim.fieldSet(PLL_PRIM_POSTDIV1_HIGH, PLL_PRIM_POSTDIV1_LOW, self.config.postdiv1);
         self.prim.fieldSet(PLL_PRIM_POSTDIV2_HIGH, PLL_PRIM_POSTDIV2_LOW, self.config.postdiv2);
 
-        // power up post dividers
-        let postdivShift: u32 = 0x3;
-        self.prim.bitSet(postdivShift, true);
+        self.pwr.bitSet(PLL_PWR_POSTDIVPD_BIT, false);
+
+        return true;
     }
 
     pub fn isLocked(&self) -> bool {

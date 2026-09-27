@@ -3,6 +3,7 @@ use crate::Kernel::Drivers::ClockDriver::*;
 use crate::Native::Drivers::RP2040::PLLDriver::*;
 use crate::Native::Constants::RP2040::ROSC::*;
 use crate::Native::Constants::RP2040::CLOCKS::*;
+use crate::Native::Constants::RP2040::Config::ROSC_BASE_FREQ;
 use crate::Util::Register::Register;
 
 pub struct _ROSCDriver {
@@ -36,6 +37,8 @@ impl ClockDriver for _ROSCDriver {
 
     fn disable(&self, domain: ClockDomain) {
         match domain {
+            // clk_ref must run continuously, it cannot be disabled.
+            ClockDomain::Reference => return (),
             ClockDomain::System => return (),
             ClockDomain::Peripherals => {
                         let clockPeriCtrl = Register::new(CLOCKS_CLK_PERI_CTRL);
@@ -43,7 +46,7 @@ impl ClockDriver for _ROSCDriver {
             },
             ClockDomain::USB => {
                 let clockUSBCtrl = Register::new(CLOCKS_CLK_USB_CTRL);
-                clockUSBCtrl.bitSet(CLOCKS_CLK_USB_CTRL_ENABLE_BIT, false);
+                clockUSBCtrl.bitSet(CLOCKS_CLK_CTRL_ENABLE_BIT, false);
             },
         }
     }
@@ -54,15 +57,10 @@ impl ClockDriver for _ROSCDriver {
 
     fn getFrequency(&self, domain: ClockDomain) -> u32 {
         match domain {
-            ClockDomain::System => {
-                return 0;
-            },
-            ClockDomain::Peripherals => {
-                return 0;
-            },
-            ClockDomain::USB => {
-                return 0;
-            }
+            ClockDomain::Reference => return ROSC_BASE_FREQ,
+            ClockDomain::System => return ROSC_BASE_FREQ,
+            ClockDomain::Peripherals => return ROSC_BASE_FREQ,
+            ClockDomain::USB => return 0,
         }
     }
 }

@@ -14,7 +14,10 @@ impl<DriverType: TimerDriver> Service for TimerService<DriverType> {
 }
 
 impl<DriverType: TimerDriver> TimerService<DriverType>  {
-    pub fn new(driver: DriverType) -> Self {
+    pub fn new(driver: DriverType, refFreq: u32) -> Self {
+        if !driver.init(refFreq) {
+            panic!("Timer service initialization Failed")
+        }
         Self {
             driver
         }

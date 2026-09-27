@@ -1,4 +1,5 @@
 use crate::Util::Register::Register;
+use crate::Util::LowLevel::_poll;
 use crate::Kernel::Drivers::ClockDriver::*;
 
 use crate::Native::Constants::RP2040::CLOCKS::*;
@@ -17,45 +18,60 @@ pub struct _XOSCDriver {
     xoscStartup : Register
 }
 
-/// private tool poll()
-/// used before clock system successfully initialized
-/// at this point, we cannot trust hardware tick counter
-fn poll(count: u32, func: impl Fn() -> bool) -> bool {
-    let mut counter = count;
-    while !func() {
-        counter -= 1;
-        core::hint::spin_loop();
-        if counter == 0 {
-            return false;
-        }
-    }
-    return true;
-}
-
 impl ClockDriver for _XOSCDriver {
     fn init(&self) -> bool {
-        // XOSC enable
-        self.xoscCtrl.write(XOSC_CTRL_ENABLE_ENABLE);
-        // TODO: Figure out exact startup delay
-        if !poll(10000, || self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT)) {
+        // Program the crystal startup delay BEFORE enabling the oscillator.
+        // With the reset value (0) the STABLE flag can assert almost
+        // immediately - i.e. before the crystal actually oscillates. clk_ref
+        // is then switched onto XOSC, so a not-yet-running crystal leaves
+        // clk_ref dead and the watchdog tick / TIMER stop counting.
+        // Recommended delay: (freq_Hz / 1000) + 128 XOSC cycles.
+        let startupDelay: u32 = (XOSC_BASE_FREQ / 1000) + 128;
+        self.xoscStartup.fieldSet(XOSC_STARTUP_DELAY_HIGH,
+                                  XOSC_STARTUP_DELAY_LOW,
+                                  startupDelay);
+
+        self.xoscCtrl.fieldSet(XOSC_CTRL_FREQ_RANGE_HIGH, 
+                               XOSC_CTRL_FREQ_RANGE_LOW, 
+                               XOSC_CTRL_FREQ_RANGE_1_15MHZ);
+        self.xoscCtrl.fieldSet(XOSC_CTRL_ENABLE_HIGH,
+                               XOSC_CTRL_ENABLE_LOW,
+                               XOSC_CTRL_ENABLE_ENABLE);
+
+        // Give the crystal enough time to come up before trusting STABLE.
+        if !_poll(100_000, || self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT)) {
             return false;
         }
 
-        // init clk_ref
+        // Migrate clk_ref from the ring oscillator to the crystal.
+        //
+        // clk_ref is the parent of clk_tick, which clocks the watchdog tick
+        // generator and with it the whole TIMER/SysTick time base. The switch
+        // is therefore only safe while the crystal is demonstrably alive: on
+        // any doubt fall back to the ROSC, because a dead clk_ref kills the
+        // time base silently (clk_sys still comes from the PLL, so the CPU
+        // keeps running while WATCHDOG_TICK writes stop landing and
+        // TIMELR/TIMEHR read back as 0).
         let clockRefCtrl = Register::new(CLOCKS_CLK_REF_CTRL);
-        clockRefCtrl.fieldSet(CLOCKS_CLK_REF_CTRL_SRC_HIGH, 
-                               CLOCKS_CLK_REF_CTRL_SRC_LOW,
-                                CLOCKS_CLK_REF_XOSC_SRC);
-        {
-            let status = Register::new(CLOCKS_CLK_REF_SELECTED);
-            if !poll(10000, || status.bitGet(CLOCKS_CLK_REF_XOSC_SRC)) {
-                return false;
-            }
+        let clockRefSelected = Register::new(CLOCKS_CLK_REF_SELECTED);
+        clockRefCtrl.fieldSet(CLOCKS_CLK_REF_CTRL_SRC_HIGH,
+                              CLOCKS_CLK_REF_CTRL_SRC_LOW,
+                              CLOCKS_CLK_REF_XOSC_SRC);
+        
+        // Check if XOSC died
+        if !_poll(10_000, || clockRefSelected.bitGet(CLOCKS_CLK_REF_XOSC_SRC))
+        || !self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT) {
+            // the cleanup work will be done at ROSCDriver.init();
+            return false;
         }
 
         // init pll_usb & pll_sys
-        self.pllSysDriver.init(XOSC_BASE_FREQ);
-        self.pllUSBDriver.init(XOSC_BASE_FREQ);
+        if !self.pllSysDriver.init(XOSC_BASE_FREQ) {
+            return false;
+        }
+        if !self.pllUSBDriver.init(XOSC_BASE_FREQ) {
+            return false;
+        }
 
         // verify all plls
         if (!self.pllSysDriver.isLocked() || !self.pllUSBDriver.isLocked()) {
@@ -85,10 +101,10 @@ impl ClockDriver for _XOSCDriver {
 
         // init clk_usb
         let clockUSBCtrl = Register::new(CLOCKS_CLK_USB_CTRL);
-        clockUSBCtrl.fieldSet(CLOCKS_CLK_USB_CTRL_AUXSRC_HIGH, 
-                               CLOCKS_CLK_USB_CTRL_AUXSRC_LOW, 
+        clockUSBCtrl.fieldSet(CLOCKS_CLK_CTRL_AUXSRC_HIGH, 
+                               CLOCKS_CLK_CTRL_AUXSRC_LOW, 
                                 CLOCKS_CLK_USB_PLL_USB_AUXSOURCE);
-        clockUSBCtrl.bitSet(CLOCKS_CLK_USB_CTRL_ENABLE_BIT, true);
+        clockUSBCtrl.bitSet(CLOCKS_CLK_CTRL_ENABLE_BIT, true);
         
         return self.verifyClocks();
     }
@@ -96,6 +112,8 @@ impl ClockDriver for _XOSCDriver {
     fn disable(&self, domain: ClockDomain) {
         // TODO: Implement disable xosc source itself, not only clk_*
         match domain {
+            // clk_ref must run continuously, it cannot be disabled.
+            ClockDomain::Reference => return (),
             ClockDomain::System => return (),
             ClockDomain::Peripherals => {
                         let clockPeriCtrl = Register::new(CLOCKS_CLK_PERI_CTRL);
@@ -103,7 +121,7 @@ impl ClockDriver for _XOSCDriver {
             },
             ClockDomain::USB => {
                 let clockUSBCtrl = Register::new(CLOCKS_CLK_USB_CTRL);
-                clockUSBCtrl.bitSet(CLOCKS_CLK_USB_CTRL_ENABLE_BIT, false);
+                clockUSBCtrl.bitSet(CLOCKS_CLK_CTRL_ENABLE_BIT, false);
             },
         }
     }
@@ -112,8 +130,12 @@ impl ClockDriver for _XOSCDriver {
         return true;
     }
 
+    /// Return corresponded clock's frequency in Hz
     fn getFrequency(&self, domain: ClockDomain) -> u32 {
         match domain {
+            // This driver is only selected when init() successfully migrated
+            // clk_ref onto the crystal, so the reference really is the XOSC.
+            ClockDomain::Reference => return XOSC_BASE_FREQ,
             ClockDomain::System => return self.pllSysDriver.getFrequency(XOSC_BASE_FREQ),
             ClockDomain::Peripherals => return self.pllSysDriver.getFrequency(XOSC_BASE_FREQ),
             ClockDomain::USB => return self.pllUSBDriver.getFrequency(XOSC_BASE_FREQ),
@@ -176,7 +198,7 @@ impl _XOSCDriver {
         );
 
         // Wait for measurement to finish.
-        if !poll(10000, || {
+        if !_poll(10000, || {
             fc0Status.bitGet(CLOCKS_FC0_STATUS_DONE_BIT)
         }) {
             return false;
@@ -194,8 +216,8 @@ impl _XOSCDriver {
         {
             let clockSysCtrl = Register::new(CLOCKS_CLK_SYS_CTRL);
             let status = Register::new(CLOCKS_CLK_SYS_SELECTED);
-            if !poll(1000, || {
-                return (clockSysCtrl.fieldGet(CLOCKS_CLK_ADC_CTRL_AUXSRC_HIGH, CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW) == CLOCKS_CLK_SYS_PLL_SYS_AUXSOURCE)
+            if !_poll(1000, || {
+                return (clockSysCtrl.fieldGet(CLOCKS_CLK_SYS_CTRL_AUXSRC_HIGH, CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW) == CLOCKS_CLK_SYS_PLL_SYS_AUXSOURCE)
                        && (status.bitGet(CLOCKS_CLK_SYS_CLK_SYS_AUX_SRC));
             }) {
                 return false;
@@ -203,7 +225,7 @@ impl _XOSCDriver {
         }
         {
             let status = Register::new(CLOCKS_CLK_PERI_SELECTED);
-            if !poll(10000, || status.bitGet(CLOCKS_CLK_PERI_PLL_SYS_AUXSOURCE)) {
+            if !_poll(10000, || status.bitGet(CLOCKS_CLK_PERI_PLL_SYS_AUXSOURCE)) {
                 return false;
             }
         }
@@ -211,12 +233,12 @@ impl _XOSCDriver {
         let expectedPllSys = self.pllSysDriver.getFrequency(XOSC_BASE_FREQ) / 1000;
         let expectedPllUsb = self.pllUSBDriver.getFrequency(XOSC_BASE_FREQ) / 1000;
 
-        return self.measureFrequency(CLOCKS_FC_SRC_XOSC_CLKSRC, expectedXosc)
-            && self.measureFrequency(CLOCKS_FC_SRC_CLK_REF, expectedXosc)
-            && self.measureFrequency(CLOCKS_FC_SRC_PLL_SYS_CLKSRC_PRIMARY, expectedPllSys)
-            && self.measureFrequency(CLOCKS_FC_SRC_PLL_USB_CLKSRC_PRIMARY, expectedPllUsb)
-            && self.measureFrequency(CLOCKS_FC_SRC_CLK_SYS, expectedPllSys)
-            && self.measureFrequency(CLOCKS_FC_SRC_CLK_PERI, expectedPllSys)
-            && self.measureFrequency(CLOCKS_FC_SRC_CLK_USB, expectedPllUsb);     
+        return self.measureFrequency(CLOCKS_FC0_SRC_XOSC_CLKSRC, expectedXosc)
+            && self.measureFrequency(CLOCKS_FC0_SRC_CLK_REF, expectedXosc)
+            && self.measureFrequency(CLOCKS_FC0_SRC_PLL_SYS_CLKSRC_PRIMARY, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC0_SRC_PLL_USB_CLKSRC_PRIMARY, expectedPllUsb)
+            && self.measureFrequency(CLOCKS_FC0_SRC_CLK_SYS, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC0_SRC_CLK_PERI, expectedPllSys)
+            && self.measureFrequency(CLOCKS_FC0_SRC_CLK_USB, expectedPllUsb);     
     }
 }

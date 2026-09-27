@@ -2,14 +2,17 @@ use crate::Util::Register::Register;
 
 use crate::Native::Constants::RP2040::RESETS::*;
 
+/// Low-level boot init.
 pub fn _init() {
     let reset = Register::new(RESETS_RESET);
-
     let resetDone = Register::new(RESETS_RESET_DONE);
 
-    // release IO_BANK0 reset
-    reset.bitSet(RESETS_RESET_IO_BANK0_BIT, false);
+    // Release every peripheral from reset explicitly. (for debug purposes)
+    reset.write(0);
 
-    // wait until reset is released
-    while !resetDone.bitGet(RESETS_RESET_DONE_IO_BANK0_BIT) {}
+    // Wait for the peripherals the kernel touches to actually come out of reset.
+    while !(resetDone.bitGet(RESETS_RESET_DONE_IO_BANK0_BIT)
+        && resetDone.bitGet(RESETS_RESET_DONE_PADS_BANK0_BIT)
+        && resetDone.bitGet(RESETS_RESET_DONE_TIMER_BIT))
+    {}
 }
