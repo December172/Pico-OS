@@ -1,0 +1,77 @@
+#![allow(dead_code)]
+// GLITCH_DETECTOR
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2350.svd -- do not edit by hand.
+
+pub const GLITCH_DETECTOR_BASE:                     u32 = 0x4015_8000;
+
+pub const GLITCH_DETECTOR_ARM:                      u32 = GLITCH_DETECTOR_BASE + 0x0;
+pub const GLITCH_DETECTOR_DISARM:                   u32 = GLITCH_DETECTOR_BASE + 0x4;
+pub const GLITCH_DETECTOR_SENSITIVITY:              u32 = GLITCH_DETECTOR_BASE + 0x8;
+pub const GLITCH_DETECTOR_LOCK:                     u32 = GLITCH_DETECTOR_BASE + 0xC;
+pub const GLITCH_DETECTOR_TRIG_STATUS:              u32 = GLITCH_DETECTOR_BASE + 0x10;
+pub const GLITCH_DETECTOR_TRIG_FORCE:               u32 = GLITCH_DETECTOR_BASE + 0x14;
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
+
+// ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
+// Generated from specs/RP2350.svd -- do not edit by hand.
+
+// ARM
+pub const GLITCH_DETECTOR_ARM_LOW:                  u32 = 0;
+pub const GLITCH_DETECTOR_ARM_HIGH:                 u32 = 15;
+
+// DISARM
+pub const GLITCH_DETECTOR_DISARM_LOW:               u32 = 0;
+pub const GLITCH_DETECTOR_DISARM_HIGH:              u32 = 15;
+
+// SENSITIVITY
+pub const GLITCH_DETECTOR_SENSITIVITY_DEFAULT_LOW:  u32 = 24;
+pub const GLITCH_DETECTOR_SENSITIVITY_DEFAULT_HIGH: u32 = 31;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET3_INV_LOW: u32 = 14;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET3_INV_HIGH:u32 = 15;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET2_INV_LOW: u32 = 12;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET2_INV_HIGH:u32 = 13;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET1_INV_LOW: u32 = 10;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET1_INV_HIGH:u32 = 11;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET0_INV_LOW: u32 = 8;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET0_INV_HIGH:u32 = 9;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET3_LOW:     u32 = 6;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET3_HIGH:    u32 = 7;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET2_LOW:     u32 = 4;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET2_HIGH:    u32 = 5;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET1_LOW:     u32 = 2;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET1_HIGH:    u32 = 3;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET0_LOW:     u32 = 0;
+pub const GLITCH_DETECTOR_SENSITIVITY_DET0_HIGH:    u32 = 1;
+
+// LOCK
+pub const GLITCH_DETECTOR_LOCK_LOW:                 u32 = 0;
+pub const GLITCH_DETECTOR_LOCK_HIGH:                u32 = 7;
+
+// TRIG_STATUS
+pub const GLITCH_DETECTOR_TRIG_STATUS_DET3_BIT:     u32 = 3;
+pub const GLITCH_DETECTOR_TRIG_STATUS_DET2_BIT:     u32 = 2;
+pub const GLITCH_DETECTOR_TRIG_STATUS_DET1_BIT:     u32 = 1;
+pub const GLITCH_DETECTOR_TRIG_STATUS_DET0_BIT:     u32 = 0;
+
+// TRIG_FORCE
+pub const GLITCH_DETECTOR_TRIG_FORCE_LOW:           u32 = 0;
+pub const GLITCH_DETECTOR_TRIG_FORCE_HIGH:          u32 = 3;
+// ==== END AUTO-GENERATED FIELD BIT RANGES ====
+
+// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====
+// Generated from specs/RP2350.svd -- do not edit by hand.
+
+// ARM: ARM
+pub const GLITCH_DETECTOR_ARM_NO:                   u32 = 0x5BAD;
+pub const GLITCH_DETECTOR_ARM_YES:                  u32 = 0x0;
+
+// DISARM: DISARM
+pub const GLITCH_DETECTOR_DISARM_NO:                u32 = 0x0;
+pub const GLITCH_DETECTOR_DISARM_YES:               u32 = 0xDCAF;
+
+// SENSITIVITY: DEFAULT
+pub const GLITCH_DETECTOR_SENSITIVITY_DEFAULT_YES:  u32 = 0x0;
+pub const GLITCH_DETECTOR_SENSITIVITY_DEFAULT_NO:   u32 = 0xDE;
+// ==== END AUTO-GENERATED ENUMERATED VALUES ====

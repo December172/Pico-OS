@@ -1,15 +1,23 @@
 #![allow(dead_code)]
 // BUSCTRL
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
 pub const BUSCTRL_BASE:                             u32 = 0x4003_0000;
+
 pub const BUSCTRL_BUS_PRIORITY:                     u32 = BUSCTRL_BASE + 0x0;
 pub const BUSCTRL_BUS_PRIORITY_ACK:                 u32 = BUSCTRL_BASE + 0x4;
+// PERFCTR0..PERFCTR3
 pub fn BUSCTRL_PERFCTR(n: u32) -> u32 {
-    return BUSCTRL_BASE + 0x8 + n * 8
+    return BUSCTRL_BASE + 0x8 + n * 0x8
 }
 
+// PERFSEL0..PERFSEL3
 pub fn BUSCTRL_PERFSEL(n: u32) -> u32 {
-    return BUSCTRL_BASE + 0xC + n * 8
+    return BUSCTRL_BASE + 0xC + n * 0x8
 }
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -19,32 +27,17 @@ pub const BUSCTRL_BUS_PRIORITY_DMA_W_BIT:           u32 = 12;
 pub const BUSCTRL_BUS_PRIORITY_DMA_R_BIT:           u32 = 8;
 pub const BUSCTRL_BUS_PRIORITY_PROC1_BIT:           u32 = 4;
 pub const BUSCTRL_BUS_PRIORITY_PROC0_BIT:           u32 = 0;
+
 // BUS_PRIORITY_ACK
 pub const BUSCTRL_BUS_PRIORITY_ACK_BIT:             u32 = 0;
-// PERFCTR0
-pub const BUSCTRL_PERFCTR0_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFCTR0_HIGH:                    u32 = 23;
-// PERFSEL0
-pub const BUSCTRL_PERFSEL0_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFSEL0_HIGH:                    u32 = 4;
-// PERFCTR1
-pub const BUSCTRL_PERFCTR1_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFCTR1_HIGH:                    u32 = 23;
-// PERFSEL1
-pub const BUSCTRL_PERFSEL1_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFSEL1_HIGH:                    u32 = 4;
-// PERFCTR2
-pub const BUSCTRL_PERFCTR2_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFCTR2_HIGH:                    u32 = 23;
-// PERFSEL2
-pub const BUSCTRL_PERFSEL2_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFSEL2_HIGH:                    u32 = 4;
-// PERFCTR3
-pub const BUSCTRL_PERFCTR3_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFCTR3_HIGH:                    u32 = 23;
-// PERFSEL3
-pub const BUSCTRL_PERFSEL3_LOW:                     u32 = 0;
-pub const BUSCTRL_PERFSEL3_HIGH:                    u32 = 4;
+
+// PERFCTR0, PERFCTR1, PERFCTR2, PERFCTR3
+pub const BUSCTRL_PERFCTR_LOW:                      u32 = 0;
+pub const BUSCTRL_PERFCTR_HIGH:                     u32 = 23;
+
+// PERFSEL0, PERFSEL1, PERFSEL2, PERFSEL3
+pub const BUSCTRL_PERFSEL_LOW:                      u32 = 0;
+pub const BUSCTRL_PERFSEL_HIGH:                     u32 = 4;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
 
 // ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ====

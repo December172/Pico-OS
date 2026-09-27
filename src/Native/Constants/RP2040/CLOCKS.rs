@@ -1,18 +1,26 @@
 #![allow(dead_code)]
 // CLOCKS
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
 pub const CLOCKS_BASE:                              u32 = 0x4000_8000;
-pub const CLOCKS_CLK_GPOUT0_CTRL:                   u32 = CLOCKS_BASE + 0x0;
-pub const CLOCKS_CLK_GPOUT0_DIV:                    u32 = CLOCKS_BASE + 0x4;
-pub const CLOCKS_CLK_GPOUT0_SELECTED:               u32 = CLOCKS_BASE + 0x8;
-pub const CLOCKS_CLK_GPOUT1_CTRL:                   u32 = CLOCKS_BASE + 0xC;
-pub const CLOCKS_CLK_GPOUT1_DIV:                    u32 = CLOCKS_BASE + 0x10;
-pub const CLOCKS_CLK_GPOUT1_SELECTED:               u32 = CLOCKS_BASE + 0x14;
-pub const CLOCKS_CLK_GPOUT2_CTRL:                   u32 = CLOCKS_BASE + 0x18;
-pub const CLOCKS_CLK_GPOUT2_DIV:                    u32 = CLOCKS_BASE + 0x1C;
-pub const CLOCKS_CLK_GPOUT2_SELECTED:               u32 = CLOCKS_BASE + 0x20;
-pub const CLOCKS_CLK_GPOUT3_CTRL:                   u32 = CLOCKS_BASE + 0x24;
-pub const CLOCKS_CLK_GPOUT3_DIV:                    u32 = CLOCKS_BASE + 0x28;
-pub const CLOCKS_CLK_GPOUT3_SELECTED:               u32 = CLOCKS_BASE + 0x2C;
+
+// CLK_GPOUT0_CTRL..CLK_GPOUT3_CTRL
+pub fn CLOCKS_CLK_GPOUT_CTRL(n: u32) -> u32 {
+    return CLOCKS_BASE + 0x0 + n * 0xC
+}
+
+// CLK_GPOUT0_DIV..CLK_GPOUT3_DIV
+pub fn CLOCKS_CLK_GPOUT_DIV(n: u32) -> u32 {
+    return CLOCKS_BASE + 0x4 + n * 0xC
+}
+
+// CLK_GPOUT0_SELECTED..CLK_GPOUT3_SELECTED
+pub fn CLOCKS_CLK_GPOUT_SELECTED(n: u32) -> u32 {
+    return CLOCKS_BASE + 0x8 + n * 0xC
+}
+
 pub const CLOCKS_CLK_REF_CTRL:                      u32 = CLOCKS_BASE + 0x30;
 pub const CLOCKS_CLK_REF_DIV:                       u32 = CLOCKS_BASE + 0x34;
 pub const CLOCKS_CLK_REF_SELECTED:                  u32 = CLOCKS_BASE + 0x38;
@@ -40,189 +48,118 @@ pub const CLOCKS_FC0_INTERVAL:                      u32 = CLOCKS_BASE + 0x90;
 pub const CLOCKS_FC0_SRC:                           u32 = CLOCKS_BASE + 0x94;
 pub const CLOCKS_FC0_STATUS:                        u32 = CLOCKS_BASE + 0x98;
 pub const CLOCKS_FC0_RESULT:                        u32 = CLOCKS_BASE + 0x9C;
-pub const CLOCKS_WAKE_EN0:                          u32 = CLOCKS_BASE + 0xA0;
-pub const CLOCKS_WAKE_EN1:                          u32 = CLOCKS_BASE + 0xA4;
-pub const CLOCKS_SLEEP_EN0:                         u32 = CLOCKS_BASE + 0xA8;
-pub const CLOCKS_SLEEP_EN1:                         u32 = CLOCKS_BASE + 0xAC;
-pub const CLOCKS_ENABLED0:                          u32 = CLOCKS_BASE + 0xB0;
-pub const CLOCKS_ENABLED1:                          u32 = CLOCKS_BASE + 0xB4;
+// WAKE_EN0..WAKE_EN1
+pub fn CLOCKS_WAKE_EN(n: u32) -> u32 {
+    return CLOCKS_BASE + 0xA0 + n * 0x4
+}
+
+// SLEEP_EN0..SLEEP_EN1
+pub fn CLOCKS_SLEEP_EN(ep: u32) -> u32 {
+    return CLOCKS_BASE + 0xA8 + ep * 0x4
+}
+
+// ENABLED0..ENABLED1
+pub fn CLOCKS_ENABLED(n: u32) -> u32 {
+    return CLOCKS_BASE + 0xB0 + n * 0x4
+}
+
 pub const CLOCKS_INTR:                              u32 = CLOCKS_BASE + 0xB8;
 pub const CLOCKS_INTE:                              u32 = CLOCKS_BASE + 0xBC;
 pub const CLOCKS_INTF:                              u32 = CLOCKS_BASE + 0xC0;
 pub const CLOCKS_INTS:                              u32 = CLOCKS_BASE + 0xC4;
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
 
-// CLK_GPOUT0_CTRL
-pub const CLOCKS_CLK_GPOUT0_CTRL_NUDGE_BIT:         u32 = 20;
-pub const CLOCKS_CLK_GPOUT0_CTRL_PHASE_LOW:         u32 = 16;
-pub const CLOCKS_CLK_GPOUT0_CTRL_PHASE_HIGH:        u32 = 17;
-pub const CLOCKS_CLK_GPOUT0_CTRL_DC50_BIT:          u32 = 12;
-pub const CLOCKS_CLK_GPOUT0_CTRL_ENABLE_BIT:        u32 = 11;
-pub const CLOCKS_CLK_GPOUT0_CTRL_KILL_BIT:          u32 = 10;
-pub const CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_LOW:        u32 = 5;
-pub const CLOCKS_CLK_GPOUT0_CTRL_AUXSRC_HIGH:       u32 = 8;
-// CLK_GPOUT0_DIV
-pub const CLOCKS_CLK_GPOUT0_DIV_INT_LOW:            u32 = 8;
-pub const CLOCKS_CLK_GPOUT0_DIV_INT_HIGH:           u32 = 31;
-pub const CLOCKS_CLK_GPOUT0_DIV_FRAC_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT0_DIV_FRAC_HIGH:          u32 = 7;
-// CLK_GPOUT0_SELECTED
-pub const CLOCKS_CLK_GPOUT0_SELECTED_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT0_SELECTED_HIGH:          u32 = 31;
-// CLK_GPOUT1_CTRL
-pub const CLOCKS_CLK_GPOUT1_CTRL_NUDGE_BIT:         u32 = 20;
-pub const CLOCKS_CLK_GPOUT1_CTRL_PHASE_LOW:         u32 = 16;
-pub const CLOCKS_CLK_GPOUT1_CTRL_PHASE_HIGH:        u32 = 17;
-pub const CLOCKS_CLK_GPOUT1_CTRL_DC50_BIT:          u32 = 12;
-pub const CLOCKS_CLK_GPOUT1_CTRL_ENABLE_BIT:        u32 = 11;
-pub const CLOCKS_CLK_GPOUT1_CTRL_KILL_BIT:          u32 = 10;
-pub const CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_LOW:        u32 = 5;
-pub const CLOCKS_CLK_GPOUT1_CTRL_AUXSRC_HIGH:       u32 = 8;
-// CLK_GPOUT1_DIV
-pub const CLOCKS_CLK_GPOUT1_DIV_INT_LOW:            u32 = 8;
-pub const CLOCKS_CLK_GPOUT1_DIV_INT_HIGH:           u32 = 31;
-pub const CLOCKS_CLK_GPOUT1_DIV_FRAC_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT1_DIV_FRAC_HIGH:          u32 = 7;
-// CLK_GPOUT1_SELECTED
-pub const CLOCKS_CLK_GPOUT1_SELECTED_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT1_SELECTED_HIGH:          u32 = 31;
-// CLK_GPOUT2_CTRL
-pub const CLOCKS_CLK_GPOUT2_CTRL_NUDGE_BIT:         u32 = 20;
-pub const CLOCKS_CLK_GPOUT2_CTRL_PHASE_LOW:         u32 = 16;
-pub const CLOCKS_CLK_GPOUT2_CTRL_PHASE_HIGH:        u32 = 17;
-pub const CLOCKS_CLK_GPOUT2_CTRL_DC50_BIT:          u32 = 12;
-pub const CLOCKS_CLK_GPOUT2_CTRL_ENABLE_BIT:        u32 = 11;
-pub const CLOCKS_CLK_GPOUT2_CTRL_KILL_BIT:          u32 = 10;
-pub const CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_LOW:        u32 = 5;
-pub const CLOCKS_CLK_GPOUT2_CTRL_AUXSRC_HIGH:       u32 = 8;
-// CLK_GPOUT2_DIV
-pub const CLOCKS_CLK_GPOUT2_DIV_INT_LOW:            u32 = 8;
-pub const CLOCKS_CLK_GPOUT2_DIV_INT_HIGH:           u32 = 31;
-pub const CLOCKS_CLK_GPOUT2_DIV_FRAC_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT2_DIV_FRAC_HIGH:          u32 = 7;
-// CLK_GPOUT2_SELECTED
-pub const CLOCKS_CLK_GPOUT2_SELECTED_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT2_SELECTED_HIGH:          u32 = 31;
-// CLK_GPOUT3_CTRL
-pub const CLOCKS_CLK_GPOUT3_CTRL_NUDGE_BIT:         u32 = 20;
-pub const CLOCKS_CLK_GPOUT3_CTRL_PHASE_LOW:         u32 = 16;
-pub const CLOCKS_CLK_GPOUT3_CTRL_PHASE_HIGH:        u32 = 17;
-pub const CLOCKS_CLK_GPOUT3_CTRL_DC50_BIT:          u32 = 12;
-pub const CLOCKS_CLK_GPOUT3_CTRL_ENABLE_BIT:        u32 = 11;
-pub const CLOCKS_CLK_GPOUT3_CTRL_KILL_BIT:          u32 = 10;
-pub const CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_LOW:        u32 = 5;
-pub const CLOCKS_CLK_GPOUT3_CTRL_AUXSRC_HIGH:       u32 = 8;
-// CLK_GPOUT3_DIV
-pub const CLOCKS_CLK_GPOUT3_DIV_INT_LOW:            u32 = 8;
-pub const CLOCKS_CLK_GPOUT3_DIV_INT_HIGH:           u32 = 31;
-pub const CLOCKS_CLK_GPOUT3_DIV_FRAC_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT3_DIV_FRAC_HIGH:          u32 = 7;
-// CLK_GPOUT3_SELECTED
-pub const CLOCKS_CLK_GPOUT3_SELECTED_LOW:           u32 = 0;
-pub const CLOCKS_CLK_GPOUT3_SELECTED_HIGH:          u32 = 31;
+// CLK_GPOUT0_CTRL, CLK_GPOUT1_CTRL, CLK_GPOUT2_CTRL, CLK_GPOUT3_CTRL
+pub const CLOCKS_CLK_GPOUT_CTRL_NUDGE_BIT:          u32 = 20;
+pub const CLOCKS_CLK_GPOUT_CTRL_PHASE_LOW:          u32 = 16;
+pub const CLOCKS_CLK_GPOUT_CTRL_PHASE_HIGH:         u32 = 17;
+pub const CLOCKS_CLK_GPOUT_CTRL_DC50_BIT:           u32 = 12;
+pub const CLOCKS_CLK_GPOUT_CTRL_ENABLE_BIT:         u32 = 11;
+pub const CLOCKS_CLK_GPOUT_CTRL_KILL_BIT:           u32 = 10;
+pub const CLOCKS_CLK_GPOUT_CTRL_AUXSRC_LOW:         u32 = 5;
+pub const CLOCKS_CLK_GPOUT_CTRL_AUXSRC_HIGH:        u32 = 8;
+
+// CLK_GPOUT0_DIV, CLK_GPOUT1_DIV, CLK_GPOUT2_DIV, CLK_GPOUT3_DIV, CLK_SYS_DIV, CLK_RTC_DIV
+pub const CLOCKS_CLK_DIV_INT_LOW:                   u32 = 8;
+pub const CLOCKS_CLK_DIV_INT_HIGH:                  u32 = 31;
+pub const CLOCKS_CLK_DIV_FRAC_LOW:                  u32 = 0;
+pub const CLOCKS_CLK_DIV_FRAC_HIGH:                 u32 = 7;
+
 // CLK_REF_CTRL
 pub const CLOCKS_CLK_REF_CTRL_AUXSRC_LOW:           u32 = 5;
 pub const CLOCKS_CLK_REF_CTRL_AUXSRC_HIGH:          u32 = 6;
 pub const CLOCKS_CLK_REF_CTRL_SRC_LOW:              u32 = 0;
 pub const CLOCKS_CLK_REF_CTRL_SRC_HIGH:             u32 = 1;
+
 // CLK_REF_DIV
 pub const CLOCKS_CLK_REF_DIV_INT_LOW:               u32 = 8;
 pub const CLOCKS_CLK_REF_DIV_INT_HIGH:              u32 = 9;
-// CLK_REF_SELECTED
-pub const CLOCKS_CLK_REF_SELECTED_LOW:              u32 = 0;
-pub const CLOCKS_CLK_REF_SELECTED_HIGH:             u32 = 31;
+
+// CLK_USB_DIV
+pub const CLOCKS_CLK_USB_DIV_INT_LOW:               u32 = 8;
+pub const CLOCKS_CLK_USB_DIV_INT_HIGH:              u32 = 9;
+
+// CLK_ADC_DIV
+pub const CLOCKS_CLK_ADC_DIV_INT_LOW:               u32 = 8;
+pub const CLOCKS_CLK_ADC_DIV_INT_HIGH:              u32 = 9;
+
 // CLK_SYS_CTRL
 pub const CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW:           u32 = 5;
 pub const CLOCKS_CLK_SYS_CTRL_AUXSRC_HIGH:          u32 = 7;
 pub const CLOCKS_CLK_SYS_CTRL_SRC_BIT:              u32 = 0;
-// CLK_SYS_DIV
-pub const CLOCKS_CLK_SYS_DIV_INT_LOW:               u32 = 8;
-pub const CLOCKS_CLK_SYS_DIV_INT_HIGH:              u32 = 31;
-pub const CLOCKS_CLK_SYS_DIV_FRAC_LOW:              u32 = 0;
-pub const CLOCKS_CLK_SYS_DIV_FRAC_HIGH:             u32 = 7;
-// CLK_SYS_SELECTED
-pub const CLOCKS_CLK_SYS_SELECTED_LOW:              u32 = 0;
-pub const CLOCKS_CLK_SYS_SELECTED_HIGH:             u32 = 31;
+
 // CLK_PERI_CTRL
 pub const CLOCKS_CLK_PERI_CTRL_ENABLE_BIT:          u32 = 11;
 pub const CLOCKS_CLK_PERI_CTRL_KILL_BIT:            u32 = 10;
 pub const CLOCKS_CLK_PERI_CTRL_AUXSRC_LOW:          u32 = 5;
 pub const CLOCKS_CLK_PERI_CTRL_AUXSRC_HIGH:         u32 = 7;
-// CLK_PERI_SELECTED
-pub const CLOCKS_CLK_PERI_SELECTED_LOW:             u32 = 0;
-pub const CLOCKS_CLK_PERI_SELECTED_HIGH:            u32 = 31;
-// CLK_USB_CTRL
-pub const CLOCKS_CLK_USB_CTRL_NUDGE_BIT:            u32 = 20;
-pub const CLOCKS_CLK_USB_CTRL_PHASE_LOW:            u32 = 16;
-pub const CLOCKS_CLK_USB_CTRL_PHASE_HIGH:           u32 = 17;
-pub const CLOCKS_CLK_USB_CTRL_ENABLE_BIT:           u32 = 11;
-pub const CLOCKS_CLK_USB_CTRL_KILL_BIT:             u32 = 10;
-pub const CLOCKS_CLK_USB_CTRL_AUXSRC_LOW:           u32 = 5;
-pub const CLOCKS_CLK_USB_CTRL_AUXSRC_HIGH:          u32 = 7;
-// CLK_USB_DIV
-pub const CLOCKS_CLK_USB_DIV_INT_LOW:               u32 = 8;
-pub const CLOCKS_CLK_USB_DIV_INT_HIGH:              u32 = 9;
-// CLK_USB_SELECTED
-pub const CLOCKS_CLK_USB_SELECTED_LOW:              u32 = 0;
-pub const CLOCKS_CLK_USB_SELECTED_HIGH:             u32 = 31;
-// CLK_ADC_CTRL
-pub const CLOCKS_CLK_ADC_CTRL_NUDGE_BIT:            u32 = 20;
-pub const CLOCKS_CLK_ADC_CTRL_PHASE_LOW:            u32 = 16;
-pub const CLOCKS_CLK_ADC_CTRL_PHASE_HIGH:           u32 = 17;
-pub const CLOCKS_CLK_ADC_CTRL_ENABLE_BIT:           u32 = 11;
-pub const CLOCKS_CLK_ADC_CTRL_KILL_BIT:             u32 = 10;
-pub const CLOCKS_CLK_ADC_CTRL_AUXSRC_LOW:           u32 = 5;
-pub const CLOCKS_CLK_ADC_CTRL_AUXSRC_HIGH:          u32 = 7;
-// CLK_ADC_DIV
-pub const CLOCKS_CLK_ADC_DIV_INT_LOW:               u32 = 8;
-pub const CLOCKS_CLK_ADC_DIV_INT_HIGH:              u32 = 9;
-// CLK_ADC_SELECTED
-pub const CLOCKS_CLK_ADC_SELECTED_LOW:              u32 = 0;
-pub const CLOCKS_CLK_ADC_SELECTED_HIGH:             u32 = 31;
-// CLK_RTC_CTRL
-pub const CLOCKS_CLK_RTC_CTRL_NUDGE_BIT:            u32 = 20;
-pub const CLOCKS_CLK_RTC_CTRL_PHASE_LOW:            u32 = 16;
-pub const CLOCKS_CLK_RTC_CTRL_PHASE_HIGH:           u32 = 17;
-pub const CLOCKS_CLK_RTC_CTRL_ENABLE_BIT:           u32 = 11;
-pub const CLOCKS_CLK_RTC_CTRL_KILL_BIT:             u32 = 10;
-pub const CLOCKS_CLK_RTC_CTRL_AUXSRC_LOW:           u32 = 5;
-pub const CLOCKS_CLK_RTC_CTRL_AUXSRC_HIGH:          u32 = 7;
-// CLK_RTC_DIV
-pub const CLOCKS_CLK_RTC_DIV_INT_LOW:               u32 = 8;
-pub const CLOCKS_CLK_RTC_DIV_INT_HIGH:              u32 = 31;
-pub const CLOCKS_CLK_RTC_DIV_FRAC_LOW:              u32 = 0;
-pub const CLOCKS_CLK_RTC_DIV_FRAC_HIGH:             u32 = 7;
-// CLK_RTC_SELECTED
-pub const CLOCKS_CLK_RTC_SELECTED_LOW:              u32 = 0;
-pub const CLOCKS_CLK_RTC_SELECTED_HIGH:             u32 = 31;
+
+// CLK_USB_CTRL, CLK_ADC_CTRL, CLK_RTC_CTRL
+pub const CLOCKS_CLK_CTRL_NUDGE_BIT:                u32 = 20;
+pub const CLOCKS_CLK_CTRL_PHASE_LOW:                u32 = 16;
+pub const CLOCKS_CLK_CTRL_PHASE_HIGH:               u32 = 17;
+pub const CLOCKS_CLK_CTRL_ENABLE_BIT:               u32 = 11;
+pub const CLOCKS_CLK_CTRL_KILL_BIT:                 u32 = 10;
+pub const CLOCKS_CLK_CTRL_AUXSRC_LOW:               u32 = 5;
+pub const CLOCKS_CLK_CTRL_AUXSRC_HIGH:              u32 = 7;
+
 // CLK_SYS_RESUS_CTRL
 pub const CLOCKS_CLK_SYS_RESUS_CTRL_CLEAR_BIT:      u32 = 16;
 pub const CLOCKS_CLK_SYS_RESUS_CTRL_FRCE_BIT:       u32 = 12;
 pub const CLOCKS_CLK_SYS_RESUS_CTRL_ENABLE_BIT:     u32 = 8;
 pub const CLOCKS_CLK_SYS_RESUS_CTRL_TIMEOUT_LOW:    u32 = 0;
 pub const CLOCKS_CLK_SYS_RESUS_CTRL_TIMEOUT_HIGH:   u32 = 7;
+
 // CLK_SYS_RESUS_STATUS
 pub const CLOCKS_CLK_SYS_RESUS_STATUS_RESUSSED_BIT: u32 = 0;
+
 // FC0_REF_KHZ
 pub const CLOCKS_FC0_REF_KHZ_LOW:                   u32 = 0;
 pub const CLOCKS_FC0_REF_KHZ_HIGH:                  u32 = 19;
+
 // FC0_MIN_KHZ
 pub const CLOCKS_FC0_MIN_KHZ_LOW:                   u32 = 0;
 pub const CLOCKS_FC0_MIN_KHZ_HIGH:                  u32 = 24;
+
 // FC0_MAX_KHZ
 pub const CLOCKS_FC0_MAX_KHZ_LOW:                   u32 = 0;
 pub const CLOCKS_FC0_MAX_KHZ_HIGH:                  u32 = 24;
+
 // FC0_DELAY
 pub const CLOCKS_FC0_DELAY_LOW:                     u32 = 0;
 pub const CLOCKS_FC0_DELAY_HIGH:                    u32 = 2;
+
 // FC0_INTERVAL
 pub const CLOCKS_FC0_INTERVAL_LOW:                  u32 = 0;
 pub const CLOCKS_FC0_INTERVAL_HIGH:                 u32 = 3;
+
 // FC0_SRC
 pub const CLOCKS_FC0_SRC_LOW:                       u32 = 0;
 pub const CLOCKS_FC0_SRC_HIGH:                      u32 = 7;
+
 // FC0_STATUS
 pub const CLOCKS_FC0_STATUS_DIED_BIT:               u32 = 28;
 pub const CLOCKS_FC0_STATUS_FAST_BIT:               u32 = 24;
@@ -232,19 +169,21 @@ pub const CLOCKS_FC0_STATUS_WAITING_BIT:            u32 = 12;
 pub const CLOCKS_FC0_STATUS_RUNNING_BIT:            u32 = 8;
 pub const CLOCKS_FC0_STATUS_DONE_BIT:               u32 = 4;
 pub const CLOCKS_FC0_STATUS_PASS_BIT:               u32 = 0;
+
 // FC0_RESULT
 pub const CLOCKS_FC0_RESULT_KHZ_LOW:                u32 = 5;
 pub const CLOCKS_FC0_RESULT_KHZ_HIGH:               u32 = 29;
 pub const CLOCKS_FC0_RESULT_FRAC_LOW:               u32 = 0;
 pub const CLOCKS_FC0_RESULT_FRAC_HIGH:              u32 = 4;
+
 // WAKE_EN0
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SRAM3_BIT:        u32 = 31;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SRAM2_BIT:        u32 = 30;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SRAM1_BIT:        u32 = 29;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SRAM0_BIT:        u32 = 28;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SPI1_BIT:         u32 = 27;
-pub const CLOCKS_WAKE_EN0_CLK_PERI_SPI1_BIT:        u32 = 26;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SPI0_BIT:         u32 = 25;
+pub const CLOCKS_WAKE_EN0_CLK_PERI_SPI1_BIT:        u32 = 26;
 pub const CLOCKS_WAKE_EN0_CLK_PERI_SPI0_BIT:        u32 = 24;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_SIO_BIT:          u32 = 23;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_RTC_BIT:          u32 = 22;
@@ -270,30 +209,15 @@ pub const CLOCKS_WAKE_EN0_CLK_SYS_BUSCTRL_BIT:      u32 = 3;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_ADC_BIT:          u32 = 2;
 pub const CLOCKS_WAKE_EN0_CLK_ADC_ADC_BIT:          u32 = 1;
 pub const CLOCKS_WAKE_EN0_CLK_SYS_CLOCKS_BIT:       u32 = 0;
-// WAKE_EN1
-pub const CLOCKS_WAKE_EN1_CLK_SYS_XOSC_BIT:         u32 = 14;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_XIP_BIT:          u32 = 13;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_WATCHDOG_BIT:     u32 = 12;
-pub const CLOCKS_WAKE_EN1_CLK_USB_USBCTRL_BIT:      u32 = 11;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_USBCTRL_BIT:      u32 = 10;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_UART1_BIT:        u32 = 9;
-pub const CLOCKS_WAKE_EN1_CLK_PERI_UART1_BIT:       u32 = 8;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_UART0_BIT:        u32 = 7;
-pub const CLOCKS_WAKE_EN1_CLK_PERI_UART0_BIT:       u32 = 6;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_TIMER_BIT:        u32 = 5;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_TBMAN_BIT:        u32 = 4;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_SYSINFO_BIT:      u32 = 3;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_SYSCFG_BIT:       u32 = 2;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_SRAM5_BIT:        u32 = 1;
-pub const CLOCKS_WAKE_EN1_CLK_SYS_SRAM4_BIT:        u32 = 0;
+
 // SLEEP_EN0
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SRAM3_BIT:       u32 = 31;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SRAM2_BIT:       u32 = 30;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SRAM1_BIT:       u32 = 29;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SRAM0_BIT:       u32 = 28;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SPI1_BIT:        u32 = 27;
-pub const CLOCKS_SLEEP_EN0_CLK_PERI_SPI1_BIT:       u32 = 26;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SPI0_BIT:        u32 = 25;
+pub const CLOCKS_SLEEP_EN0_CLK_PERI_SPI1_BIT:       u32 = 26;
 pub const CLOCKS_SLEEP_EN0_CLK_PERI_SPI0_BIT:       u32 = 24;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_SIO_BIT:         u32 = 23;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_RTC_BIT:         u32 = 22;
@@ -319,30 +243,15 @@ pub const CLOCKS_SLEEP_EN0_CLK_SYS_BUSCTRL_BIT:     u32 = 3;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_ADC_BIT:         u32 = 2;
 pub const CLOCKS_SLEEP_EN0_CLK_ADC_ADC_BIT:         u32 = 1;
 pub const CLOCKS_SLEEP_EN0_CLK_SYS_CLOCKS_BIT:      u32 = 0;
-// SLEEP_EN1
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_XOSC_BIT:        u32 = 14;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_XIP_BIT:         u32 = 13;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_WATCHDOG_BIT:    u32 = 12;
-pub const CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_BIT:     u32 = 11;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_BIT:     u32 = 10;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_UART1_BIT:       u32 = 9;
-pub const CLOCKS_SLEEP_EN1_CLK_PERI_UART1_BIT:      u32 = 8;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_UART0_BIT:       u32 = 7;
-pub const CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BIT:      u32 = 6;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_BIT:       u32 = 5;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_TBMAN_BIT:       u32 = 4;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_SYSINFO_BIT:     u32 = 3;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_SYSCFG_BIT:      u32 = 2;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_SRAM5_BIT:       u32 = 1;
-pub const CLOCKS_SLEEP_EN1_CLK_SYS_SRAM4_BIT:       u32 = 0;
+
 // ENABLED0
 pub const CLOCKS_ENABLED0_CLK_SYS_SRAM3_BIT:        u32 = 31;
 pub const CLOCKS_ENABLED0_CLK_SYS_SRAM2_BIT:        u32 = 30;
 pub const CLOCKS_ENABLED0_CLK_SYS_SRAM1_BIT:        u32 = 29;
 pub const CLOCKS_ENABLED0_CLK_SYS_SRAM0_BIT:        u32 = 28;
 pub const CLOCKS_ENABLED0_CLK_SYS_SPI1_BIT:         u32 = 27;
-pub const CLOCKS_ENABLED0_CLK_PERI_SPI1_BIT:        u32 = 26;
 pub const CLOCKS_ENABLED0_CLK_SYS_SPI0_BIT:         u32 = 25;
+pub const CLOCKS_ENABLED0_CLK_PERI_SPI1_BIT:        u32 = 26;
 pub const CLOCKS_ENABLED0_CLK_PERI_SPI0_BIT:        u32 = 24;
 pub const CLOCKS_ENABLED0_CLK_SYS_SIO_BIT:          u32 = 23;
 pub const CLOCKS_ENABLED0_CLK_SYS_RTC_BIT:          u32 = 22;
@@ -368,6 +277,41 @@ pub const CLOCKS_ENABLED0_CLK_SYS_BUSCTRL_BIT:      u32 = 3;
 pub const CLOCKS_ENABLED0_CLK_SYS_ADC_BIT:          u32 = 2;
 pub const CLOCKS_ENABLED0_CLK_ADC_ADC_BIT:          u32 = 1;
 pub const CLOCKS_ENABLED0_CLK_SYS_CLOCKS_BIT:       u32 = 0;
+
+// WAKE_EN1
+pub const CLOCKS_WAKE_EN1_CLK_SYS_XOSC_BIT:         u32 = 14;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_XIP_BIT:          u32 = 13;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_WATCHDOG_BIT:     u32 = 12;
+pub const CLOCKS_WAKE_EN1_CLK_USB_USBCTRL_BIT:      u32 = 11;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_USBCTRL_BIT:      u32 = 10;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_UART1_BIT:        u32 = 9;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_UART0_BIT:        u32 = 7;
+pub const CLOCKS_WAKE_EN1_CLK_PERI_UART1_BIT:       u32 = 8;
+pub const CLOCKS_WAKE_EN1_CLK_PERI_UART0_BIT:       u32 = 6;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_TIMER_BIT:        u32 = 5;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_TBMAN_BIT:        u32 = 4;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_SYSINFO_BIT:      u32 = 3;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_SYSCFG_BIT:       u32 = 2;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_SRAM5_BIT:        u32 = 1;
+pub const CLOCKS_WAKE_EN1_CLK_SYS_SRAM4_BIT:        u32 = 0;
+
+// SLEEP_EN1
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_XOSC_BIT:        u32 = 14;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_XIP_BIT:         u32 = 13;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_WATCHDOG_BIT:    u32 = 12;
+pub const CLOCKS_SLEEP_EN1_CLK_USB_USBCTRL_BIT:     u32 = 11;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_USBCTRL_BIT:     u32 = 10;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_UART1_BIT:       u32 = 9;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_UART0_BIT:       u32 = 7;
+pub const CLOCKS_SLEEP_EN1_CLK_PERI_UART1_BIT:      u32 = 8;
+pub const CLOCKS_SLEEP_EN1_CLK_PERI_UART0_BIT:      u32 = 6;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_TIMER_BIT:       u32 = 5;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_TBMAN_BIT:       u32 = 4;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_SYSINFO_BIT:     u32 = 3;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_SYSCFG_BIT:      u32 = 2;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_SRAM5_BIT:       u32 = 1;
+pub const CLOCKS_SLEEP_EN1_CLK_SYS_SRAM4_BIT:       u32 = 0;
+
 // ENABLED1
 pub const CLOCKS_ENABLED1_CLK_SYS_XOSC_BIT:         u32 = 14;
 pub const CLOCKS_ENABLED1_CLK_SYS_XIP_BIT:          u32 = 13;
@@ -375,8 +319,8 @@ pub const CLOCKS_ENABLED1_CLK_SYS_WATCHDOG_BIT:     u32 = 12;
 pub const CLOCKS_ENABLED1_CLK_USB_USBCTRL_BIT:      u32 = 11;
 pub const CLOCKS_ENABLED1_CLK_SYS_USBCTRL_BIT:      u32 = 10;
 pub const CLOCKS_ENABLED1_CLK_SYS_UART1_BIT:        u32 = 9;
-pub const CLOCKS_ENABLED1_CLK_PERI_UART1_BIT:       u32 = 8;
 pub const CLOCKS_ENABLED1_CLK_SYS_UART0_BIT:        u32 = 7;
+pub const CLOCKS_ENABLED1_CLK_PERI_UART1_BIT:       u32 = 8;
 pub const CLOCKS_ENABLED1_CLK_PERI_UART0_BIT:       u32 = 6;
 pub const CLOCKS_ENABLED1_CLK_SYS_TIMER_BIT:        u32 = 5;
 pub const CLOCKS_ENABLED1_CLK_SYS_TBMAN_BIT:        u32 = 4;
@@ -384,12 +328,16 @@ pub const CLOCKS_ENABLED1_CLK_SYS_SYSINFO_BIT:      u32 = 3;
 pub const CLOCKS_ENABLED1_CLK_SYS_SYSCFG_BIT:       u32 = 2;
 pub const CLOCKS_ENABLED1_CLK_SYS_SRAM5_BIT:        u32 = 1;
 pub const CLOCKS_ENABLED1_CLK_SYS_SRAM4_BIT:        u32 = 0;
+
 // INTR
 pub const CLOCKS_INTR_CLK_SYS_RESUS_BIT:            u32 = 0;
+
 // INTE
 pub const CLOCKS_INTE_CLK_SYS_RESUS_BIT:            u32 = 0;
+
 // INTF
 pub const CLOCKS_INTF_CLK_SYS_RESUS_BIT:            u32 = 0;
+
 // INTS
 pub const CLOCKS_INTS_CLK_SYS_RESUS_BIT:            u32 = 0;
 // ==== END AUTO-GENERATED FIELD BIT RANGES ====
@@ -467,18 +415,18 @@ pub const CLOCKS_CLK_RTC_GPIN0_AUXSOURCE:           u32 = 0x4;
 pub const CLOCKS_CLK_RTC_GPIN1_AUXSOURCE:           u32 = 0x5;
 
 // FC0_SRC: FC_SRC
-pub const CLOCKS_FC_SRC_NULL:                       u32 = 0x0;
-pub const CLOCKS_FC_SRC_PLL_SYS_CLKSRC_PRIMARY:     u32 = 0x1;
-pub const CLOCKS_FC_SRC_PLL_USB_CLKSRC_PRIMARY:     u32 = 0x2;
-pub const CLOCKS_FC_SRC_ROSC_CLKSRC:                u32 = 0x3;
-pub const CLOCKS_FC_SRC_ROSC_CLKSRC_PH:             u32 = 0x4;
-pub const CLOCKS_FC_SRC_XOSC_CLKSRC:                u32 = 0x5;
-pub const CLOCKS_FC_SRC_CLKSRC_GPIN0:               u32 = 0x6;
-pub const CLOCKS_FC_SRC_CLKSRC_GPIN1:               u32 = 0x7;
-pub const CLOCKS_FC_SRC_CLK_REF:                    u32 = 0x8;
-pub const CLOCKS_FC_SRC_CLK_SYS:                    u32 = 0x9;
-pub const CLOCKS_FC_SRC_CLK_PERI:                   u32 = 0xA;
-pub const CLOCKS_FC_SRC_CLK_USB:                    u32 = 0xB;
-pub const CLOCKS_FC_SRC_CLK_ADC:                    u32 = 0xC;
-pub const CLOCKS_FC_SRC_CLK_RTC:                    u32 = 0xD;
+pub const CLOCKS_FC0_SRC_NULL:                      u32 = 0x0;
+pub const CLOCKS_FC0_SRC_PLL_SYS_CLKSRC_PRIMARY:    u32 = 0x1;
+pub const CLOCKS_FC0_SRC_PLL_USB_CLKSRC_PRIMARY:    u32 = 0x2;
+pub const CLOCKS_FC0_SRC_ROSC_CLKSRC:               u32 = 0x3;
+pub const CLOCKS_FC0_SRC_ROSC_CLKSRC_PH:            u32 = 0x4;
+pub const CLOCKS_FC0_SRC_XOSC_CLKSRC:               u32 = 0x5;
+pub const CLOCKS_FC0_SRC_CLKSRC_GPIN0:              u32 = 0x6;
+pub const CLOCKS_FC0_SRC_CLKSRC_GPIN1:              u32 = 0x7;
+pub const CLOCKS_FC0_SRC_CLK_REF:                   u32 = 0x8;
+pub const CLOCKS_FC0_SRC_CLK_SYS:                   u32 = 0x9;
+pub const CLOCKS_FC0_SRC_CLK_PERI:                  u32 = 0xA;
+pub const CLOCKS_FC0_SRC_CLK_USB:                   u32 = 0xB;
+pub const CLOCKS_FC0_SRC_CLK_ADC:                   u32 = 0xC;
+pub const CLOCKS_FC0_SRC_CLK_RTC:                   u32 = 0xD;
 // ==== END AUTO-GENERATED ENUMERATED VALUES ====
