@@ -1,4 +1,4 @@
-#[repr(usize)]
+#[repr(u8)]
 pub enum ServiceID {
     PinService,
     GPIOService,

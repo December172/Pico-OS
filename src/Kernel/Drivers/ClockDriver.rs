@@ -1,10 +1,12 @@
 #[repr(u8)]
 #[derive(Clone, Copy)]
 pub enum ClockDomain {
+    Reference,
     System,
     Peripherals,
     USB,
 }
+
 // TODO: Configuable system clock dividers
 pub trait ClockDriver {
     fn init(&self) -> bool;

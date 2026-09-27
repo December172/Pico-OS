@@ -73,8 +73,10 @@ impl Register {
     pub fn fieldSet(&self, highBit: u32, lowBit: u32, state: u32) {
         self.modify(|val| {
             let width = highBit - lowBit + 1;
-            let mask = ((1 << width) - 1) << lowBit;
-            return (val & !mask) | ((state << mask));
+            let mask = ((1u32 << width) - 1) << lowBit;
+            // shift the field value down to its position (lowBit) and keep
+            // only the bits that belong to the field, then splice it in.
+            return (val & !mask) | ((state << lowBit) & mask);
         })
     }
 }

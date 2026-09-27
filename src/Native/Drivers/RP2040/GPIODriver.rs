@@ -88,9 +88,9 @@ impl GPIODriver for _GPIODriver {
                 Register::new(SIO_GPIO_OUT_SET)
             };
             let registerClear = if pin >= GPIO_HI_PIN_START {
-                Register::new(SIO_GPIO_HI_OE_CLR)
+                Register::new(SIO_GPIO_HI_OUT_CLR)
             } else {
-                Register::new(SIO_GPIO_OE_CLR)
+                Register::new(SIO_GPIO_OUT_CLR)
             };
             let bit = if pin >= GPIO_HI_PIN_START {
                 pin - GPIO_HI_PIN_START
