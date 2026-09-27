@@ -12,6 +12,7 @@ build(){
     rm -rf output/*
     mv target/thumbv6m-none-eabi/$profile/kernel output/kernel.elf
     ./tools/picotool uf2 convert output/kernel.elf output/kernel.uf2
+    arm-none-eabi-objdump -d -Mforce-thumb output/kernel.elf > output/disassembly.S
 }
 
 clean(){
