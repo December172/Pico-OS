@@ -18,6 +18,7 @@ opt-level = 0
 panic = "abort"
 opt-level = "z"
 lto = true
+strip = true
 
 [[bin]]
 name = "kernel"
