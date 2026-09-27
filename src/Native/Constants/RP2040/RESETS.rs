@@ -1,9 +1,15 @@
 #![allow(dead_code)]
 // RESETS
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
 pub const RESETS_BASE:                              u32 = 0x4000_C000;
+
 pub const RESETS_RESET:                             u32 = RESETS_BASE + 0x0;
 pub const RESETS_WDSEL:                             u32 = RESETS_BASE + 0x4;
 pub const RESETS_RESET_DONE:                        u32 = RESETS_BASE + 0x8;
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -34,6 +40,7 @@ pub const RESETS_RESET_I2C0_BIT:                    u32 = 3;
 pub const RESETS_RESET_DMA_BIT:                     u32 = 2;
 pub const RESETS_RESET_BUSCTRL_BIT:                 u32 = 1;
 pub const RESETS_RESET_ADC_BIT:                     u32 = 0;
+
 // WDSEL
 pub const RESETS_WDSEL_USBCTRL_BIT:                 u32 = 24;
 pub const RESETS_WDSEL_UART1_BIT:                   u32 = 23;
@@ -60,6 +67,7 @@ pub const RESETS_WDSEL_I2C0_BIT:                    u32 = 3;
 pub const RESETS_WDSEL_DMA_BIT:                     u32 = 2;
 pub const RESETS_WDSEL_BUSCTRL_BIT:                 u32 = 1;
 pub const RESETS_WDSEL_ADC_BIT:                     u32 = 0;
+
 // RESET_DONE
 pub const RESETS_RESET_DONE_USBCTRL_BIT:            u32 = 24;
 pub const RESETS_RESET_DONE_UART1_BIT:              u32 = 23;

@@ -1,6 +1,11 @@
 #![allow(dead_code)]
 // USB
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
 pub const USB_BASE:                                 u32 = 0x5011_0000;
+
 pub const USB_ADDR_ENDP:                            u32 = USB_BASE + 0x0;
 pub const USB_ADDR_ENDP1:                           u32 = USB_BASE + 0x4;
 pub const USB_ADDR_ENDP2:                           u32 = USB_BASE + 0x8;
@@ -39,6 +44,7 @@ pub const USB_INTR:                                 u32 = USB_BASE + 0x8C;
 pub const USB_INTE:                                 u32 = USB_BASE + 0x90;
 pub const USB_INTF:                                 u32 = USB_BASE + 0x94;
 pub const USB_INTS:                                 u32 = USB_BASE + 0x98;
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -48,121 +54,24 @@ pub const USB_ADDR_ENDP_ENDPOINT_LOW:               u32 = 16;
 pub const USB_ADDR_ENDP_ENDPOINT_HIGH:              u32 = 19;
 pub const USB_ADDR_ENDP_ADDRESS_LOW:                u32 = 0;
 pub const USB_ADDR_ENDP_ADDRESS_HIGH:               u32 = 6;
-// ADDR_ENDP1
+
+// ADDR_ENDP1..ADDR_ENDP15
 pub const USB_ADDR_ENDP1_INTEP_PREAMBLE_BIT:        u32 = 26;
 pub const USB_ADDR_ENDP1_INTEP_DIR_BIT:             u32 = 25;
 pub const USB_ADDR_ENDP1_ENDPOINT_LOW:              u32 = 16;
 pub const USB_ADDR_ENDP1_ENDPOINT_HIGH:             u32 = 19;
 pub const USB_ADDR_ENDP1_ADDRESS_LOW:               u32 = 0;
 pub const USB_ADDR_ENDP1_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP2
-pub const USB_ADDR_ENDP2_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP2_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP2_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP2_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP2_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP2_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP3
-pub const USB_ADDR_ENDP3_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP3_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP3_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP3_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP3_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP3_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP4
-pub const USB_ADDR_ENDP4_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP4_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP4_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP4_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP4_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP4_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP5
-pub const USB_ADDR_ENDP5_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP5_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP5_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP5_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP5_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP5_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP6
-pub const USB_ADDR_ENDP6_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP6_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP6_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP6_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP6_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP6_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP7
-pub const USB_ADDR_ENDP7_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP7_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP7_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP7_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP7_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP7_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP8
-pub const USB_ADDR_ENDP8_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP8_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP8_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP8_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP8_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP8_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP9
-pub const USB_ADDR_ENDP9_INTEP_PREAMBLE_BIT:        u32 = 26;
-pub const USB_ADDR_ENDP9_INTEP_DIR_BIT:             u32 = 25;
-pub const USB_ADDR_ENDP9_ENDPOINT_LOW:              u32 = 16;
-pub const USB_ADDR_ENDP9_ENDPOINT_HIGH:             u32 = 19;
-pub const USB_ADDR_ENDP9_ADDRESS_LOW:               u32 = 0;
-pub const USB_ADDR_ENDP9_ADDRESS_HIGH:              u32 = 6;
-// ADDR_ENDP10
-pub const USB_ADDR_ENDP10_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP10_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP10_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP10_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP10_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP10_ADDRESS_HIGH:             u32 = 6;
-// ADDR_ENDP11
-pub const USB_ADDR_ENDP11_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP11_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP11_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP11_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP11_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP11_ADDRESS_HIGH:             u32 = 6;
-// ADDR_ENDP12
-pub const USB_ADDR_ENDP12_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP12_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP12_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP12_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP12_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP12_ADDRESS_HIGH:             u32 = 6;
-// ADDR_ENDP13
-pub const USB_ADDR_ENDP13_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP13_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP13_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP13_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP13_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP13_ADDRESS_HIGH:             u32 = 6;
-// ADDR_ENDP14
-pub const USB_ADDR_ENDP14_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP14_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP14_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP14_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP14_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP14_ADDRESS_HIGH:             u32 = 6;
-// ADDR_ENDP15
-pub const USB_ADDR_ENDP15_INTEP_PREAMBLE_BIT:       u32 = 26;
-pub const USB_ADDR_ENDP15_INTEP_DIR_BIT:            u32 = 25;
-pub const USB_ADDR_ENDP15_ENDPOINT_LOW:             u32 = 16;
-pub const USB_ADDR_ENDP15_ENDPOINT_HIGH:            u32 = 19;
-pub const USB_ADDR_ENDP15_ADDRESS_LOW:              u32 = 0;
-pub const USB_ADDR_ENDP15_ADDRESS_HIGH:             u32 = 6;
+
 // MAIN_CTRL
 pub const USB_MAIN_CTRL_SIM_TIMING_BIT:             u32 = 31;
 pub const USB_MAIN_CTRL_HOST_NDEVICE_BIT:           u32 = 1;
 pub const USB_MAIN_CTRL_CONTROLLER_EN_BIT:          u32 = 0;
-// SOF_WR
-pub const USB_SOF_WR_COUNT_LOW:                     u32 = 0;
-pub const USB_SOF_WR_COUNT_HIGH:                    u32 = 10;
-// SOF_RD
-pub const USB_SOF_RD_COUNT_LOW:                     u32 = 0;
-pub const USB_SOF_RD_COUNT_HIGH:                    u32 = 10;
+
+// SOF_WR, SOF_RD
+pub const USB_SOF_COUNT_LOW:                        u32 = 0;
+pub const USB_SOF_COUNT_HIGH:                       u32 = 10;
+
 // SIE_CTRL
 pub const USB_SIE_CTRL_EP0_INT_STALL_BIT:           u32 = 31;
 pub const USB_SIE_CTRL_EP0_DOUBLE_BUF_BIT:          u32 = 30;
@@ -188,6 +97,7 @@ pub const USB_SIE_CTRL_RECEIVE_DATA_BIT:            u32 = 3;
 pub const USB_SIE_CTRL_SEND_DATA_BIT:               u32 = 2;
 pub const USB_SIE_CTRL_SEND_SETUP_BIT:              u32 = 1;
 pub const USB_SIE_CTRL_START_TRANS_BIT:             u32 = 0;
+
 // SIE_STATUS
 pub const USB_SIE_STATUS_DATA_SEQ_ERROR_BIT:        u32 = 31;
 pub const USB_SIE_STATUS_ACK_REC_BIT:               u32 = 30;
@@ -209,187 +119,197 @@ pub const USB_SIE_STATUS_SUSPENDED_BIT:             u32 = 4;
 pub const USB_SIE_STATUS_LINE_STATE_LOW:            u32 = 2;
 pub const USB_SIE_STATUS_LINE_STATE_HIGH:           u32 = 3;
 pub const USB_SIE_STATUS_VBUS_DETECTED_BIT:         u32 = 0;
+
 // INT_EP_CTRL
 pub const USB_INT_EP_CTRL_INT_EP_ACTIVE_LOW:        u32 = 1;
 pub const USB_INT_EP_CTRL_INT_EP_ACTIVE_HIGH:       u32 = 15;
+
 // BUFF_STATUS
 pub const USB_BUFF_STATUS_EP15_OUT_BIT:             u32 = 31;
-pub const USB_BUFF_STATUS_EP15_IN_BIT:              u32 = 30;
 pub const USB_BUFF_STATUS_EP14_OUT_BIT:             u32 = 29;
-pub const USB_BUFF_STATUS_EP14_IN_BIT:              u32 = 28;
 pub const USB_BUFF_STATUS_EP13_OUT_BIT:             u32 = 27;
-pub const USB_BUFF_STATUS_EP13_IN_BIT:              u32 = 26;
 pub const USB_BUFF_STATUS_EP12_OUT_BIT:             u32 = 25;
-pub const USB_BUFF_STATUS_EP12_IN_BIT:              u32 = 24;
 pub const USB_BUFF_STATUS_EP11_OUT_BIT:             u32 = 23;
-pub const USB_BUFF_STATUS_EP11_IN_BIT:              u32 = 22;
 pub const USB_BUFF_STATUS_EP10_OUT_BIT:             u32 = 21;
-pub const USB_BUFF_STATUS_EP10_IN_BIT:              u32 = 20;
 pub const USB_BUFF_STATUS_EP9_OUT_BIT:              u32 = 19;
-pub const USB_BUFF_STATUS_EP9_IN_BIT:               u32 = 18;
 pub const USB_BUFF_STATUS_EP8_OUT_BIT:              u32 = 17;
-pub const USB_BUFF_STATUS_EP8_IN_BIT:               u32 = 16;
 pub const USB_BUFF_STATUS_EP7_OUT_BIT:              u32 = 15;
-pub const USB_BUFF_STATUS_EP7_IN_BIT:               u32 = 14;
 pub const USB_BUFF_STATUS_EP6_OUT_BIT:              u32 = 13;
-pub const USB_BUFF_STATUS_EP6_IN_BIT:               u32 = 12;
 pub const USB_BUFF_STATUS_EP5_OUT_BIT:              u32 = 11;
-pub const USB_BUFF_STATUS_EP5_IN_BIT:               u32 = 10;
 pub const USB_BUFF_STATUS_EP4_OUT_BIT:              u32 = 9;
-pub const USB_BUFF_STATUS_EP4_IN_BIT:               u32 = 8;
 pub const USB_BUFF_STATUS_EP3_OUT_BIT:              u32 = 7;
-pub const USB_BUFF_STATUS_EP3_IN_BIT:               u32 = 6;
 pub const USB_BUFF_STATUS_EP2_OUT_BIT:              u32 = 5;
-pub const USB_BUFF_STATUS_EP2_IN_BIT:               u32 = 4;
 pub const USB_BUFF_STATUS_EP1_OUT_BIT:              u32 = 3;
-pub const USB_BUFF_STATUS_EP1_IN_BIT:               u32 = 2;
 pub const USB_BUFF_STATUS_EP0_OUT_BIT:              u32 = 1;
+pub const USB_BUFF_STATUS_EP15_IN_BIT:              u32 = 30;
+pub const USB_BUFF_STATUS_EP14_IN_BIT:              u32 = 28;
+pub const USB_BUFF_STATUS_EP13_IN_BIT:              u32 = 26;
+pub const USB_BUFF_STATUS_EP12_IN_BIT:              u32 = 24;
+pub const USB_BUFF_STATUS_EP11_IN_BIT:              u32 = 22;
+pub const USB_BUFF_STATUS_EP10_IN_BIT:              u32 = 20;
+pub const USB_BUFF_STATUS_EP9_IN_BIT:               u32 = 18;
+pub const USB_BUFF_STATUS_EP8_IN_BIT:               u32 = 16;
+pub const USB_BUFF_STATUS_EP7_IN_BIT:               u32 = 14;
+pub const USB_BUFF_STATUS_EP6_IN_BIT:               u32 = 12;
+pub const USB_BUFF_STATUS_EP5_IN_BIT:               u32 = 10;
+pub const USB_BUFF_STATUS_EP4_IN_BIT:               u32 = 8;
+pub const USB_BUFF_STATUS_EP3_IN_BIT:               u32 = 6;
+pub const USB_BUFF_STATUS_EP2_IN_BIT:               u32 = 4;
+pub const USB_BUFF_STATUS_EP1_IN_BIT:               u32 = 2;
 pub const USB_BUFF_STATUS_EP0_IN_BIT:               u32 = 0;
+
 // BUFF_CPU_SHOULD_HANDLE
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP15_OUT_BIT:  u32 = 31;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP15_IN_BIT:   u32 = 30;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP14_OUT_BIT:  u32 = 29;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP14_IN_BIT:   u32 = 28;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP13_OUT_BIT:  u32 = 27;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP13_IN_BIT:   u32 = 26;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP12_OUT_BIT:  u32 = 25;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP12_IN_BIT:   u32 = 24;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP11_OUT_BIT:  u32 = 23;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP11_IN_BIT:   u32 = 22;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP10_OUT_BIT:  u32 = 21;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP10_IN_BIT:   u32 = 20;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP9_OUT_BIT:   u32 = 19;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP9_IN_BIT:    u32 = 18;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP8_OUT_BIT:   u32 = 17;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP8_IN_BIT:    u32 = 16;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP7_OUT_BIT:   u32 = 15;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP7_IN_BIT:    u32 = 14;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP6_OUT_BIT:   u32 = 13;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP6_IN_BIT:    u32 = 12;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP5_OUT_BIT:   u32 = 11;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP5_IN_BIT:    u32 = 10;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP4_OUT_BIT:   u32 = 9;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP4_IN_BIT:    u32 = 8;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP3_OUT_BIT:   u32 = 7;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP3_IN_BIT:    u32 = 6;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP2_OUT_BIT:   u32 = 5;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP2_IN_BIT:    u32 = 4;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP1_OUT_BIT:   u32 = 3;
-pub const USB_BUFF_CPU_SHOULD_HANDLE_EP1_IN_BIT:    u32 = 2;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP0_OUT_BIT:   u32 = 1;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP15_IN_BIT:   u32 = 30;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP14_IN_BIT:   u32 = 28;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP13_IN_BIT:   u32 = 26;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP12_IN_BIT:   u32 = 24;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP11_IN_BIT:   u32 = 22;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP10_IN_BIT:   u32 = 20;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP9_IN_BIT:    u32 = 18;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP8_IN_BIT:    u32 = 16;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP7_IN_BIT:    u32 = 14;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP6_IN_BIT:    u32 = 12;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP5_IN_BIT:    u32 = 10;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP4_IN_BIT:    u32 = 8;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP3_IN_BIT:    u32 = 6;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP2_IN_BIT:    u32 = 4;
+pub const USB_BUFF_CPU_SHOULD_HANDLE_EP1_IN_BIT:    u32 = 2;
 pub const USB_BUFF_CPU_SHOULD_HANDLE_EP0_IN_BIT:    u32 = 0;
+
 // EP_ABORT
 pub const USB_EP_ABORT_EP15_OUT_BIT:                u32 = 31;
-pub const USB_EP_ABORT_EP15_IN_BIT:                 u32 = 30;
 pub const USB_EP_ABORT_EP14_OUT_BIT:                u32 = 29;
-pub const USB_EP_ABORT_EP14_IN_BIT:                 u32 = 28;
 pub const USB_EP_ABORT_EP13_OUT_BIT:                u32 = 27;
-pub const USB_EP_ABORT_EP13_IN_BIT:                 u32 = 26;
 pub const USB_EP_ABORT_EP12_OUT_BIT:                u32 = 25;
-pub const USB_EP_ABORT_EP12_IN_BIT:                 u32 = 24;
 pub const USB_EP_ABORT_EP11_OUT_BIT:                u32 = 23;
-pub const USB_EP_ABORT_EP11_IN_BIT:                 u32 = 22;
 pub const USB_EP_ABORT_EP10_OUT_BIT:                u32 = 21;
-pub const USB_EP_ABORT_EP10_IN_BIT:                 u32 = 20;
 pub const USB_EP_ABORT_EP9_OUT_BIT:                 u32 = 19;
-pub const USB_EP_ABORT_EP9_IN_BIT:                  u32 = 18;
 pub const USB_EP_ABORT_EP8_OUT_BIT:                 u32 = 17;
-pub const USB_EP_ABORT_EP8_IN_BIT:                  u32 = 16;
 pub const USB_EP_ABORT_EP7_OUT_BIT:                 u32 = 15;
-pub const USB_EP_ABORT_EP7_IN_BIT:                  u32 = 14;
 pub const USB_EP_ABORT_EP6_OUT_BIT:                 u32 = 13;
-pub const USB_EP_ABORT_EP6_IN_BIT:                  u32 = 12;
 pub const USB_EP_ABORT_EP5_OUT_BIT:                 u32 = 11;
-pub const USB_EP_ABORT_EP5_IN_BIT:                  u32 = 10;
 pub const USB_EP_ABORT_EP4_OUT_BIT:                 u32 = 9;
-pub const USB_EP_ABORT_EP4_IN_BIT:                  u32 = 8;
 pub const USB_EP_ABORT_EP3_OUT_BIT:                 u32 = 7;
-pub const USB_EP_ABORT_EP3_IN_BIT:                  u32 = 6;
 pub const USB_EP_ABORT_EP2_OUT_BIT:                 u32 = 5;
-pub const USB_EP_ABORT_EP2_IN_BIT:                  u32 = 4;
 pub const USB_EP_ABORT_EP1_OUT_BIT:                 u32 = 3;
-pub const USB_EP_ABORT_EP1_IN_BIT:                  u32 = 2;
 pub const USB_EP_ABORT_EP0_OUT_BIT:                 u32 = 1;
+pub const USB_EP_ABORT_EP15_IN_BIT:                 u32 = 30;
+pub const USB_EP_ABORT_EP14_IN_BIT:                 u32 = 28;
+pub const USB_EP_ABORT_EP13_IN_BIT:                 u32 = 26;
+pub const USB_EP_ABORT_EP12_IN_BIT:                 u32 = 24;
+pub const USB_EP_ABORT_EP11_IN_BIT:                 u32 = 22;
+pub const USB_EP_ABORT_EP10_IN_BIT:                 u32 = 20;
+pub const USB_EP_ABORT_EP9_IN_BIT:                  u32 = 18;
+pub const USB_EP_ABORT_EP8_IN_BIT:                  u32 = 16;
+pub const USB_EP_ABORT_EP7_IN_BIT:                  u32 = 14;
+pub const USB_EP_ABORT_EP6_IN_BIT:                  u32 = 12;
+pub const USB_EP_ABORT_EP5_IN_BIT:                  u32 = 10;
+pub const USB_EP_ABORT_EP4_IN_BIT:                  u32 = 8;
+pub const USB_EP_ABORT_EP3_IN_BIT:                  u32 = 6;
+pub const USB_EP_ABORT_EP2_IN_BIT:                  u32 = 4;
+pub const USB_EP_ABORT_EP1_IN_BIT:                  u32 = 2;
 pub const USB_EP_ABORT_EP0_IN_BIT:                  u32 = 0;
+
 // EP_ABORT_DONE
 pub const USB_EP_ABORT_DONE_EP15_OUT_BIT:           u32 = 31;
-pub const USB_EP_ABORT_DONE_EP15_IN_BIT:            u32 = 30;
 pub const USB_EP_ABORT_DONE_EP14_OUT_BIT:           u32 = 29;
-pub const USB_EP_ABORT_DONE_EP14_IN_BIT:            u32 = 28;
 pub const USB_EP_ABORT_DONE_EP13_OUT_BIT:           u32 = 27;
-pub const USB_EP_ABORT_DONE_EP13_IN_BIT:            u32 = 26;
 pub const USB_EP_ABORT_DONE_EP12_OUT_BIT:           u32 = 25;
-pub const USB_EP_ABORT_DONE_EP12_IN_BIT:            u32 = 24;
 pub const USB_EP_ABORT_DONE_EP11_OUT_BIT:           u32 = 23;
-pub const USB_EP_ABORT_DONE_EP11_IN_BIT:            u32 = 22;
 pub const USB_EP_ABORT_DONE_EP10_OUT_BIT:           u32 = 21;
-pub const USB_EP_ABORT_DONE_EP10_IN_BIT:            u32 = 20;
 pub const USB_EP_ABORT_DONE_EP9_OUT_BIT:            u32 = 19;
-pub const USB_EP_ABORT_DONE_EP9_IN_BIT:             u32 = 18;
 pub const USB_EP_ABORT_DONE_EP8_OUT_BIT:            u32 = 17;
-pub const USB_EP_ABORT_DONE_EP8_IN_BIT:             u32 = 16;
 pub const USB_EP_ABORT_DONE_EP7_OUT_BIT:            u32 = 15;
-pub const USB_EP_ABORT_DONE_EP7_IN_BIT:             u32 = 14;
 pub const USB_EP_ABORT_DONE_EP6_OUT_BIT:            u32 = 13;
-pub const USB_EP_ABORT_DONE_EP6_IN_BIT:             u32 = 12;
 pub const USB_EP_ABORT_DONE_EP5_OUT_BIT:            u32 = 11;
-pub const USB_EP_ABORT_DONE_EP5_IN_BIT:             u32 = 10;
 pub const USB_EP_ABORT_DONE_EP4_OUT_BIT:            u32 = 9;
-pub const USB_EP_ABORT_DONE_EP4_IN_BIT:             u32 = 8;
 pub const USB_EP_ABORT_DONE_EP3_OUT_BIT:            u32 = 7;
-pub const USB_EP_ABORT_DONE_EP3_IN_BIT:             u32 = 6;
 pub const USB_EP_ABORT_DONE_EP2_OUT_BIT:            u32 = 5;
-pub const USB_EP_ABORT_DONE_EP2_IN_BIT:             u32 = 4;
 pub const USB_EP_ABORT_DONE_EP1_OUT_BIT:            u32 = 3;
-pub const USB_EP_ABORT_DONE_EP1_IN_BIT:             u32 = 2;
 pub const USB_EP_ABORT_DONE_EP0_OUT_BIT:            u32 = 1;
+pub const USB_EP_ABORT_DONE_EP15_IN_BIT:            u32 = 30;
+pub const USB_EP_ABORT_DONE_EP14_IN_BIT:            u32 = 28;
+pub const USB_EP_ABORT_DONE_EP13_IN_BIT:            u32 = 26;
+pub const USB_EP_ABORT_DONE_EP12_IN_BIT:            u32 = 24;
+pub const USB_EP_ABORT_DONE_EP11_IN_BIT:            u32 = 22;
+pub const USB_EP_ABORT_DONE_EP10_IN_BIT:            u32 = 20;
+pub const USB_EP_ABORT_DONE_EP9_IN_BIT:             u32 = 18;
+pub const USB_EP_ABORT_DONE_EP8_IN_BIT:             u32 = 16;
+pub const USB_EP_ABORT_DONE_EP7_IN_BIT:             u32 = 14;
+pub const USB_EP_ABORT_DONE_EP6_IN_BIT:             u32 = 12;
+pub const USB_EP_ABORT_DONE_EP5_IN_BIT:             u32 = 10;
+pub const USB_EP_ABORT_DONE_EP4_IN_BIT:             u32 = 8;
+pub const USB_EP_ABORT_DONE_EP3_IN_BIT:             u32 = 6;
+pub const USB_EP_ABORT_DONE_EP2_IN_BIT:             u32 = 4;
+pub const USB_EP_ABORT_DONE_EP1_IN_BIT:             u32 = 2;
 pub const USB_EP_ABORT_DONE_EP0_IN_BIT:             u32 = 0;
+
+// EP_STATUS_STALL_NAK
+pub const USB_EP_STATUS_STALL_NAK_EP15_OUT_BIT:     u32 = 31;
+pub const USB_EP_STATUS_STALL_NAK_EP14_OUT_BIT:     u32 = 29;
+pub const USB_EP_STATUS_STALL_NAK_EP13_OUT_BIT:     u32 = 27;
+pub const USB_EP_STATUS_STALL_NAK_EP12_OUT_BIT:     u32 = 25;
+pub const USB_EP_STATUS_STALL_NAK_EP11_OUT_BIT:     u32 = 23;
+pub const USB_EP_STATUS_STALL_NAK_EP10_OUT_BIT:     u32 = 21;
+pub const USB_EP_STATUS_STALL_NAK_EP9_OUT_BIT:      u32 = 19;
+pub const USB_EP_STATUS_STALL_NAK_EP8_OUT_BIT:      u32 = 17;
+pub const USB_EP_STATUS_STALL_NAK_EP7_OUT_BIT:      u32 = 15;
+pub const USB_EP_STATUS_STALL_NAK_EP6_OUT_BIT:      u32 = 13;
+pub const USB_EP_STATUS_STALL_NAK_EP5_OUT_BIT:      u32 = 11;
+pub const USB_EP_STATUS_STALL_NAK_EP4_OUT_BIT:      u32 = 9;
+pub const USB_EP_STATUS_STALL_NAK_EP3_OUT_BIT:      u32 = 7;
+pub const USB_EP_STATUS_STALL_NAK_EP2_OUT_BIT:      u32 = 5;
+pub const USB_EP_STATUS_STALL_NAK_EP1_OUT_BIT:      u32 = 3;
+pub const USB_EP_STATUS_STALL_NAK_EP0_OUT_BIT:      u32 = 1;
+pub const USB_EP_STATUS_STALL_NAK_EP15_IN_BIT:      u32 = 30;
+pub const USB_EP_STATUS_STALL_NAK_EP14_IN_BIT:      u32 = 28;
+pub const USB_EP_STATUS_STALL_NAK_EP13_IN_BIT:      u32 = 26;
+pub const USB_EP_STATUS_STALL_NAK_EP12_IN_BIT:      u32 = 24;
+pub const USB_EP_STATUS_STALL_NAK_EP11_IN_BIT:      u32 = 22;
+pub const USB_EP_STATUS_STALL_NAK_EP10_IN_BIT:      u32 = 20;
+pub const USB_EP_STATUS_STALL_NAK_EP9_IN_BIT:       u32 = 18;
+pub const USB_EP_STATUS_STALL_NAK_EP8_IN_BIT:       u32 = 16;
+pub const USB_EP_STATUS_STALL_NAK_EP7_IN_BIT:       u32 = 14;
+pub const USB_EP_STATUS_STALL_NAK_EP6_IN_BIT:       u32 = 12;
+pub const USB_EP_STATUS_STALL_NAK_EP5_IN_BIT:       u32 = 10;
+pub const USB_EP_STATUS_STALL_NAK_EP4_IN_BIT:       u32 = 8;
+pub const USB_EP_STATUS_STALL_NAK_EP3_IN_BIT:       u32 = 6;
+pub const USB_EP_STATUS_STALL_NAK_EP2_IN_BIT:       u32 = 4;
+pub const USB_EP_STATUS_STALL_NAK_EP1_IN_BIT:       u32 = 2;
+pub const USB_EP_STATUS_STALL_NAK_EP0_IN_BIT:       u32 = 0;
+
 // EP_STALL_ARM
 pub const USB_EP_STALL_ARM_EP0_OUT_BIT:             u32 = 1;
 pub const USB_EP_STALL_ARM_EP0_IN_BIT:              u32 = 0;
+
 // NAK_POLL
 pub const USB_NAK_POLL_DELAY_FS_LOW:                u32 = 16;
 pub const USB_NAK_POLL_DELAY_FS_HIGH:               u32 = 25;
 pub const USB_NAK_POLL_DELAY_LS_LOW:                u32 = 0;
 pub const USB_NAK_POLL_DELAY_LS_HIGH:               u32 = 9;
-// EP_STATUS_STALL_NAK
-pub const USB_EP_STATUS_STALL_NAK_EP15_OUT_BIT:     u32 = 31;
-pub const USB_EP_STATUS_STALL_NAK_EP15_IN_BIT:      u32 = 30;
-pub const USB_EP_STATUS_STALL_NAK_EP14_OUT_BIT:     u32 = 29;
-pub const USB_EP_STATUS_STALL_NAK_EP14_IN_BIT:      u32 = 28;
-pub const USB_EP_STATUS_STALL_NAK_EP13_OUT_BIT:     u32 = 27;
-pub const USB_EP_STATUS_STALL_NAK_EP13_IN_BIT:      u32 = 26;
-pub const USB_EP_STATUS_STALL_NAK_EP12_OUT_BIT:     u32 = 25;
-pub const USB_EP_STATUS_STALL_NAK_EP12_IN_BIT:      u32 = 24;
-pub const USB_EP_STATUS_STALL_NAK_EP11_OUT_BIT:     u32 = 23;
-pub const USB_EP_STATUS_STALL_NAK_EP11_IN_BIT:      u32 = 22;
-pub const USB_EP_STATUS_STALL_NAK_EP10_OUT_BIT:     u32 = 21;
-pub const USB_EP_STATUS_STALL_NAK_EP10_IN_BIT:      u32 = 20;
-pub const USB_EP_STATUS_STALL_NAK_EP9_OUT_BIT:      u32 = 19;
-pub const USB_EP_STATUS_STALL_NAK_EP9_IN_BIT:       u32 = 18;
-pub const USB_EP_STATUS_STALL_NAK_EP8_OUT_BIT:      u32 = 17;
-pub const USB_EP_STATUS_STALL_NAK_EP8_IN_BIT:       u32 = 16;
-pub const USB_EP_STATUS_STALL_NAK_EP7_OUT_BIT:      u32 = 15;
-pub const USB_EP_STATUS_STALL_NAK_EP7_IN_BIT:       u32 = 14;
-pub const USB_EP_STATUS_STALL_NAK_EP6_OUT_BIT:      u32 = 13;
-pub const USB_EP_STATUS_STALL_NAK_EP6_IN_BIT:       u32 = 12;
-pub const USB_EP_STATUS_STALL_NAK_EP5_OUT_BIT:      u32 = 11;
-pub const USB_EP_STATUS_STALL_NAK_EP5_IN_BIT:       u32 = 10;
-pub const USB_EP_STATUS_STALL_NAK_EP4_OUT_BIT:      u32 = 9;
-pub const USB_EP_STATUS_STALL_NAK_EP4_IN_BIT:       u32 = 8;
-pub const USB_EP_STATUS_STALL_NAK_EP3_OUT_BIT:      u32 = 7;
-pub const USB_EP_STATUS_STALL_NAK_EP3_IN_BIT:       u32 = 6;
-pub const USB_EP_STATUS_STALL_NAK_EP2_OUT_BIT:      u32 = 5;
-pub const USB_EP_STATUS_STALL_NAK_EP2_IN_BIT:       u32 = 4;
-pub const USB_EP_STATUS_STALL_NAK_EP1_OUT_BIT:      u32 = 3;
-pub const USB_EP_STATUS_STALL_NAK_EP1_IN_BIT:       u32 = 2;
-pub const USB_EP_STATUS_STALL_NAK_EP0_OUT_BIT:      u32 = 1;
-pub const USB_EP_STATUS_STALL_NAK_EP0_IN_BIT:       u32 = 0;
+
 // USB_MUXING
 pub const USB_USB_MUXING_SOFTCON_BIT:               u32 = 3;
 pub const USB_USB_MUXING_TO_DIGITAL_PAD_BIT:        u32 = 2;
 pub const USB_USB_MUXING_TO_EXTPHY_BIT:             u32 = 1;
 pub const USB_USB_MUXING_TO_PHY_BIT:                u32 = 0;
+
 // USB_PWR
 pub const USB_USB_PWR_OVERCURR_DETECT_EN_BIT:       u32 = 5;
 pub const USB_USB_PWR_OVERCURR_DETECT_BIT:          u32 = 4;
@@ -397,6 +317,7 @@ pub const USB_USB_PWR_VBUS_DETECT_OVERRIDE_EN_BIT:  u32 = 3;
 pub const USB_USB_PWR_VBUS_DETECT_BIT:              u32 = 2;
 pub const USB_USB_PWR_VBUS_EN_OVERRIDE_EN_BIT:      u32 = 1;
 pub const USB_USB_PWR_VBUS_EN_BIT:                  u32 = 0;
+
 // USBPHY_DIRECT
 pub const USB_USBPHY_DIRECT_DM_OVV_BIT:             u32 = 22;
 pub const USB_USBPHY_DIRECT_DP_OVV_BIT:             u32 = 21;
@@ -419,6 +340,7 @@ pub const USB_USBPHY_DIRECT_DM_PULLUP_HISEL_BIT:    u32 = 4;
 pub const USB_USBPHY_DIRECT_DP_PULLDN_EN_BIT:       u32 = 2;
 pub const USB_USBPHY_DIRECT_DP_PULLUP_EN_BIT:       u32 = 1;
 pub const USB_USBPHY_DIRECT_DP_PULLUP_HISEL_BIT:    u32 = 0;
+
 // USBPHY_DIRECT_OVERRIDE
 pub const USB_USBPHY_DIRECT_OVERRIDE_TX_DIFFMODE_OVERRIDE_EN_BIT:u32 = 15;
 pub const USB_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_OVERRIDE_EN_BIT:u32 = 12;
@@ -434,11 +356,13 @@ pub const USB_USBPHY_DIRECT_OVERRIDE_DP_PULLDN_EN_OVERRIDE_EN_BIT:u32 = 3;
 pub const USB_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_EN_OVERRIDE_EN_BIT:u32 = 2;
 pub const USB_USBPHY_DIRECT_OVERRIDE_DM_PULLUP_HISEL_OVERRIDE_EN_BIT:u32 = 1;
 pub const USB_USBPHY_DIRECT_OVERRIDE_DP_PULLUP_HISEL_OVERRIDE_EN_BIT:u32 = 0;
+
 // USBPHY_TRIM
 pub const USB_USBPHY_TRIM_DM_PULLDN_TRIM_LOW:       u32 = 8;
 pub const USB_USBPHY_TRIM_DM_PULLDN_TRIM_HIGH:      u32 = 12;
 pub const USB_USBPHY_TRIM_DP_PULLDN_TRIM_LOW:       u32 = 0;
 pub const USB_USBPHY_TRIM_DP_PULLDN_TRIM_HIGH:      u32 = 4;
+
 // INTR
 pub const USB_INTR_EP_STALL_NAK_BIT:                u32 = 19;
 pub const USB_INTR_ABORT_DONE_BIT:                  u32 = 18;
@@ -460,6 +384,7 @@ pub const USB_INTR_TRANS_COMPLETE_BIT:              u32 = 3;
 pub const USB_INTR_HOST_SOF_BIT:                    u32 = 2;
 pub const USB_INTR_HOST_RESUME_BIT:                 u32 = 1;
 pub const USB_INTR_HOST_CONN_DIS_BIT:               u32 = 0;
+
 // INTE
 pub const USB_INTE_EP_STALL_NAK_BIT:                u32 = 19;
 pub const USB_INTE_ABORT_DONE_BIT:                  u32 = 18;
@@ -481,6 +406,7 @@ pub const USB_INTE_TRANS_COMPLETE_BIT:              u32 = 3;
 pub const USB_INTE_HOST_SOF_BIT:                    u32 = 2;
 pub const USB_INTE_HOST_RESUME_BIT:                 u32 = 1;
 pub const USB_INTE_HOST_CONN_DIS_BIT:               u32 = 0;
+
 // INTF
 pub const USB_INTF_EP_STALL_NAK_BIT:                u32 = 19;
 pub const USB_INTF_ABORT_DONE_BIT:                  u32 = 18;
@@ -502,6 +428,7 @@ pub const USB_INTF_TRANS_COMPLETE_BIT:              u32 = 3;
 pub const USB_INTF_HOST_SOF_BIT:                    u32 = 2;
 pub const USB_INTF_HOST_RESUME_BIT:                 u32 = 1;
 pub const USB_INTF_HOST_CONN_DIS_BIT:               u32 = 0;
+
 // INTS
 pub const USB_INTS_EP_STALL_NAK_BIT:                u32 = 19;
 pub const USB_INTS_ABORT_DONE_BIT:                  u32 = 18;

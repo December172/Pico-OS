@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 
-"""Generate enumerated-value constants for every RP2040 register field from specs/RP2040.svd.
+"""Generate enumerated-value constants for every register field of the active device.
+
+The active device is selected with the SVD_DEVICE environment variable (default
+RP2040); constants are written to src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs.
 
 For each register field that carries `<enumeratedValues>` in the CMSIS-SVD file
 this script writes one constant per enumerated value:
@@ -18,18 +21,26 @@ registers are named for their meaning instead:
 (e.g. CLOCKS_CLK_SYS_PLL_SYS_AUXSOURCE, CLOCKS_CLK_REF_XOSC_SRC).  Those two
 fields are skipped by the generic pass so no duplicate constants appear.
 
+Duplication handling
+--------------------
+Registers that share an identical field layout are collapsed into one family by
+svd_common.register_families(); the family name is used in place of the
+individual register name, so GPIO0..GPIO29 emit a single set of enum constants
+under GPIO_CTRL and CH0..CH11 under CH_CTRL_TRIG.  Numeric instance suffixes are
+removed from the shared name.  When two members of a family disagree on an
+enum value the conflicting field is emitted per register instead, so different
+values are never silently merged.
+
 Naming:
   * identifiers are fully qualified strict UPPER_SNAKE_CASE -- illegal
     characters are folded to '_', underscore runs are collapsed and edges
     trimmed, and no identifier starts with a digit.  Enum values such as
     `3V3`, `1_15MHZ` or `128` therefore yield clean names
     (`..._VOLTAGE_SELECT_3V3`, `..._FREQ_RANGE_1_15MHZ`, `..._OFFSET_128`).
-  * numbered sibling registers that expose an identical field layout
-    (GPIO0..GPIO29, CH0..CH11, SM0..SM3, EP1..EP15, CLK_GPOUT0..3, ...) are
-    collapsed into a single constant set with the digit runs stripped from the
-    register name.
-  * when a field name repeats its register name the redundant component is
+  * when a field name repeats its family name the redundant component is
     dropped.
+  * names that would collide with the bit-range block (or another enum) are
+    renamed with a numeric suffix so nothing is silently overwritten.
 
 Peripherals that only carry a `derivedFrom` attribute (I2C1, PIO1, PLL_USB,
 SPI1, UART1) inherit the register/field layout of their base peripheral but keep
@@ -37,95 +48,37 @@ their own name prefix.
 
 The generated block is delimited so it can be regenerated idempotently, and is
 written *after* the field bit-range block (tools/gen_field_ranges.py) so the
-generators do not clobber each other's output.  Hand-written constants already
-present in the file (including the bit-range block) are treated as reserved:
-any generated identifier that would collide is renamed with a numeric suffix so
-existing constants are never overwritten.
+generators do not clobber each other's output.
 """
 
 import os
 import re
-import xml.etree.ElementTree as ET
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SVD = os.path.join(ROOT, "specs", "RP2040.svd")
-CONST_DIR = os.path.join(ROOT, "src", "Native", "Constants", "RP2040")
-
-BEGIN = "// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ===="
-END = "// ==== END AUTO-GENERATED ENUMERATED VALUES ===="
-
-# Legacy marker block written by the former standalone tools/gen_auxsrc_enums.py
-# (kept so stale output from the old two-script setup is removed on regeneration).
-LEGACY_BEGIN = "// ==== BEGIN AUTO-GENERATED AUXSRC ENUMERATED VALUES (tools/gen_auxsrc_enums.py) ===="
-LEGACY_END = "// ==== END AUTO-GENERATED AUXSRC ENUMERATED VALUES ===="
+from svd_common import (
+    CONST_DIR,
+    ENUM_BEGIN as BEGIN,
+    ENUM_END as END,
+    LEGACY_ENUM_BEGIN,
+    LEGACY_ENUM_END,
+    SVD_NAME,
+    collect_register_fields,
+    existing_constants,
+    ident,
+    merge_outputs,
+    parse_svd,
+    register_family_names,
+    resolve,
+    sanitize,
+    split_block,
+    token,
+    upsert_block,
+)
 
 # CLOCKS source-selector fields and the constant suffix they use.  AUXSRC feeds
 # the glitchy auxiliary mux, SRC the glitchless one.  These are emitted by the
 # dedicated CLOCKS pass below and skipped by the generic enumerated-value pass.
 ID_FIELDS = {"AUXSRC": "AUXSOURCE", "SRC": "SRC"}
 SKIP = {("CLOCKS", "AUXSRC"), ("CLOCKS", "SRC")}
-
-# Peripherals sharing an identical layout are emitted into one file: maps the
-# output file stem -> primary peripheral.  Sibling instances (discovered via
-# `derivedFrom`, e.g. PIO1 derives from PIO0) are folded into the primary and
-# their enum constants are emitted once with the shared stem prefix.
-MERGED = {
-    "PIO": "PIO0",
-    "I2C": "I2C0",
-    "UART": "UART0",
-    "SPI": "SPI0",
-}
-
-
-def merge_outputs(periphs):
-    """Return (primary->stem, alias->primary) maps describing the MERGED merges."""
-    primary_stem = {}
-    alias_of = {}
-    for stem, primary in MERGED.items():
-        primary_stem[primary] = stem
-        for name, p in periphs.items():
-            if name != primary and p.get("derivedFrom") == primary:
-                alias_of[name] = primary
-    return primary_stem, alias_of
-
-IDENT = re.compile(r"[^0-9A-Za-z_]")
-DIGITS = re.compile(r"\d+")
-UNDERSCORES = re.compile(r"_+")
-
-
-def sanitize(name: str) -> str:
-    # strict UPPER_SNAKE_CASE: fold illegal chars, collapse underscore runs and
-    # trim the edges so values like "3V3", "1_15MHZ" or "128" become clean
-    # tokens (3V3, 1_15MHZ, 128) instead of producing "__1_15MHZ"/"__3V3".
-    name = IDENT.sub("_", name).upper()
-    name = UNDERSCORES.sub("_", name).strip("_")
-    if name and name[0].isdigit():
-        name = "_" + name
-    return name
-
-
-def ident(*parts) -> str:
-    """Join parts into a strict UPPER_SNAKE_CASE identifier."""
-    return sanitize("_".join(p for p in parts if p))
-
-
-def token(name: str) -> str:
-    """Strip digit runs then sanitize -- collapses numbered register families."""
-    return sanitize(DIGITS.sub("", name))
-
-
-def resolve(periphs, name, seen=None):
-    """Return the peripheral element to read registers/fields from, following derivedFrom."""
-    seen = seen or set()
-    if name in seen:
-        raise RuntimeError("cyclic derivedFrom involving " + name)
-    seen.add(name)
-    p = periphs[name]
-    regs = p.findall("./registers/register")
-    derived = p.get("derivedFrom")
-    if derived and not regs:
-        return resolve(periphs, derived, seen)
-    return p
 
 
 def collect_enum_fields(peripheral):
@@ -136,30 +89,13 @@ def collect_enum_fields(peripheral):
     """
     pname = peripheral.findtext("name")
     out = []
-    for reg in peripheral.findall("./registers/register"):
-        reg_name = reg.findtext("name")
-        for f in reg.findall("./fields/field"):
-            fld_name = f.findtext("name")
+    for reg_name, fields in collect_register_fields(peripheral):
+        for fld_name, _high, _low, values in fields:
             if (pname, fld_name) in SKIP:
                 continue
-            evs = f.findall("./enumeratedValues/enumeratedValue")
-            if not evs:
-                continue
-            values = []
-            for ev in evs:
-                val = ev.findtext("value")
-                if val is None:
-                    continue
-                values.append((ev.findtext("name"), int(val, 0)))
             if values:
-                out.append((reg_name, f.findtext("name"), values))
+                out.append((reg_name, fld_name, values))
     return out
-
-
-def existing_constants(text):
-    """Names of pub const identifiers already present in the file (outside our block)."""
-    head = text.split(BEGIN, 1)[0]
-    return set(re.findall(r"pub const\s+([0-9A-Za-z_]+)\s*:", head))
 
 
 def source_token(enum_name: str) -> str:
@@ -183,7 +119,7 @@ def clock_token(reg_name: str) -> str:
     return sanitize(n)
 
 
-def merge_token(clock: str) -> str:
+def merge_clock_token(clock: str) -> str:
     """Collapse numbered sibling clocks (GPOUT0..GPOUT3) into one token."""
     if re.fullmatch(r"GPOUT\d+", clock):
         return "GPOUT"
@@ -193,30 +129,14 @@ def merge_token(clock: str) -> str:
 def collect_sources(peripheral):
     """Yield (field_name, register_name, bitrange_str, [(source, value), ...])."""
     out = []
-    for reg in peripheral.findall("./registers/register"):
-        reg_name = reg.findtext("name")
-        for f in reg.findall("./fields/field"):
-            fld_name = f.findtext("name")
+    for reg_name, fields in collect_register_fields(peripheral):
+        for fld_name, high, low, values in fields:
             if fld_name not in ID_FIELDS:
                 continue
-            br = f.findtext("bitRange")
-            if br is None:
-                lo = int(f.findtext("bitOffset"))
-                high = lo + int(f.findtext("bitWidth")) - 1
-                br = f"[{high}:{lo}]"
-            else:
-                m = re.fullmatch(r"\[(\d+):(\d+)\]", br.strip())
-                if not m:
-                    raise RuntimeError(f"unparsable bitRange {br!r} in {reg_name}.{fld_name}")
-                br = f"[{m.group(1)}:{m.group(2)}]"
-
-            values = []
-            for ev in f.findall("./enumeratedValues/enumeratedValue"):
-                val = ev.findtext("value")
-                if val is None:
-                    continue
-                values.append((source_token(ev.findtext("name")), int(val, 0)))
-            out.append((fld_name, reg_name, br, values))
+            sources = []
+            for ev_name, val in values:
+                sources.append((source_token(ev_name), val))
+            out.append((fld_name, reg_name, f"[{high}:{low}]", sources))
     return out
 
 
@@ -231,7 +151,7 @@ def build_auxsrc(peripheral_name, entries, used):
     order = []
     groups = {}
     for field_name, reg_name, br, values in entries:
-        clock = merge_token(clock_token(reg_name))
+        clock = merge_clock_token(clock_token(reg_name))
         key = (field_name, clock)
         if key not in groups:
             groups[key] = {"regs": [], "br": br, "values": [], "seen": set()}
@@ -267,17 +187,25 @@ def build_auxsrc(peripheral_name, entries, used):
 
 
 def strip_old_blocks(content):
-    """Remove any previously generated block (merged and/or legacy AUXSRC)."""
-    content = content.split(BEGIN, 1)[0]
-    if LEGACY_BEGIN in content:
-        pre, rest = content.split(LEGACY_BEGIN, 1)
-        post = rest.split(LEGACY_END, 1)[1] if LEGACY_END in rest else ""
+    """Remove any previously generated legacy AUXSRC block.
+
+    The current enumerated-value block is replaced in place by `upsert_block`,
+    so it is left untouched here.
+    """
+    if LEGACY_ENUM_BEGIN in content:
+        pre, rest = content.split(LEGACY_ENUM_BEGIN, 1)
+        post = rest.split(LEGACY_ENUM_END, 1)[1] if LEGACY_ENUM_END in rest else ""
         content = pre + post
     return content
 
 
-def build_block(peripheral_name, fields, reserved):
-    """Group numbered sibling registers and emit one constant per enumerated value."""
+def build_block(peripheral_name, fields, reserved, reg_tokens):
+    """Group sibling registers and emit one constant per enumerated value.
+
+    `reg_tokens` maps a register name to the name of the layout family it
+    belongs to; family members merge unless their value maps disagree, in which
+    case the field falls back to the exact register name.
+    """
     used = set(reserved)
     lines = []
     warnings = []
@@ -286,9 +214,7 @@ def build_block(peripheral_name, fields, reserved):
     groups = {}
     order = []
     for reg_name, fld_name, values in fields:
-        base = token(reg_name)
-        fld = token(fld_name)
-        key = (base, fld)
+        key = (reg_tokens.get(reg_name, token(reg_name)), token(fld_name))
 
         # Only merge into an existing group when the value maps are consistent;
         # a conflicting value forces a dedicated group keyed by the exact name.
@@ -314,8 +240,9 @@ def build_block(peripheral_name, fields, reserved):
 
     for base, fld in order:
         group = groups[(base, fld)]
-        # Drop the redundant field component when it repeats the register name.
-        stem = base if fld == base else f"{base}_{fld}"
+        # Drop the redundant field component when it repeats the family name
+        # (comparing digit-free tokens so FC0_SRC.FC0_SRC -> FC0_SRC).
+        stem = base if token(base) == fld else f"{base}_{fld}"
         emitted = []
         for name in group["order"]:
             const = ident(peripheral_name, stem, name)
@@ -347,11 +274,7 @@ def build_block(peripheral_name, fields, reserved):
 
 
 def main():
-    periphs = {}
-    root = ET.parse(SVD).getroot()
-    for p in root.findall("./peripherals/peripheral"):
-        periphs[p.findtext("name")] = p
-
+    periphs = parse_svd()
     primary_stem, alias_of = merge_outputs(periphs)
 
     total = 0
@@ -374,7 +297,10 @@ def main():
         with open(path, "r") as fh:
             content = strip_old_blocks(fh.read())
 
-        reserved = existing_constants(content)
+        reserved = existing_constants(split_block(content, BEGIN, END)[0])
+        registers = collect_register_fields(peripheral)
+        reg_tokens = register_family_names(registers)
+
         body = []
         warnings = []
 
@@ -388,7 +314,7 @@ def main():
             warnings += aux_warn
 
         if fields:
-            gen_lines, gen_warn = build_block(stem, fields, reserved)
+            gen_lines, gen_warn = build_block(stem, fields, reserved, reg_tokens)
             body += gen_lines
             warnings += gen_warn
 
@@ -398,15 +324,10 @@ def main():
         if not body:
             continue
 
-        block = "\n".join(
-            [BEGIN, "// Generated from specs/RP2040.svd -- do not edit by hand.", ""]
-            + body
-            + [END, ""]
-        )
-
-        head = content.rstrip("\n")
+        lines = [f"// Generated from specs/{SVD_NAME} -- do not edit by hand.", ""] + body
+        content = upsert_block(content, BEGIN, END, lines)
         with open(path, "w") as fh:
-            fh.write(head + "\n\n" + block)
+            fh.write(content)
 
         n = len([l for l in body if l.startswith("pub const")])
         total += n

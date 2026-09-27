@@ -1,10 +1,16 @@
 #![allow(dead_code)]
 // PSM
+
+// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ====
+// Generated from specs/RP2040.svd -- do not edit by hand.
+
 pub const PSM_BASE:                                 u32 = 0x4001_0000;
+
 pub const PSM_FRCE_ON:                              u32 = PSM_BASE + 0x0;
 pub const PSM_FRCE_OFF:                             u32 = PSM_BASE + 0x4;
 pub const PSM_WDSEL:                                u32 = PSM_BASE + 0x8;
 pub const PSM_DONE:                                 u32 = PSM_BASE + 0xC;
+// ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====
 // Generated from specs/RP2040.svd -- do not edit by hand.
@@ -27,6 +33,7 @@ pub const PSM_FRCE_ON_RESETS_BIT:                   u32 = 3;
 pub const PSM_FRCE_ON_CLOCKS_BIT:                   u32 = 2;
 pub const PSM_FRCE_ON_XOSC_BIT:                     u32 = 1;
 pub const PSM_FRCE_ON_ROSC_BIT:                     u32 = 0;
+
 // FRCE_OFF
 pub const PSM_FRCE_OFF_PROC1_BIT:                   u32 = 16;
 pub const PSM_FRCE_OFF_PROC0_BIT:                   u32 = 15;
@@ -45,6 +52,7 @@ pub const PSM_FRCE_OFF_RESETS_BIT:                  u32 = 3;
 pub const PSM_FRCE_OFF_CLOCKS_BIT:                  u32 = 2;
 pub const PSM_FRCE_OFF_XOSC_BIT:                    u32 = 1;
 pub const PSM_FRCE_OFF_ROSC_BIT:                    u32 = 0;
+
 // WDSEL
 pub const PSM_WDSEL_PROC1_BIT:                      u32 = 16;
 pub const PSM_WDSEL_PROC0_BIT:                      u32 = 15;
@@ -63,6 +71,7 @@ pub const PSM_WDSEL_RESETS_BIT:                     u32 = 3;
 pub const PSM_WDSEL_CLOCKS_BIT:                     u32 = 2;
 pub const PSM_WDSEL_XOSC_BIT:                       u32 = 1;
 pub const PSM_WDSEL_ROSC_BIT:                       u32 = 0;
+
 // DONE
 pub const PSM_DONE_PROC1_BIT:                       u32 = 16;
 pub const PSM_DONE_PROC0_BIT:                       u32 = 15;
