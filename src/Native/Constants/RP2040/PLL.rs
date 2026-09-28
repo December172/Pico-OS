@@ -7,10 +7,14 @@
 pub const PLL_SYS_BASE:                             u32 = 0x4002_8000;
 pub const PLL_USB_BASE:                             u32 = 0x4002_C000;
 
-pub const PLL_CS_OFFSET:                            u32 = 0x0;
-pub const PLL_PWR_OFFSET:                           u32 = 0x4;
-pub const PLL_FBDIV_INT_OFFSET:                     u32 = 0x8;
-pub const PLL_PRIM_OFFSET:                          u32 = 0xC;
+pub const PLL_SYS_CS:                               u32 = PLL_SYS_BASE + 0x0;
+pub const PLL_SYS_PWR:                              u32 = PLL_SYS_BASE + 0x4;
+pub const PLL_SYS_FBDIV_INT:                        u32 = PLL_SYS_BASE + 0x8;
+pub const PLL_SYS_PRIM:                             u32 = PLL_SYS_BASE + 0xC;
+pub const PLL_USB_CS:                               u32 = PLL_USB_BASE + 0x0;
+pub const PLL_USB_PWR:                              u32 = PLL_USB_BASE + 0x4;
+pub const PLL_USB_FBDIV_INT:                        u32 = PLL_USB_BASE + 0x8;
+pub const PLL_USB_PRIM:                             u32 = PLL_USB_BASE + 0xC;
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====

@@ -42,3 +42,6 @@ pub mod OTP_DATA;
 pub mod OTP_DATA_RAW;
 pub mod TBMAN;
 pub mod USB_DPRAM;
+
+// For non-predefined user values
+pub mod Config;

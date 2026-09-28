@@ -7,28 +7,52 @@
 pub const UART0_BASE:                               u32 = 0x4003_4000;
 pub const UART1_BASE:                               u32 = 0x4003_8000;
 
-pub const UART_UARTDR_OFFSET:                       u32 = 0x0;
-pub const UART_UARTRSR_OFFSET:                      u32 = 0x4;
-pub const UART_UARTFR_OFFSET:                       u32 = 0x18;
-pub const UART_UARTILPR_OFFSET:                     u32 = 0x20;
-pub const UART_UARTIBRD_OFFSET:                     u32 = 0x24;
-pub const UART_UARTFBRD_OFFSET:                     u32 = 0x28;
-pub const UART_UARTLCR_H_OFFSET:                    u32 = 0x2C;
-pub const UART_UARTCR_OFFSET:                       u32 = 0x30;
-pub const UART_UARTIFLS_OFFSET:                     u32 = 0x34;
-pub const UART_UARTIMSC_OFFSET:                     u32 = 0x38;
-pub const UART_UARTRIS_OFFSET:                      u32 = 0x3C;
-pub const UART_UARTMIS_OFFSET:                      u32 = 0x40;
-pub const UART_UARTICR_OFFSET:                      u32 = 0x44;
-pub const UART_UARTDMACR_OFFSET:                    u32 = 0x48;
+pub const UART0_UARTDR:                             u32 = UART0_BASE + 0x0;
+pub const UART0_UARTRSR:                            u32 = UART0_BASE + 0x4;
+pub const UART0_UARTFR:                             u32 = UART0_BASE + 0x18;
+pub const UART0_UARTILPR:                           u32 = UART0_BASE + 0x20;
+pub const UART0_UARTIBRD:                           u32 = UART0_BASE + 0x24;
+pub const UART0_UARTFBRD:                           u32 = UART0_BASE + 0x28;
+pub const UART0_UARTLCR_H:                          u32 = UART0_BASE + 0x2C;
+pub const UART0_UARTCR:                             u32 = UART0_BASE + 0x30;
+pub const UART0_UARTIFLS:                           u32 = UART0_BASE + 0x34;
+pub const UART0_UARTIMSC:                           u32 = UART0_BASE + 0x38;
+pub const UART0_UARTRIS:                            u32 = UART0_BASE + 0x3C;
+pub const UART0_UARTMIS:                            u32 = UART0_BASE + 0x40;
+pub const UART0_UARTICR:                            u32 = UART0_BASE + 0x44;
+pub const UART0_UARTDMACR:                          u32 = UART0_BASE + 0x48;
 // UARTPERIPHID0..UARTPERIPHID3
-pub fn UART_UARTPERIPHID_OFFSET(n: u32) -> u32 {
-    return 0xFE0 + n * 0x4
+pub fn UART0_UARTPERIPHID(n: u32) -> u32 {
+    return UART0_BASE + 0xFE0 + n * 0x4
 }
 
 // UARTPCELLID0..UARTPCELLID3
-pub fn UART_UARTPCELLID_OFFSET(n: u32) -> u32 {
-    return 0xFF0 + n * 0x4
+pub fn UART0_UARTPCELLID(n: u32) -> u32 {
+    return UART0_BASE + 0xFF0 + n * 0x4
+}
+
+pub const UART1_UARTDR:                             u32 = UART1_BASE + 0x0;
+pub const UART1_UARTRSR:                            u32 = UART1_BASE + 0x4;
+pub const UART1_UARTFR:                             u32 = UART1_BASE + 0x18;
+pub const UART1_UARTILPR:                           u32 = UART1_BASE + 0x20;
+pub const UART1_UARTIBRD:                           u32 = UART1_BASE + 0x24;
+pub const UART1_UARTFBRD:                           u32 = UART1_BASE + 0x28;
+pub const UART1_UARTLCR_H:                          u32 = UART1_BASE + 0x2C;
+pub const UART1_UARTCR:                             u32 = UART1_BASE + 0x30;
+pub const UART1_UARTIFLS:                           u32 = UART1_BASE + 0x34;
+pub const UART1_UARTIMSC:                           u32 = UART1_BASE + 0x38;
+pub const UART1_UARTRIS:                            u32 = UART1_BASE + 0x3C;
+pub const UART1_UARTMIS:                            u32 = UART1_BASE + 0x40;
+pub const UART1_UARTICR:                            u32 = UART1_BASE + 0x44;
+pub const UART1_UARTDMACR:                          u32 = UART1_BASE + 0x48;
+// UARTPERIPHID0..UARTPERIPHID3
+pub fn UART1_UARTPERIPHID(n: u32) -> u32 {
+    return UART1_BASE + 0xFE0 + n * 0x4
+}
+
+// UARTPCELLID0..UARTPCELLID3
+pub fn UART1_UARTPCELLID(n: u32) -> u32 {
+    return UART1_BASE + 0xFF0 + n * 0x4
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 

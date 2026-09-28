@@ -8,96 +8,280 @@ pub const PIO0_BASE:                                u32 = 0x5020_0000;
 pub const PIO1_BASE:                                u32 = 0x5030_0000;
 pub const PIO2_BASE:                                u32 = 0x5040_0000;
 
-pub const PIO_CTRL_OFFSET:                          u32 = 0x0;
-pub const PIO_FSTAT_OFFSET:                         u32 = 0x4;
-pub const PIO_FDEBUG_OFFSET:                        u32 = 0x8;
-pub const PIO_FLEVEL_OFFSET:                        u32 = 0xC;
+pub const PIO0_CTRL:                                u32 = PIO0_BASE + 0x0;
+pub const PIO0_FSTAT:                               u32 = PIO0_BASE + 0x4;
+pub const PIO0_FDEBUG:                              u32 = PIO0_BASE + 0x8;
+pub const PIO0_FLEVEL:                              u32 = PIO0_BASE + 0xC;
 // TXF0..TXF3
-pub fn PIO_TXF_OFFSET(n: u32) -> u32 {
-    return 0x10 + n * 0x4
+pub fn PIO0_TXF(n: u32) -> u32 {
+    return PIO0_BASE + 0x10 + n * 0x4
 }
 
 // RXF0..RXF3
-pub fn PIO_RXF_OFFSET(n: u32) -> u32 {
-    return 0x20 + n * 0x4
+pub fn PIO0_RXF(n: u32) -> u32 {
+    return PIO0_BASE + 0x20 + n * 0x4
 }
 
-pub const PIO_IRQ_OFFSET:                           u32 = 0x30;
-pub const PIO_IRQ_FORCE_OFFSET:                     u32 = 0x34;
-pub const PIO_INPUT_SYNC_BYPASS_OFFSET:             u32 = 0x38;
-pub const PIO_DBG_PADOUT_OFFSET:                    u32 = 0x3C;
-pub const PIO_DBG_PADOE_OFFSET:                     u32 = 0x40;
-pub const PIO_DBG_CFGINFO_OFFSET:                   u32 = 0x44;
+pub const PIO0_IRQ:                                 u32 = PIO0_BASE + 0x30;
+pub const PIO0_IRQ_FORCE:                           u32 = PIO0_BASE + 0x34;
+pub const PIO0_INPUT_SYNC_BYPASS:                   u32 = PIO0_BASE + 0x38;
+pub const PIO0_DBG_PADOUT:                          u32 = PIO0_BASE + 0x3C;
+pub const PIO0_DBG_PADOE:                           u32 = PIO0_BASE + 0x40;
+pub const PIO0_DBG_CFGINFO:                         u32 = PIO0_BASE + 0x44;
 // INSTR_MEM0..INSTR_MEM31
-pub fn PIO_INSTR_MEM_OFFSET(n: u32) -> u32 {
-    return 0x48 + n * 0x4
+pub fn PIO0_INSTR_MEM(n: u32) -> u32 {
+    return PIO0_BASE + 0x48 + n * 0x4
 }
 
 // SM0_CLKDIV..SM3_CLKDIV
-pub fn PIO_SM_CLKDIV_OFFSET(sm: u32) -> u32 {
-    return 0xC8 + sm * 0x18
+pub fn PIO0_SM_CLKDIV(n: u32) -> u32 {
+    return PIO0_BASE + 0xC8 + n * 0x18
 }
 
 // SM0_EXECCTRL..SM3_EXECCTRL
-pub fn PIO_SM_EXECCTRL_OFFSET(sm: u32) -> u32 {
-    return 0xCC + sm * 0x18
+pub fn PIO0_SM_EXECCTRL(n: u32) -> u32 {
+    return PIO0_BASE + 0xCC + n * 0x18
 }
 
 // SM0_SHIFTCTRL..SM3_SHIFTCTRL
-pub fn PIO_SM_SHIFTCTRL_OFFSET(sm: u32) -> u32 {
-    return 0xD0 + sm * 0x18
+pub fn PIO0_SM_SHIFTCTRL(n: u32) -> u32 {
+    return PIO0_BASE + 0xD0 + n * 0x18
 }
 
 // SM0_ADDR..SM3_ADDR
-pub fn PIO_SM_ADDR_OFFSET(sm: u32) -> u32 {
-    return 0xD4 + sm * 0x18
+pub fn PIO0_SM_ADDR(n: u32) -> u32 {
+    return PIO0_BASE + 0xD4 + n * 0x18
 }
 
 // SM0_INSTR..SM3_INSTR
-pub fn PIO_SM_INSTR_OFFSET(sm: u32) -> u32 {
-    return 0xD8 + sm * 0x18
+pub fn PIO0_SM_INSTR(n: u32) -> u32 {
+    return PIO0_BASE + 0xD8 + n * 0x18
 }
 
 // SM0_PINCTRL..SM3_PINCTRL
-pub fn PIO_SM_PINCTRL_OFFSET(sm: u32) -> u32 {
-    return 0xDC + sm * 0x18
+pub fn PIO0_SM_PINCTRL(n: u32) -> u32 {
+    return PIO0_BASE + 0xDC + n * 0x18
 }
 
 // RXF0_PUTGET0..RXF0_PUTGET3
-pub fn PIO_RXF0_PUTGET_OFFSET(n: u32) -> u32 {
-    return 0x128 + n * 0x4
+pub fn PIO0_RXF0_PUTGET(n: u32) -> u32 {
+    return PIO0_BASE + 0x128 + n * 0x4
 }
 
 // RXF1_PUTGET0..RXF1_PUTGET3
-pub fn PIO_RXF1_PUTGET_OFFSET(n: u32) -> u32 {
-    return 0x138 + n * 0x4
+pub fn PIO0_RXF1_PUTGET(n: u32) -> u32 {
+    return PIO0_BASE + 0x138 + n * 0x4
 }
 
 // RXF2_PUTGET0..RXF2_PUTGET3
-pub fn PIO_RXF2_PUTGET_OFFSET(n: u32) -> u32 {
-    return 0x148 + n * 0x4
+pub fn PIO0_RXF2_PUTGET(n: u32) -> u32 {
+    return PIO0_BASE + 0x148 + n * 0x4
 }
 
 // RXF3_PUTGET0..RXF3_PUTGET3
-pub fn PIO_RXF3_PUTGET_OFFSET(n: u32) -> u32 {
-    return 0x158 + n * 0x4
+pub fn PIO0_RXF3_PUTGET(n: u32) -> u32 {
+    return PIO0_BASE + 0x158 + n * 0x4
 }
 
-pub const PIO_GPIOBASE_OFFSET:                      u32 = 0x168;
-pub const PIO_INTR_OFFSET:                          u32 = 0x16C;
+pub const PIO0_GPIOBASE:                            u32 = PIO0_BASE + 0x168;
+pub const PIO0_INTR:                                u32 = PIO0_BASE + 0x16C;
 // IRQ0_INTE..IRQ1_INTE
-pub fn PIO_IRQ_INTE_OFFSET(n: u32) -> u32 {
-    return 0x170 + n * 0xC
+pub fn PIO0_IRQ_INTE(n: u32) -> u32 {
+    return PIO0_BASE + 0x170 + n * 0xC
 }
 
 // IRQ0_INTF..IRQ1_INTF
-pub fn PIO_IRQ_INTF_OFFSET(n: u32) -> u32 {
-    return 0x174 + n * 0xC
+pub fn PIO0_IRQ_INTF(n: u32) -> u32 {
+    return PIO0_BASE + 0x174 + n * 0xC
 }
 
 // IRQ0_INTS..IRQ1_INTS
-pub fn PIO_IRQ_INTS_OFFSET(n: u32) -> u32 {
-    return 0x178 + n * 0xC
+pub fn PIO0_IRQ_INTS(n: u32) -> u32 {
+    return PIO0_BASE + 0x178 + n * 0xC
+}
+
+pub const PIO1_CTRL:                                u32 = PIO1_BASE + 0x0;
+pub const PIO1_FSTAT:                               u32 = PIO1_BASE + 0x4;
+pub const PIO1_FDEBUG:                              u32 = PIO1_BASE + 0x8;
+pub const PIO1_FLEVEL:                              u32 = PIO1_BASE + 0xC;
+// TXF0..TXF3
+pub fn PIO1_TXF(n: u32) -> u32 {
+    return PIO1_BASE + 0x10 + n * 0x4
+}
+
+// RXF0..RXF3
+pub fn PIO1_RXF(n: u32) -> u32 {
+    return PIO1_BASE + 0x20 + n * 0x4
+}
+
+pub const PIO1_IRQ:                                 u32 = PIO1_BASE + 0x30;
+pub const PIO1_IRQ_FORCE:                           u32 = PIO1_BASE + 0x34;
+pub const PIO1_INPUT_SYNC_BYPASS:                   u32 = PIO1_BASE + 0x38;
+pub const PIO1_DBG_PADOUT:                          u32 = PIO1_BASE + 0x3C;
+pub const PIO1_DBG_PADOE:                           u32 = PIO1_BASE + 0x40;
+pub const PIO1_DBG_CFGINFO:                         u32 = PIO1_BASE + 0x44;
+// INSTR_MEM0..INSTR_MEM31
+pub fn PIO1_INSTR_MEM(n: u32) -> u32 {
+    return PIO1_BASE + 0x48 + n * 0x4
+}
+
+// SM0_CLKDIV..SM3_CLKDIV
+pub fn PIO1_SM_CLKDIV(n: u32) -> u32 {
+    return PIO1_BASE + 0xC8 + n * 0x18
+}
+
+// SM0_EXECCTRL..SM3_EXECCTRL
+pub fn PIO1_SM_EXECCTRL(n: u32) -> u32 {
+    return PIO1_BASE + 0xCC + n * 0x18
+}
+
+// SM0_SHIFTCTRL..SM3_SHIFTCTRL
+pub fn PIO1_SM_SHIFTCTRL(n: u32) -> u32 {
+    return PIO1_BASE + 0xD0 + n * 0x18
+}
+
+// SM0_ADDR..SM3_ADDR
+pub fn PIO1_SM_ADDR(n: u32) -> u32 {
+    return PIO1_BASE + 0xD4 + n * 0x18
+}
+
+// SM0_INSTR..SM3_INSTR
+pub fn PIO1_SM_INSTR(n: u32) -> u32 {
+    return PIO1_BASE + 0xD8 + n * 0x18
+}
+
+// SM0_PINCTRL..SM3_PINCTRL
+pub fn PIO1_SM_PINCTRL(n: u32) -> u32 {
+    return PIO1_BASE + 0xDC + n * 0x18
+}
+
+// RXF0_PUTGET0..RXF0_PUTGET3
+pub fn PIO1_RXF0_PUTGET(n: u32) -> u32 {
+    return PIO1_BASE + 0x128 + n * 0x4
+}
+
+// RXF1_PUTGET0..RXF1_PUTGET3
+pub fn PIO1_RXF1_PUTGET(n: u32) -> u32 {
+    return PIO1_BASE + 0x138 + n * 0x4
+}
+
+// RXF2_PUTGET0..RXF2_PUTGET3
+pub fn PIO1_RXF2_PUTGET(n: u32) -> u32 {
+    return PIO1_BASE + 0x148 + n * 0x4
+}
+
+// RXF3_PUTGET0..RXF3_PUTGET3
+pub fn PIO1_RXF3_PUTGET(n: u32) -> u32 {
+    return PIO1_BASE + 0x158 + n * 0x4
+}
+
+pub const PIO1_GPIOBASE:                            u32 = PIO1_BASE + 0x168;
+pub const PIO1_INTR:                                u32 = PIO1_BASE + 0x16C;
+// IRQ0_INTE..IRQ1_INTE
+pub fn PIO1_IRQ_INTE(n: u32) -> u32 {
+    return PIO1_BASE + 0x170 + n * 0xC
+}
+
+// IRQ0_INTF..IRQ1_INTF
+pub fn PIO1_IRQ_INTF(n: u32) -> u32 {
+    return PIO1_BASE + 0x174 + n * 0xC
+}
+
+// IRQ0_INTS..IRQ1_INTS
+pub fn PIO1_IRQ_INTS(n: u32) -> u32 {
+    return PIO1_BASE + 0x178 + n * 0xC
+}
+
+pub const PIO2_CTRL:                                u32 = PIO2_BASE + 0x0;
+pub const PIO2_FSTAT:                               u32 = PIO2_BASE + 0x4;
+pub const PIO2_FDEBUG:                              u32 = PIO2_BASE + 0x8;
+pub const PIO2_FLEVEL:                              u32 = PIO2_BASE + 0xC;
+// TXF0..TXF3
+pub fn PIO2_TXF(n: u32) -> u32 {
+    return PIO2_BASE + 0x10 + n * 0x4
+}
+
+// RXF0..RXF3
+pub fn PIO2_RXF(n: u32) -> u32 {
+    return PIO2_BASE + 0x20 + n * 0x4
+}
+
+pub const PIO2_IRQ:                                 u32 = PIO2_BASE + 0x30;
+pub const PIO2_IRQ_FORCE:                           u32 = PIO2_BASE + 0x34;
+pub const PIO2_INPUT_SYNC_BYPASS:                   u32 = PIO2_BASE + 0x38;
+pub const PIO2_DBG_PADOUT:                          u32 = PIO2_BASE + 0x3C;
+pub const PIO2_DBG_PADOE:                           u32 = PIO2_BASE + 0x40;
+pub const PIO2_DBG_CFGINFO:                         u32 = PIO2_BASE + 0x44;
+// INSTR_MEM0..INSTR_MEM31
+pub fn PIO2_INSTR_MEM(n: u32) -> u32 {
+    return PIO2_BASE + 0x48 + n * 0x4
+}
+
+// SM0_CLKDIV..SM3_CLKDIV
+pub fn PIO2_SM_CLKDIV(n: u32) -> u32 {
+    return PIO2_BASE + 0xC8 + n * 0x18
+}
+
+// SM0_EXECCTRL..SM3_EXECCTRL
+pub fn PIO2_SM_EXECCTRL(n: u32) -> u32 {
+    return PIO2_BASE + 0xCC + n * 0x18
+}
+
+// SM0_SHIFTCTRL..SM3_SHIFTCTRL
+pub fn PIO2_SM_SHIFTCTRL(n: u32) -> u32 {
+    return PIO2_BASE + 0xD0 + n * 0x18
+}
+
+// SM0_ADDR..SM3_ADDR
+pub fn PIO2_SM_ADDR(n: u32) -> u32 {
+    return PIO2_BASE + 0xD4 + n * 0x18
+}
+
+// SM0_INSTR..SM3_INSTR
+pub fn PIO2_SM_INSTR(n: u32) -> u32 {
+    return PIO2_BASE + 0xD8 + n * 0x18
+}
+
+// SM0_PINCTRL..SM3_PINCTRL
+pub fn PIO2_SM_PINCTRL(n: u32) -> u32 {
+    return PIO2_BASE + 0xDC + n * 0x18
+}
+
+// RXF0_PUTGET0..RXF0_PUTGET3
+pub fn PIO2_RXF0_PUTGET(n: u32) -> u32 {
+    return PIO2_BASE + 0x128 + n * 0x4
+}
+
+// RXF1_PUTGET0..RXF1_PUTGET3
+pub fn PIO2_RXF1_PUTGET(n: u32) -> u32 {
+    return PIO2_BASE + 0x138 + n * 0x4
+}
+
+// RXF2_PUTGET0..RXF2_PUTGET3
+pub fn PIO2_RXF2_PUTGET(n: u32) -> u32 {
+    return PIO2_BASE + 0x148 + n * 0x4
+}
+
+// RXF3_PUTGET0..RXF3_PUTGET3
+pub fn PIO2_RXF3_PUTGET(n: u32) -> u32 {
+    return PIO2_BASE + 0x158 + n * 0x4
+}
+
+pub const PIO2_GPIOBASE:                            u32 = PIO2_BASE + 0x168;
+pub const PIO2_INTR:                                u32 = PIO2_BASE + 0x16C;
+// IRQ0_INTE..IRQ1_INTE
+pub fn PIO2_IRQ_INTE(n: u32) -> u32 {
+    return PIO2_BASE + 0x170 + n * 0xC
+}
+
+// IRQ0_INTF..IRQ1_INTF
+pub fn PIO2_IRQ_INTF(n: u32) -> u32 {
+    return PIO2_BASE + 0x174 + n * 0xC
+}
+
+// IRQ0_INTS..IRQ1_INTS
+pub fn PIO2_IRQ_INTS(n: u32) -> u32 {
+    return PIO2_BASE + 0x178 + n * 0xC
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 

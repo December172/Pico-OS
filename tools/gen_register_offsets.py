@@ -4,20 +4,21 @@
 """Generate register-address accessors for the active SVD device.
 
 For every peripheral this script writes the register-address section of the
-matching src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs file:
+matching src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs file.  Every accessor is
+an absolute address: one `pub const` per register, or one `pub fn` for a
+collapsed instance family:
 
-  * non-merged peripheral -- addresses are absolute, one `pub const` per
-    register, or one `pub fn` for a collapsed instance family:
+    pub const RESETS_RESET:   u32 = RESETS_BASE + 0x0;
+    pub fn IO_BANK0_GPIO_CTRL(pin: u32) -> u32 { ... }
 
-        pub const RESETS_RESET:   u32 = RESETS_BASE + 0x0;
-        pub fn IO_BANK0_GPIO_CTRL(pin: u32) -> u32 { ... }
+Peripherals sharing one file (several `derivedFrom` instances) emit one
+`<INSTANCE>_BASE` and one absolute accessor set per instance, so an alias is
+addressed directly as `<INSTANCE>_<REG>`:
 
-  * merged peripheral (several `derivedFrom` instances sharing one file) --
-    one `<NAME>_BASE` per instance plus offsets relative to that base:
-
-        pub const PIO0_BASE:      u32 = 0x5020_0000;
-        pub const PIO_CTRL_OFFSET: u32 = 0x0;
-        pub fn PIO_INSTR_MEM_OFFSET(n: u32) -> u32 { ... }
+    pub const PIO0_BASE:      u32 = 0x5020_0000;
+    pub const PIO1_BASE:      u32 = 0x5030_0000;
+    pub const PIO0_CTRL:      u32 = PIO0_BASE + 0x0;
+    pub fn PIO0_INSTR_MEM(n: u32) -> u32 { ... }
 
 Collapsing repeated addresses
 -----------------------------
@@ -69,14 +70,6 @@ DIGITS = re.compile(r"\d+")
 # A hand-curated declaration already sitting in the file header -- the offsets
 # pass must not duplicate it.
 MANUAL = re.compile(r"^\s*pub\s+(?:const|fn)\b", re.M)
-# Keywords that suggest a friendlier index parameter name.
-PARAM_HINTS = (
-    ("GPIO", "pin"),
-    ("PADS_BANK", "pin"),
-    ("EP", "ep"),
-    ("CH_", "ch"),
-    ("SM", "sm"),
-)
 
 
 def fmt_base(value):
@@ -208,20 +201,11 @@ def plan_registers(registers):
     return items
 
 
-def param_name(template):
-    """Pick a readable index parameter name for a collapsed accessor."""
-    up = template.upper()
-    for needle, name in PARAM_HINTS:
-        if needle in up:
-            return name
-    return "n"
+def render(items, bases):
+    """Render the absolute register-address accessors for one peripheral.
 
-
-def render(items, base_name, merged):
-    """Render the register-address lines for one peripheral.
-
-    `base_name` is the constant used for absolute addresses (the file stem);
-    `merged` files emit relative offsets instead (no base is added).
+    One `<INSTANCE>_<REG>` constant (or `<INSTANCE>_<REG>(index)` function) is
+    emitted per instance, each as an absolute `<INSTANCE>_BASE + offset`.
     """
     lines = []
     used = set()
@@ -239,30 +223,23 @@ def render(items, base_name, merged):
         used.add(name)
         return name
 
-    for item in items:
-        if item[0] == "const":
-            _kind, name, off = item
-            if merged:
-                const = unique(ident(base_name, name, "OFFSET"))
-                lines.append(f"pub const {const}:".ljust(52) + f"u32 = {fmt_off(off)};")
-            else:
+    for base_name, _addr in bases:
+        for item in items:
+            if item[0] == "const":
+                _kind, name, off = item
                 const = unique(ident(base_name, name))
                 lines.append(f"pub const {const}:".ljust(52)
                              + f"u32 = {base_name}_BASE + {fmt_off(off)};")
-        else:
-            _kind, template, off, stride, count, members = item
-            param = param_name(template)
-            if merged:
-                fn = unique(ident(base_name, template, "OFFSET"))
-                expr = f"{fmt_off(off)} + {param} * {fmt_off(stride)}"
             else:
+                _kind, template, off, stride, count, members = item
+                param = "n"
                 fn = unique(ident(base_name, template))
                 expr = f"{base_name}_BASE + {fmt_off(off)} + {param} * {fmt_off(stride)}"
-            lines.append(f"// {members[0]}..{members[-1]}")
-            lines.append(f"pub fn {fn}({param}: u32) -> u32 {{")
-            lines.append(f"    return {expr}")
-            lines.append("}")
-            lines.append("")
+                lines.append(f"// {members[0]}..{members[-1]}")
+                lines.append(f"pub fn {fn}({param}: u32) -> u32 {{")
+                lines.append(f"    return {expr}")
+                lines.append("}")
+                lines.append("")
     while lines and lines[-1] == "":
         lines.pop()
     return lines
@@ -270,12 +247,11 @@ def render(items, base_name, merged):
 
 def build_block(stem, primary, aliases, registers, bases):
     """Return the generated lines for one output file."""
-    merged = bool(aliases)
     body = []
     for name, addr in bases:
         body.append(f"pub const {name}_BASE:".ljust(52) + f"u32 = {fmt_base(addr)};")
     body.append("")
-    body.extend(render(plan_registers(registers), stem, merged))
+    body.extend(render(plan_registers(registers), bases))
     return body
 
 

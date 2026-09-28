@@ -7,13 +7,13 @@
 pub const IO_BANK0_BASE:                            u32 = 0x4001_4000;
 
 // GPIO0_STATUS..GPIO29_STATUS
-pub fn IO_BANK0_GPIO_STATUS(pin: u32) -> u32 {
-    return IO_BANK0_BASE + 0x0 + pin * 0x8
+pub fn IO_BANK0_GPIO_STATUS(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x0 + n * 0x8
 }
 
 // GPIO0_CTRL..GPIO29_CTRL
-pub fn IO_BANK0_GPIO_CTRL(pin: u32) -> u32 {
-    return IO_BANK0_BASE + 0x4 + pin * 0x8
+pub fn IO_BANK0_GPIO_CTRL(n: u32) -> u32 {
+    return IO_BANK0_BASE + 0x4 + n * 0x8
 }
 
 // INTR0..INTR3

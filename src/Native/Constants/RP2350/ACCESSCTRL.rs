@@ -10,8 +10,8 @@ pub const ACCESSCTRL_LOCK:                          u32 = ACCESSCTRL_BASE + 0x0;
 pub const ACCESSCTRL_FORCE_CORE_NS:                 u32 = ACCESSCTRL_BASE + 0x4;
 pub const ACCESSCTRL_CFGRESET:                      u32 = ACCESSCTRL_BASE + 0x8;
 // GPIO_NSMASK0..GPIO_NSMASK1
-pub fn ACCESSCTRL_GPIO_NSMASK(pin: u32) -> u32 {
-    return ACCESSCTRL_BASE + 0xC + pin * 0x4
+pub fn ACCESSCTRL_GPIO_NSMASK(n: u32) -> u32 {
+    return ACCESSCTRL_BASE + 0xC + n * 0x4
 }
 
 pub const ACCESSCTRL_ROM:                           u32 = ACCESSCTRL_BASE + 0x14;

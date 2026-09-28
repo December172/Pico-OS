@@ -7,83 +7,83 @@
 pub const DMA_BASE:                                 u32 = 0x5000_0000;
 
 // CH0_READ_ADDR..CH11_READ_ADDR
-pub fn DMA_CH_READ_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x0 + ch * 0x40
+pub fn DMA_CH_READ_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x0 + n * 0x40
 }
 
 // CH0_WRITE_ADDR..CH11_WRITE_ADDR
-pub fn DMA_CH_WRITE_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x4 + ch * 0x40
+pub fn DMA_CH_WRITE_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x4 + n * 0x40
 }
 
 // CH0_TRANS_COUNT..CH11_TRANS_COUNT
-pub fn DMA_CH_TRANS_COUNT(ch: u32) -> u32 {
-    return DMA_BASE + 0x8 + ch * 0x40
+pub fn DMA_CH_TRANS_COUNT(n: u32) -> u32 {
+    return DMA_BASE + 0x8 + n * 0x40
 }
 
 // CH0_CTRL_TRIG..CH11_CTRL_TRIG
-pub fn DMA_CH_CTRL_TRIG(ch: u32) -> u32 {
-    return DMA_BASE + 0xC + ch * 0x40
+pub fn DMA_CH_CTRL_TRIG(n: u32) -> u32 {
+    return DMA_BASE + 0xC + n * 0x40
 }
 
 // CH0_AL1_CTRL..CH11_AL1_CTRL
-pub fn DMA_CH_AL1_CTRL(ch: u32) -> u32 {
-    return DMA_BASE + 0x10 + ch * 0x40
+pub fn DMA_CH_AL1_CTRL(n: u32) -> u32 {
+    return DMA_BASE + 0x10 + n * 0x40
 }
 
 // CH0_AL2_CTRL..CH11_AL2_CTRL
-pub fn DMA_CH_AL2_CTRL(ch: u32) -> u32 {
-    return DMA_BASE + 0x20 + ch * 0x40
+pub fn DMA_CH_AL2_CTRL(n: u32) -> u32 {
+    return DMA_BASE + 0x20 + n * 0x40
 }
 
 // CH0_AL3_CTRL..CH11_AL3_CTRL
-pub fn DMA_CH_AL3_CTRL(ch: u32) -> u32 {
-    return DMA_BASE + 0x30 + ch * 0x40
+pub fn DMA_CH_AL3_CTRL(n: u32) -> u32 {
+    return DMA_BASE + 0x30 + n * 0x40
 }
 
 // CH0_AL1_READ_ADDR..CH11_AL1_READ_ADDR
-pub fn DMA_CH_AL1_READ_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x14 + ch * 0x40
+pub fn DMA_CH_AL1_READ_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x14 + n * 0x40
 }
 
 // CH0_AL2_READ_ADDR..CH11_AL2_READ_ADDR
-pub fn DMA_CH_AL2_READ_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x28 + ch * 0x40
+pub fn DMA_CH_AL2_READ_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x28 + n * 0x40
 }
 
 // CH0_AL1_WRITE_ADDR..CH11_AL1_WRITE_ADDR
-pub fn DMA_CH_AL1_WRITE_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x18 + ch * 0x40
+pub fn DMA_CH_AL1_WRITE_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x18 + n * 0x40
 }
 
 // CH0_AL3_WRITE_ADDR..CH11_AL3_WRITE_ADDR
-pub fn DMA_CH_AL3_WRITE_ADDR(ch: u32) -> u32 {
-    return DMA_BASE + 0x34 + ch * 0x40
+pub fn DMA_CH_AL3_WRITE_ADDR(n: u32) -> u32 {
+    return DMA_BASE + 0x34 + n * 0x40
 }
 
 // CH0_AL1_TRANS_COUNT_TRIG..CH11_AL1_TRANS_COUNT_TRIG
-pub fn DMA_CH_AL1_TRANS_COUNT_TRIG(ch: u32) -> u32 {
-    return DMA_BASE + 0x1C + ch * 0x40
+pub fn DMA_CH_AL1_TRANS_COUNT_TRIG(n: u32) -> u32 {
+    return DMA_BASE + 0x1C + n * 0x40
 }
 
 // CH0_AL2_TRANS_COUNT..CH11_AL2_TRANS_COUNT
-pub fn DMA_CH_AL2_TRANS_COUNT(ch: u32) -> u32 {
-    return DMA_BASE + 0x24 + ch * 0x40
+pub fn DMA_CH_AL2_TRANS_COUNT(n: u32) -> u32 {
+    return DMA_BASE + 0x24 + n * 0x40
 }
 
 // CH0_AL3_TRANS_COUNT..CH11_AL3_TRANS_COUNT
-pub fn DMA_CH_AL3_TRANS_COUNT(ch: u32) -> u32 {
-    return DMA_BASE + 0x38 + ch * 0x40
+pub fn DMA_CH_AL3_TRANS_COUNT(n: u32) -> u32 {
+    return DMA_BASE + 0x38 + n * 0x40
 }
 
 // CH0_AL2_WRITE_ADDR_TRIG..CH11_AL2_WRITE_ADDR_TRIG
-pub fn DMA_CH_AL2_WRITE_ADDR_TRIG(ch: u32) -> u32 {
-    return DMA_BASE + 0x2C + ch * 0x40
+pub fn DMA_CH_AL2_WRITE_ADDR_TRIG(n: u32) -> u32 {
+    return DMA_BASE + 0x2C + n * 0x40
 }
 
 // CH0_AL3_READ_ADDR_TRIG..CH11_AL3_READ_ADDR_TRIG
-pub fn DMA_CH_AL3_READ_ADDR_TRIG(ch: u32) -> u32 {
-    return DMA_BASE + 0x3C + ch * 0x40
+pub fn DMA_CH_AL3_READ_ADDR_TRIG(n: u32) -> u32 {
+    return DMA_BASE + 0x3C + n * 0x40
 }
 
 pub const DMA_INTR:                                 u32 = DMA_BASE + 0x400;
@@ -114,13 +114,13 @@ pub const DMA_FIFO_LEVELS:                          u32 = DMA_BASE + 0x440;
 pub const DMA_CHAN_ABORT:                           u32 = DMA_BASE + 0x444;
 pub const DMA_N_CHANNELS:                           u32 = DMA_BASE + 0x448;
 // CH0_DBG_CTDREQ..CH11_DBG_CTDREQ
-pub fn DMA_CH_DBG_CTDREQ(ch: u32) -> u32 {
-    return DMA_BASE + 0x800 + ch * 0x40
+pub fn DMA_CH_DBG_CTDREQ(n: u32) -> u32 {
+    return DMA_BASE + 0x800 + n * 0x40
 }
 
 // CH0_DBG_TCR..CH11_DBG_TCR
-pub fn DMA_CH_DBG_TCR(ch: u32) -> u32 {
-    return DMA_BASE + 0x804 + ch * 0x40
+pub fn DMA_CH_DBG_TCR(n: u32) -> u32 {
+    return DMA_BASE + 0x804 + n * 0x40
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 

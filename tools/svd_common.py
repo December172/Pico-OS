@@ -110,9 +110,6 @@ FIELD_END = "// ==== END AUTO-GENERATED FIELD BIT RANGES ===="
 ENUM_BEGIN = "// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ===="
 ENUM_END = "// ==== END AUTO-GENERATED ENUMERATED VALUES ===="
 BLOCK_ORDER = (REG_BEGIN, FIELD_BEGIN, ENUM_BEGIN)
-# Legacy marker block written by the former standalone tools/gen_auxsrc_enums.py.
-LEGACY_ENUM_BEGIN = "// ==== BEGIN AUTO-GENERATED AUXSRC ENUMERATED VALUES (tools/gen_auxsrc_enums.py) ===="
-LEGACY_ENUM_END = "// ==== END AUTO-GENERATED AUXSRC ENUMERATED VALUES ===="
 
 
 def split_block(content, begin, end):

@@ -8,8 +8,8 @@ pub const PADS_BANK0_BASE:                          u32 = 0x4001_C000;
 
 pub const PADS_BANK0_VOLTAGE_SELECT:                u32 = PADS_BANK0_BASE + 0x0;
 // GPIO0..GPIO29
-pub fn PADS_BANK0_GPIO(pin: u32) -> u32 {
-    return PADS_BANK0_BASE + 0x4 + pin * 0x4
+pub fn PADS_BANK0_GPIO(n: u32) -> u32 {
+    return PADS_BANK0_BASE + 0x4 + n * 0x4
 }
 
 pub const PADS_BANK0_SWCLK:                         u32 = PADS_BANK0_BASE + 0x7C;
