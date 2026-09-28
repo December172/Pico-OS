@@ -26,11 +26,11 @@ impl ClockDriver for _ROSCDriver {
         // initialize clocks, use non-precise ROSC
         clockRefCtrl.fieldSet(CLOCKS_CLK_REF_CTRL_SRC_HIGH, 
                                CLOCKS_CLK_REF_CTRL_SRC_LOW,
-                                CLOCKS_CLK_REF_ROSC_PH_SRC);
+                                CLOCKS_CLK_REF_CTRL_SRC_ROSC_CLKSRC_PH);
         clockSysCtrl.bitSet(CLOCKS_CLK_SYS_CTRL_SRC_BIT, false);
         clockPeriCtrl.fieldSet(CLOCKS_CLK_PERI_CTRL_AUXSRC_HIGH, 
                                 CLOCKS_CLK_PERI_CTRL_AUXSRC_LOW,
-                                 CLOCKS_CLK_PERI_CLK_SYS_AUXSOURCE);
+                                 CLOCKS_CLK_PERI_CTRL_AUXSRC_CLK_SYS);
         clockPeriCtrl.bitSet(CLOCKS_CLK_PERI_CTRL_ENABLE_BIT, true);
         return true;
     }

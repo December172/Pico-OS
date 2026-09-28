@@ -8,7 +8,10 @@ use crate::Native::Constants::RP2040::PLL::*;
 
 #[derive(Clone, Copy)]
 pub struct PLLConfig {
-    pub baseAddr: u32,
+    pub cs: u32,
+    pub pwr: u32,
+    pub fbdivInt: u32,
+    pub prim: u32,
     pub fbdiv: u32,
     pub postdiv1: u32,
     pub postdiv2: u32,
@@ -16,7 +19,10 @@ pub struct PLLConfig {
 }
 
 pub const PLLCONFIG_SYSTEM : PLLConfig = PLLConfig {
-    baseAddr : PLL_SYS_BASE,
+    cs: PLL_SYS_CS,
+    pwr: PLL_SYS_PWR,
+    fbdivInt: PLL_SYS_FBDIV_INT,
+    prim: PLL_SYS_PRIM,
     fbdiv: PLL_SYS_FBDIV,
     postdiv1: PLL_SYS_POSTDIV1,
     postdiv2: PLL_SYS_POSTDIV2,
@@ -24,7 +30,10 @@ pub const PLLCONFIG_SYSTEM : PLLConfig = PLLConfig {
 };
 
 pub const PLLCONFIG_USB : PLLConfig = PLLConfig {
-    baseAddr : PLL_USB_BASE,
+    cs: PLL_USB_CS,
+    pwr: PLL_USB_PWR,
+    fbdivInt: PLL_USB_FBDIV_INT,
+    prim: PLL_USB_PRIM,
     fbdiv: PLL_USB_FBDIV,
     postdiv1: PLL_USB_POSTDIV1,
     postdiv2: PLL_USB_POSTDIV2,
@@ -43,10 +52,10 @@ impl PLLDriver {
     pub fn new(config: PLLConfig) -> Self {
         Self {
             config,
-            cs : Register::new(config.baseAddr + PLL_CS_OFFSET),
-            pwr : Register::new(config.baseAddr + PLL_PWR_OFFSET),
-            fbdiv_int : Register::new(config.baseAddr + PLL_FBDIV_INT_OFFSET),
-            prim : Register::new(config.baseAddr + PLL_PRIM_OFFSET),
+            cs : Register::new(config.cs),
+            pwr : Register::new(config.pwr),
+            fbdiv_int : Register::new(config.fbdivInt),
+            prim : Register::new(config.prim),
         }
     }
 

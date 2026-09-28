@@ -4,8 +4,6 @@ use crate::Kernel::Drivers::ClockDriver::*;
 
 use crate::Native::Constants::RP2040::CLOCKS::*;
 use crate::Native::Constants::RP2040::Config::XOSC_BASE_FREQ;
-use crate::Native::Constants::RP2040::PLL::PLL_SYS_BASE;
-use crate::Native::Constants::RP2040::PLL::PLL_USB_BASE;
 use crate::Native::Constants::RP2040::XOSC::*;
 use crate::Native::Drivers::RP2040::PLLDriver::*;
 
@@ -56,10 +54,10 @@ impl ClockDriver for _XOSCDriver {
         let clockRefSelected = Register::new(CLOCKS_CLK_REF_SELECTED);
         clockRefCtrl.fieldSet(CLOCKS_CLK_REF_CTRL_SRC_HIGH,
                               CLOCKS_CLK_REF_CTRL_SRC_LOW,
-                              CLOCKS_CLK_REF_XOSC_SRC);
+                              CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC);
         
         // Check if XOSC died
-        if !_poll(10_000, || clockRefSelected.bitGet(CLOCKS_CLK_REF_XOSC_SRC))
+        if !_poll(10_000, || clockRefSelected.bitGet(CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC))
         || !self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT) {
             // the cleanup work will be done at ROSCDriver.init();
             return false;
@@ -87,7 +85,7 @@ impl ClockDriver for _XOSCDriver {
         let clockSysCtrl = Register::new(CLOCKS_CLK_SYS_CTRL);
         clockSysCtrl.fieldSet(CLOCKS_CLK_SYS_CTRL_AUXSRC_HIGH, 
                                CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW,
-                                CLOCKS_CLK_SYS_PLL_SYS_AUXSOURCE);
+                                CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_PLL_SYS);
         clockSysCtrl.bitSet(CLOCKS_CLK_SYS_CTRL_SRC_BIT, true);
 
 
@@ -95,7 +93,7 @@ impl ClockDriver for _XOSCDriver {
         let clockPeriCtrl = Register::new(CLOCKS_CLK_PERI_CTRL);
         clockPeriCtrl.fieldSet(CLOCKS_CLK_PERI_CTRL_AUXSRC_HIGH, 
                                 CLOCKS_CLK_PERI_CTRL_AUXSRC_LOW,
-                                 CLOCKS_CLK_PERI_PLL_SYS_AUXSOURCE);
+                                 CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_PLL_SYS);
         clockPeriCtrl.bitSet(CLOCKS_CLK_PERI_CTRL_ENABLE_BIT, true);
 
 
@@ -103,7 +101,7 @@ impl ClockDriver for _XOSCDriver {
         let clockUSBCtrl = Register::new(CLOCKS_CLK_USB_CTRL);
         clockUSBCtrl.fieldSet(CLOCKS_CLK_CTRL_AUXSRC_HIGH, 
                                CLOCKS_CLK_CTRL_AUXSRC_LOW, 
-                                CLOCKS_CLK_USB_PLL_USB_AUXSOURCE);
+                                CLOCKS_CLK_CTRL_AUXSRC_CLKSRC_PLL_USB);
         clockUSBCtrl.bitSet(CLOCKS_CLK_CTRL_ENABLE_BIT, true);
         
         return self.verifyClocks();
@@ -217,15 +215,15 @@ impl _XOSCDriver {
             let clockSysCtrl = Register::new(CLOCKS_CLK_SYS_CTRL);
             let status = Register::new(CLOCKS_CLK_SYS_SELECTED);
             if !_poll(1000, || {
-                return (clockSysCtrl.fieldGet(CLOCKS_CLK_SYS_CTRL_AUXSRC_HIGH, CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW) == CLOCKS_CLK_SYS_PLL_SYS_AUXSOURCE)
-                       && (status.bitGet(CLOCKS_CLK_SYS_CLK_SYS_AUX_SRC));
+                return (clockSysCtrl.fieldGet(CLOCKS_CLK_SYS_CTRL_AUXSRC_HIGH, CLOCKS_CLK_SYS_CTRL_AUXSRC_LOW) == CLOCKS_CLK_SYS_CTRL_AUXSRC_CLKSRC_PLL_SYS)
+                       && (status.bitGet(CLOCKS_CLK_SYS_CTRL_SRC_CLKSRC_CLK_SYS_AUX));
             }) {
                 return false;
             }
         }
         {
             let status = Register::new(CLOCKS_CLK_PERI_SELECTED);
-            if !_poll(10000, || status.bitGet(CLOCKS_CLK_PERI_PLL_SYS_AUXSOURCE)) {
+            if !_poll(10000, || status.bitGet(CLOCKS_CLK_PERI_CTRL_AUXSRC_CLKSRC_PLL_SYS)) {
                 return false;
             }
         }
