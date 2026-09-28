@@ -2,9 +2,7 @@ use crate::Util::Register::Register;
 use crate::Util::LowLevel::_poll;
 
 use crate::Native::Constants::Config::*;
-use crate::Native::Constants::RP2040::PLL::*;
-
-
+use crate::Native::Constants::RP2350::PLL::*;
 
 #[derive(Clone, Copy)]
 pub struct PLLConfig {
@@ -40,7 +38,7 @@ pub const PLLCONFIG_USB : PLLConfig = PLLConfig {
     refdiv: 0x1
 };
 
-pub struct PLLDriver {  
+pub struct PLLDriver {
     config: PLLConfig,
     cs : Register,
     pwr : Register,
@@ -60,17 +58,13 @@ impl PLLDriver {
     }
 
     pub fn init(&self, sourceFreq: u32) -> bool {
-        /// Note that all fields with suffix `_PD` mean powerdown - `true` for disable, and `false` for enable
         self.cs.fieldSet(PLL_CS_REFDIV_HIGH,PLL_CS_REFDIV_LOW, self.config.refdiv);
 
-        // set 125MHz for fbdiv
         self.fbdiv_int.write(self.config.fbdiv);
 
-        // power up vco & pll
         self.pwr.bitSet(PLL_PWR_PD_BIT, false);
         self.pwr.bitSet(PLL_PWR_VCOPD_BIT, false);
 
-        // Return to ROSC if lock failed
         if !_poll(1_000_000, || self.cs.bitGet(PLL_CS_LOCK_BIT)) {
             return false;
         }
@@ -88,7 +82,6 @@ impl PLLDriver {
     }
 
     pub fn getFrequency(&self, sourceFreq: u32) -> u32 {
-        // From RP2040 datasheet
-        return (sourceFreq / self.config.refdiv) * self.config.fbdiv / (self.config.postdiv1 * self.config.postdiv2); 
+        return (sourceFreq / self.config.refdiv) * self.config.fbdiv / (self.config.postdiv1 * self.config.postdiv2);
     }
 }
