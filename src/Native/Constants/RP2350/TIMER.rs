@@ -7,26 +7,46 @@
 pub const TIMER0_BASE:                              u32 = 0x400B_0000;
 pub const TIMER1_BASE:                              u32 = 0x400B_8000;
 
-pub const TIMER_TIMEHW_OFFSET:                      u32 = 0x0;
-pub const TIMER_TIMELW_OFFSET:                      u32 = 0x4;
-pub const TIMER_TIMEHR_OFFSET:                      u32 = 0x8;
-pub const TIMER_TIMELR_OFFSET:                      u32 = 0xC;
+pub const TIMER0_TIMEHW:                            u32 = TIMER0_BASE + 0x0;
+pub const TIMER0_TIMELW:                            u32 = TIMER0_BASE + 0x4;
+pub const TIMER0_TIMEHR:                            u32 = TIMER0_BASE + 0x8;
+pub const TIMER0_TIMELR:                            u32 = TIMER0_BASE + 0xC;
 // ALARM0..ALARM3
-pub fn TIMER_ALARM_OFFSET(n: u32) -> u32 {
-    return 0x10 + n * 0x4
+pub fn TIMER0_ALARM(n: u32) -> u32 {
+    return TIMER0_BASE + 0x10 + n * 0x4
 }
 
-pub const TIMER_ARMED_OFFSET:                       u32 = 0x20;
-pub const TIMER_TIMERAWH_OFFSET:                    u32 = 0x24;
-pub const TIMER_TIMERAWL_OFFSET:                    u32 = 0x28;
-pub const TIMER_DBGPAUSE_OFFSET:                    u32 = 0x2C;
-pub const TIMER_PAUSE_OFFSET:                       u32 = 0x30;
-pub const TIMER_LOCKED_OFFSET:                      u32 = 0x34;
-pub const TIMER_SOURCE_OFFSET:                      u32 = 0x38;
-pub const TIMER_INTR_OFFSET:                        u32 = 0x3C;
-pub const TIMER_INTE_OFFSET:                        u32 = 0x40;
-pub const TIMER_INTF_OFFSET:                        u32 = 0x44;
-pub const TIMER_INTS_OFFSET:                        u32 = 0x48;
+pub const TIMER0_ARMED:                             u32 = TIMER0_BASE + 0x20;
+pub const TIMER0_TIMERAWH:                          u32 = TIMER0_BASE + 0x24;
+pub const TIMER0_TIMERAWL:                          u32 = TIMER0_BASE + 0x28;
+pub const TIMER0_DBGPAUSE:                          u32 = TIMER0_BASE + 0x2C;
+pub const TIMER0_PAUSE:                             u32 = TIMER0_BASE + 0x30;
+pub const TIMER0_LOCKED:                            u32 = TIMER0_BASE + 0x34;
+pub const TIMER0_SOURCE:                            u32 = TIMER0_BASE + 0x38;
+pub const TIMER0_INTR:                              u32 = TIMER0_BASE + 0x3C;
+pub const TIMER0_INTE:                              u32 = TIMER0_BASE + 0x40;
+pub const TIMER0_INTF:                              u32 = TIMER0_BASE + 0x44;
+pub const TIMER0_INTS:                              u32 = TIMER0_BASE + 0x48;
+pub const TIMER1_TIMEHW:                            u32 = TIMER1_BASE + 0x0;
+pub const TIMER1_TIMELW:                            u32 = TIMER1_BASE + 0x4;
+pub const TIMER1_TIMEHR:                            u32 = TIMER1_BASE + 0x8;
+pub const TIMER1_TIMELR:                            u32 = TIMER1_BASE + 0xC;
+// ALARM0..ALARM3
+pub fn TIMER1_ALARM(n: u32) -> u32 {
+    return TIMER1_BASE + 0x10 + n * 0x4
+}
+
+pub const TIMER1_ARMED:                             u32 = TIMER1_BASE + 0x20;
+pub const TIMER1_TIMERAWH:                          u32 = TIMER1_BASE + 0x24;
+pub const TIMER1_TIMERAWL:                          u32 = TIMER1_BASE + 0x28;
+pub const TIMER1_DBGPAUSE:                          u32 = TIMER1_BASE + 0x2C;
+pub const TIMER1_PAUSE:                             u32 = TIMER1_BASE + 0x30;
+pub const TIMER1_LOCKED:                            u32 = TIMER1_BASE + 0x34;
+pub const TIMER1_SOURCE:                            u32 = TIMER1_BASE + 0x38;
+pub const TIMER1_INTR:                              u32 = TIMER1_BASE + 0x3C;
+pub const TIMER1_INTE:                              u32 = TIMER1_BASE + 0x40;
+pub const TIMER1_INTF:                              u32 = TIMER1_BASE + 0x44;
+pub const TIMER1_INTS:                              u32 = TIMER1_BASE + 0x48;
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
 // ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ====

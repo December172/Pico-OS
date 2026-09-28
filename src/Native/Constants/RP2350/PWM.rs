@@ -7,28 +7,28 @@
 pub const PWM_BASE:                                 u32 = 0x400A_8000;
 
 // CH0_CSR..CH11_CSR
-pub fn PWM_CH_CSR(ch: u32) -> u32 {
-    return PWM_BASE + 0x0 + ch * 0x14
+pub fn PWM_CH_CSR(n: u32) -> u32 {
+    return PWM_BASE + 0x0 + n * 0x14
 }
 
 // CH0_DIV..CH11_DIV
-pub fn PWM_CH_DIV(ch: u32) -> u32 {
-    return PWM_BASE + 0x4 + ch * 0x14
+pub fn PWM_CH_DIV(n: u32) -> u32 {
+    return PWM_BASE + 0x4 + n * 0x14
 }
 
 // CH0_CTR..CH11_CTR
-pub fn PWM_CH_CTR(ch: u32) -> u32 {
-    return PWM_BASE + 0x8 + ch * 0x14
+pub fn PWM_CH_CTR(n: u32) -> u32 {
+    return PWM_BASE + 0x8 + n * 0x14
 }
 
 // CH0_CC..CH11_CC
-pub fn PWM_CH_CC(ch: u32) -> u32 {
-    return PWM_BASE + 0xC + ch * 0x14
+pub fn PWM_CH_CC(n: u32) -> u32 {
+    return PWM_BASE + 0xC + n * 0x14
 }
 
 // CH0_TOP..CH11_TOP
-pub fn PWM_CH_TOP(ch: u32) -> u32 {
-    return PWM_BASE + 0x10 + ch * 0x14
+pub fn PWM_CH_TOP(n: u32) -> u32 {
+    return PWM_BASE + 0x10 + n * 0x14
 }
 
 pub const PWM_EN:                                   u32 = PWM_BASE + 0xF0;

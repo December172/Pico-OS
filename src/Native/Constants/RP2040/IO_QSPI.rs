@@ -11,13 +11,13 @@ pub const IO_QSPI_GPIO_QSPI_SCLK_CTRL:              u32 = IO_QSPI_BASE + 0x4;
 pub const IO_QSPI_GPIO_QSPI_SS_STATUS:              u32 = IO_QSPI_BASE + 0x8;
 pub const IO_QSPI_GPIO_QSPI_SS_CTRL:                u32 = IO_QSPI_BASE + 0xC;
 // GPIO_QSPI_SD0_STATUS..GPIO_QSPI_SD3_STATUS
-pub fn IO_QSPI_GPIO_QSPI_SD_STATUS(pin: u32) -> u32 {
-    return IO_QSPI_BASE + 0x10 + pin * 0x8
+pub fn IO_QSPI_GPIO_QSPI_SD_STATUS(n: u32) -> u32 {
+    return IO_QSPI_BASE + 0x10 + n * 0x8
 }
 
 // GPIO_QSPI_SD0_CTRL..GPIO_QSPI_SD3_CTRL
-pub fn IO_QSPI_GPIO_QSPI_SD_CTRL(pin: u32) -> u32 {
-    return IO_QSPI_BASE + 0x14 + pin * 0x8
+pub fn IO_QSPI_GPIO_QSPI_SD_CTRL(n: u32) -> u32 {
+    return IO_QSPI_BASE + 0x14 + n * 0x8
 }
 
 pub const IO_QSPI_INTR:                             u32 = IO_QSPI_BASE + 0x30;

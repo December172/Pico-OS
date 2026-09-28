@@ -9,8 +9,8 @@ pub const PADS_QSPI_BASE:                           u32 = 0x4002_0000;
 pub const PADS_QSPI_VOLTAGE_SELECT:                 u32 = PADS_QSPI_BASE + 0x0;
 pub const PADS_QSPI_GPIO_QSPI_SCLK:                 u32 = PADS_QSPI_BASE + 0x4;
 // GPIO_QSPI_SD0..GPIO_QSPI_SD3
-pub fn PADS_QSPI_GPIO_QSPI_SD(pin: u32) -> u32 {
-    return PADS_QSPI_BASE + 0x8 + pin * 0x4
+pub fn PADS_QSPI_GPIO_QSPI_SD(n: u32) -> u32 {
+    return PADS_QSPI_BASE + 0x8 + n * 0x4
 }
 
 pub const PADS_QSPI_GPIO_QSPI_SS:                   u32 = PADS_QSPI_BASE + 0x18;

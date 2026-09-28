@@ -7,132 +7,260 @@
 pub const SIO_BASE:                                 u32 = 0xD000_0000;
 pub const SIO_NS_BASE:                              u32 = 0xD002_0000;
 
-pub const SIO_CPUID_OFFSET:                         u32 = 0x0;
-pub const SIO_GPIO_IN_OFFSET:                       u32 = 0x4;
-pub const SIO_GPIO_HI_IN_OFFSET:                    u32 = 0x8;
-pub const SIO_GPIO_OUT_OFFSET:                      u32 = 0x10;
-pub const SIO_GPIO_HI_OUT_OFFSET:                   u32 = 0x14;
-pub const SIO_GPIO_OUT_SET_OFFSET:                  u32 = 0x18;
-pub const SIO_GPIO_HI_OUT_SET_OFFSET:               u32 = 0x1C;
-pub const SIO_GPIO_OUT_CLR_OFFSET:                  u32 = 0x20;
-pub const SIO_GPIO_HI_OUT_CLR_OFFSET:               u32 = 0x24;
-pub const SIO_GPIO_OUT_XOR_OFFSET:                  u32 = 0x28;
-pub const SIO_GPIO_HI_OUT_XOR_OFFSET:               u32 = 0x2C;
-pub const SIO_GPIO_OE_OFFSET:                       u32 = 0x30;
-pub const SIO_GPIO_HI_OE_OFFSET:                    u32 = 0x34;
-pub const SIO_GPIO_OE_SET_OFFSET:                   u32 = 0x38;
-pub const SIO_GPIO_HI_OE_SET_OFFSET:                u32 = 0x3C;
-pub const SIO_GPIO_OE_CLR_OFFSET:                   u32 = 0x40;
-pub const SIO_GPIO_HI_OE_CLR_OFFSET:                u32 = 0x44;
-pub const SIO_GPIO_OE_XOR_OFFSET:                   u32 = 0x48;
-pub const SIO_GPIO_HI_OE_XOR_OFFSET:                u32 = 0x4C;
-pub const SIO_FIFO_ST_OFFSET:                       u32 = 0x50;
-pub const SIO_FIFO_WR_OFFSET:                       u32 = 0x54;
-pub const SIO_FIFO_RD_OFFSET:                       u32 = 0x58;
-pub const SIO_SPINLOCK_ST_OFFSET:                   u32 = 0x5C;
+pub const SIO_CPUID:                                u32 = SIO_BASE + 0x0;
+pub const SIO_GPIO_IN:                              u32 = SIO_BASE + 0x4;
+pub const SIO_GPIO_HI_IN:                           u32 = SIO_BASE + 0x8;
+pub const SIO_GPIO_OUT:                             u32 = SIO_BASE + 0x10;
+pub const SIO_GPIO_HI_OUT:                          u32 = SIO_BASE + 0x14;
+pub const SIO_GPIO_OUT_SET:                         u32 = SIO_BASE + 0x18;
+pub const SIO_GPIO_HI_OUT_SET:                      u32 = SIO_BASE + 0x1C;
+pub const SIO_GPIO_OUT_CLR:                         u32 = SIO_BASE + 0x20;
+pub const SIO_GPIO_HI_OUT_CLR:                      u32 = SIO_BASE + 0x24;
+pub const SIO_GPIO_OUT_XOR:                         u32 = SIO_BASE + 0x28;
+pub const SIO_GPIO_HI_OUT_XOR:                      u32 = SIO_BASE + 0x2C;
+pub const SIO_GPIO_OE:                              u32 = SIO_BASE + 0x30;
+pub const SIO_GPIO_HI_OE:                           u32 = SIO_BASE + 0x34;
+pub const SIO_GPIO_OE_SET:                          u32 = SIO_BASE + 0x38;
+pub const SIO_GPIO_HI_OE_SET:                       u32 = SIO_BASE + 0x3C;
+pub const SIO_GPIO_OE_CLR:                          u32 = SIO_BASE + 0x40;
+pub const SIO_GPIO_HI_OE_CLR:                       u32 = SIO_BASE + 0x44;
+pub const SIO_GPIO_OE_XOR:                          u32 = SIO_BASE + 0x48;
+pub const SIO_GPIO_HI_OE_XOR:                       u32 = SIO_BASE + 0x4C;
+pub const SIO_FIFO_ST:                              u32 = SIO_BASE + 0x50;
+pub const SIO_FIFO_WR:                              u32 = SIO_BASE + 0x54;
+pub const SIO_FIFO_RD:                              u32 = SIO_BASE + 0x58;
+pub const SIO_SPINLOCK_ST:                          u32 = SIO_BASE + 0x5C;
 // INTERP0_ACCUM0..INTERP0_ACCUM1
-pub fn SIO_INTERP0_ACCUM_OFFSET(n: u32) -> u32 {
-    return 0x80 + n * 0x4
+pub fn SIO_INTERP0_ACCUM(n: u32) -> u32 {
+    return SIO_BASE + 0x80 + n * 0x4
 }
 
 // INTERP1_ACCUM0..INTERP1_ACCUM1
-pub fn SIO_INTERP1_ACCUM_OFFSET(n: u32) -> u32 {
-    return 0xC0 + n * 0x4
+pub fn SIO_INTERP1_ACCUM(n: u32) -> u32 {
+    return SIO_BASE + 0xC0 + n * 0x4
 }
 
 // INTERP0_BASE0..INTERP0_BASE2
-pub fn SIO_INTERP0_BASE_OFFSET(n: u32) -> u32 {
-    return 0x88 + n * 0x4
+pub fn SIO_INTERP0_BASE(n: u32) -> u32 {
+    return SIO_BASE + 0x88 + n * 0x4
 }
 
 // INTERP1_BASE0..INTERP1_BASE2
-pub fn SIO_INTERP1_BASE_OFFSET(n: u32) -> u32 {
-    return 0xC8 + n * 0x4
+pub fn SIO_INTERP1_BASE(n: u32) -> u32 {
+    return SIO_BASE + 0xC8 + n * 0x4
 }
 
 // INTERP0_POP_LANE0..INTERP0_POP_LANE1
-pub fn SIO_INTERP0_POP_LANE_OFFSET(n: u32) -> u32 {
-    return 0x94 + n * 0x4
+pub fn SIO_INTERP0_POP_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0x94 + n * 0x4
 }
 
 // INTERP1_POP_LANE0..INTERP1_POP_LANE1
-pub fn SIO_INTERP1_POP_LANE_OFFSET(n: u32) -> u32 {
-    return 0xD4 + n * 0x4
+pub fn SIO_INTERP1_POP_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0xD4 + n * 0x4
 }
 
 // INTERP0_POP_FULL..INTERP1_POP_FULL
-pub fn SIO_INTERP_POP_FULL_OFFSET(n: u32) -> u32 {
-    return 0x9C + n * 0x40
+pub fn SIO_INTERP_POP_FULL(n: u32) -> u32 {
+    return SIO_BASE + 0x9C + n * 0x40
 }
 
 // INTERP0_PEEK_LANE0..INTERP0_PEEK_LANE1
-pub fn SIO_INTERP0_PEEK_LANE_OFFSET(n: u32) -> u32 {
-    return 0xA0 + n * 0x4
+pub fn SIO_INTERP0_PEEK_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0xA0 + n * 0x4
 }
 
 // INTERP1_PEEK_LANE0..INTERP1_PEEK_LANE1
-pub fn SIO_INTERP1_PEEK_LANE_OFFSET(n: u32) -> u32 {
-    return 0xE0 + n * 0x4
+pub fn SIO_INTERP1_PEEK_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0xE0 + n * 0x4
 }
 
 // INTERP0_PEEK_FULL..INTERP1_PEEK_FULL
-pub fn SIO_INTERP_PEEK_FULL_OFFSET(n: u32) -> u32 {
-    return 0xA8 + n * 0x40
+pub fn SIO_INTERP_PEEK_FULL(n: u32) -> u32 {
+    return SIO_BASE + 0xA8 + n * 0x40
 }
 
 // INTERP0_CTRL_LANE0..INTERP0_CTRL_LANE1
-pub fn SIO_INTERP0_CTRL_LANE_OFFSET(n: u32) -> u32 {
-    return 0xAC + n * 0x4
+pub fn SIO_INTERP0_CTRL_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0xAC + n * 0x4
 }
 
 // INTERP1_CTRL_LANE0..INTERP1_CTRL_LANE1
-pub fn SIO_INTERP1_CTRL_LANE_OFFSET(n: u32) -> u32 {
-    return 0xEC + n * 0x4
+pub fn SIO_INTERP1_CTRL_LANE(n: u32) -> u32 {
+    return SIO_BASE + 0xEC + n * 0x4
 }
 
 // INTERP0_ACCUM0_ADD..INTERP0_ACCUM1_ADD
-pub fn SIO_INTERP0_ACCUM_ADD_OFFSET(n: u32) -> u32 {
-    return 0xB4 + n * 0x4
+pub fn SIO_INTERP0_ACCUM_ADD(n: u32) -> u32 {
+    return SIO_BASE + 0xB4 + n * 0x4
 }
 
 // INTERP1_ACCUM0_ADD..INTERP1_ACCUM1_ADD
-pub fn SIO_INTERP1_ACCUM_ADD_OFFSET(n: u32) -> u32 {
-    return 0xF4 + n * 0x4
+pub fn SIO_INTERP1_ACCUM_ADD(n: u32) -> u32 {
+    return SIO_BASE + 0xF4 + n * 0x4
 }
 
 // INTERP0_BASE_1AND0..INTERP1_BASE_1AND0
-pub fn SIO_INTERP_BASE_1AND0_OFFSET(n: u32) -> u32 {
-    return 0xBC + n * 0x40
+pub fn SIO_INTERP_BASE_1AND0(n: u32) -> u32 {
+    return SIO_BASE + 0xBC + n * 0x40
 }
 
 // SPINLOCK0..SPINLOCK31
-pub fn SIO_SPINLOCK_OFFSET(n: u32) -> u32 {
-    return 0x100 + n * 0x4
+pub fn SIO_SPINLOCK(n: u32) -> u32 {
+    return SIO_BASE + 0x100 + n * 0x4
 }
 
-pub const SIO_DOORBELL_OUT_SET_OFFSET:              u32 = 0x180;
-pub const SIO_DOORBELL_OUT_CLR_OFFSET:              u32 = 0x184;
-pub const SIO_DOORBELL_IN_SET_OFFSET:               u32 = 0x188;
-pub const SIO_DOORBELL_IN_CLR_OFFSET:               u32 = 0x18C;
-pub const SIO_PERI_NONSEC_OFFSET:                   u32 = 0x190;
-pub const SIO_RISCV_SOFTIRQ_OFFSET:                 u32 = 0x1A0;
-pub const SIO_MTIME_CTRL_OFFSET:                    u32 = 0x1A4;
-pub const SIO_MTIME_OFFSET:                         u32 = 0x1B0;
-pub const SIO_MTIMEH_OFFSET:                        u32 = 0x1B4;
-pub const SIO_MTIMECMP_OFFSET:                      u32 = 0x1B8;
-pub const SIO_MTIMECMPH_OFFSET:                     u32 = 0x1BC;
-pub const SIO_TMDS_CTRL_OFFSET:                     u32 = 0x1C0;
-pub const SIO_TMDS_WDATA_OFFSET:                    u32 = 0x1C4;
-pub const SIO_TMDS_PEEK_SINGLE_OFFSET:              u32 = 0x1C8;
-pub const SIO_TMDS_POP_SINGLE_OFFSET:               u32 = 0x1CC;
+pub const SIO_DOORBELL_OUT_SET:                     u32 = SIO_BASE + 0x180;
+pub const SIO_DOORBELL_OUT_CLR:                     u32 = SIO_BASE + 0x184;
+pub const SIO_DOORBELL_IN_SET:                      u32 = SIO_BASE + 0x188;
+pub const SIO_DOORBELL_IN_CLR:                      u32 = SIO_BASE + 0x18C;
+pub const SIO_PERI_NONSEC:                          u32 = SIO_BASE + 0x190;
+pub const SIO_RISCV_SOFTIRQ:                        u32 = SIO_BASE + 0x1A0;
+pub const SIO_MTIME_CTRL:                           u32 = SIO_BASE + 0x1A4;
+pub const SIO_MTIME:                                u32 = SIO_BASE + 0x1B0;
+pub const SIO_MTIMEH:                               u32 = SIO_BASE + 0x1B4;
+pub const SIO_MTIMECMP:                             u32 = SIO_BASE + 0x1B8;
+pub const SIO_MTIMECMPH:                            u32 = SIO_BASE + 0x1BC;
+pub const SIO_TMDS_CTRL:                            u32 = SIO_BASE + 0x1C0;
+pub const SIO_TMDS_WDATA:                           u32 = SIO_BASE + 0x1C4;
+pub const SIO_TMDS_PEEK_SINGLE:                     u32 = SIO_BASE + 0x1C8;
+pub const SIO_TMDS_POP_SINGLE:                      u32 = SIO_BASE + 0x1CC;
 // TMDS_PEEK_DOUBLE_L0..TMDS_PEEK_DOUBLE_L2
-pub fn SIO_TMDS_PEEK_DOUBLE_L_OFFSET(n: u32) -> u32 {
-    return 0x1D0 + n * 0x8
+pub fn SIO_TMDS_PEEK_DOUBLE_L(n: u32) -> u32 {
+    return SIO_BASE + 0x1D0 + n * 0x8
 }
 
 // TMDS_POP_DOUBLE_L0..TMDS_POP_DOUBLE_L2
-pub fn SIO_TMDS_POP_DOUBLE_L_OFFSET(n: u32) -> u32 {
-    return 0x1D4 + n * 0x8
+pub fn SIO_TMDS_POP_DOUBLE_L(n: u32) -> u32 {
+    return SIO_BASE + 0x1D4 + n * 0x8
+}
+
+pub const SIO_NS_CPUID:                             u32 = SIO_NS_BASE + 0x0;
+pub const SIO_NS_GPIO_IN:                           u32 = SIO_NS_BASE + 0x4;
+pub const SIO_NS_GPIO_HI_IN:                        u32 = SIO_NS_BASE + 0x8;
+pub const SIO_NS_GPIO_OUT:                          u32 = SIO_NS_BASE + 0x10;
+pub const SIO_NS_GPIO_HI_OUT:                       u32 = SIO_NS_BASE + 0x14;
+pub const SIO_NS_GPIO_OUT_SET:                      u32 = SIO_NS_BASE + 0x18;
+pub const SIO_NS_GPIO_HI_OUT_SET:                   u32 = SIO_NS_BASE + 0x1C;
+pub const SIO_NS_GPIO_OUT_CLR:                      u32 = SIO_NS_BASE + 0x20;
+pub const SIO_NS_GPIO_HI_OUT_CLR:                   u32 = SIO_NS_BASE + 0x24;
+pub const SIO_NS_GPIO_OUT_XOR:                      u32 = SIO_NS_BASE + 0x28;
+pub const SIO_NS_GPIO_HI_OUT_XOR:                   u32 = SIO_NS_BASE + 0x2C;
+pub const SIO_NS_GPIO_OE:                           u32 = SIO_NS_BASE + 0x30;
+pub const SIO_NS_GPIO_HI_OE:                        u32 = SIO_NS_BASE + 0x34;
+pub const SIO_NS_GPIO_OE_SET:                       u32 = SIO_NS_BASE + 0x38;
+pub const SIO_NS_GPIO_HI_OE_SET:                    u32 = SIO_NS_BASE + 0x3C;
+pub const SIO_NS_GPIO_OE_CLR:                       u32 = SIO_NS_BASE + 0x40;
+pub const SIO_NS_GPIO_HI_OE_CLR:                    u32 = SIO_NS_BASE + 0x44;
+pub const SIO_NS_GPIO_OE_XOR:                       u32 = SIO_NS_BASE + 0x48;
+pub const SIO_NS_GPIO_HI_OE_XOR:                    u32 = SIO_NS_BASE + 0x4C;
+pub const SIO_NS_FIFO_ST:                           u32 = SIO_NS_BASE + 0x50;
+pub const SIO_NS_FIFO_WR:                           u32 = SIO_NS_BASE + 0x54;
+pub const SIO_NS_FIFO_RD:                           u32 = SIO_NS_BASE + 0x58;
+pub const SIO_NS_SPINLOCK_ST:                       u32 = SIO_NS_BASE + 0x5C;
+// INTERP0_ACCUM0..INTERP0_ACCUM1
+pub fn SIO_NS_INTERP0_ACCUM(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x80 + n * 0x4
+}
+
+// INTERP1_ACCUM0..INTERP1_ACCUM1
+pub fn SIO_NS_INTERP1_ACCUM(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xC0 + n * 0x4
+}
+
+// INTERP0_BASE0..INTERP0_BASE2
+pub fn SIO_NS_INTERP0_BASE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x88 + n * 0x4
+}
+
+// INTERP1_BASE0..INTERP1_BASE2
+pub fn SIO_NS_INTERP1_BASE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xC8 + n * 0x4
+}
+
+// INTERP0_POP_LANE0..INTERP0_POP_LANE1
+pub fn SIO_NS_INTERP0_POP_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x94 + n * 0x4
+}
+
+// INTERP1_POP_LANE0..INTERP1_POP_LANE1
+pub fn SIO_NS_INTERP1_POP_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xD4 + n * 0x4
+}
+
+// INTERP0_POP_FULL..INTERP1_POP_FULL
+pub fn SIO_NS_INTERP_POP_FULL(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x9C + n * 0x40
+}
+
+// INTERP0_PEEK_LANE0..INTERP0_PEEK_LANE1
+pub fn SIO_NS_INTERP0_PEEK_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xA0 + n * 0x4
+}
+
+// INTERP1_PEEK_LANE0..INTERP1_PEEK_LANE1
+pub fn SIO_NS_INTERP1_PEEK_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xE0 + n * 0x4
+}
+
+// INTERP0_PEEK_FULL..INTERP1_PEEK_FULL
+pub fn SIO_NS_INTERP_PEEK_FULL(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xA8 + n * 0x40
+}
+
+// INTERP0_CTRL_LANE0..INTERP0_CTRL_LANE1
+pub fn SIO_NS_INTERP0_CTRL_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xAC + n * 0x4
+}
+
+// INTERP1_CTRL_LANE0..INTERP1_CTRL_LANE1
+pub fn SIO_NS_INTERP1_CTRL_LANE(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xEC + n * 0x4
+}
+
+// INTERP0_ACCUM0_ADD..INTERP0_ACCUM1_ADD
+pub fn SIO_NS_INTERP0_ACCUM_ADD(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xB4 + n * 0x4
+}
+
+// INTERP1_ACCUM0_ADD..INTERP1_ACCUM1_ADD
+pub fn SIO_NS_INTERP1_ACCUM_ADD(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xF4 + n * 0x4
+}
+
+// INTERP0_BASE_1AND0..INTERP1_BASE_1AND0
+pub fn SIO_NS_INTERP_BASE_1AND0(n: u32) -> u32 {
+    return SIO_NS_BASE + 0xBC + n * 0x40
+}
+
+// SPINLOCK0..SPINLOCK31
+pub fn SIO_NS_SPINLOCK(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x100 + n * 0x4
+}
+
+pub const SIO_NS_DOORBELL_OUT_SET:                  u32 = SIO_NS_BASE + 0x180;
+pub const SIO_NS_DOORBELL_OUT_CLR:                  u32 = SIO_NS_BASE + 0x184;
+pub const SIO_NS_DOORBELL_IN_SET:                   u32 = SIO_NS_BASE + 0x188;
+pub const SIO_NS_DOORBELL_IN_CLR:                   u32 = SIO_NS_BASE + 0x18C;
+pub const SIO_NS_PERI_NONSEC:                       u32 = SIO_NS_BASE + 0x190;
+pub const SIO_NS_RISCV_SOFTIRQ:                     u32 = SIO_NS_BASE + 0x1A0;
+pub const SIO_NS_MTIME_CTRL:                        u32 = SIO_NS_BASE + 0x1A4;
+pub const SIO_NS_MTIME:                             u32 = SIO_NS_BASE + 0x1B0;
+pub const SIO_NS_MTIMEH:                            u32 = SIO_NS_BASE + 0x1B4;
+pub const SIO_NS_MTIMECMP:                          u32 = SIO_NS_BASE + 0x1B8;
+pub const SIO_NS_MTIMECMPH:                         u32 = SIO_NS_BASE + 0x1BC;
+pub const SIO_NS_TMDS_CTRL:                         u32 = SIO_NS_BASE + 0x1C0;
+pub const SIO_NS_TMDS_WDATA:                        u32 = SIO_NS_BASE + 0x1C4;
+pub const SIO_NS_TMDS_PEEK_SINGLE:                  u32 = SIO_NS_BASE + 0x1C8;
+pub const SIO_NS_TMDS_POP_SINGLE:                   u32 = SIO_NS_BASE + 0x1CC;
+// TMDS_PEEK_DOUBLE_L0..TMDS_PEEK_DOUBLE_L2
+pub fn SIO_NS_TMDS_PEEK_DOUBLE_L(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x1D0 + n * 0x8
+}
+
+// TMDS_POP_DOUBLE_L0..TMDS_POP_DOUBLE_L2
+pub fn SIO_NS_TMDS_POP_DOUBLE_L(n: u32) -> u32 {
+    return SIO_NS_BASE + 0x1D4 + n * 0x8
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 

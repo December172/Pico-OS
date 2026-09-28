@@ -8,26 +8,49 @@ pub const SPI0_BASE:                                u32 = 0x4008_0000;
 pub const SPI1_BASE:                                u32 = 0x4008_8000;
 
 // SSPCR0..SSPCR1
-pub fn SPI_SSPCR_OFFSET(n: u32) -> u32 {
-    return 0x0 + n * 0x4
+pub fn SPI0_SSPCR(n: u32) -> u32 {
+    return SPI0_BASE + 0x0 + n * 0x4
 }
 
-pub const SPI_SSPDR_OFFSET:                         u32 = 0x8;
-pub const SPI_SSPSR_OFFSET:                         u32 = 0xC;
-pub const SPI_SSPCPSR_OFFSET:                       u32 = 0x10;
-pub const SPI_SSPIMSC_OFFSET:                       u32 = 0x14;
-pub const SPI_SSPRIS_OFFSET:                        u32 = 0x18;
-pub const SPI_SSPMIS_OFFSET:                        u32 = 0x1C;
-pub const SPI_SSPICR_OFFSET:                        u32 = 0x20;
-pub const SPI_SSPDMACR_OFFSET:                      u32 = 0x24;
+pub const SPI0_SSPDR:                               u32 = SPI0_BASE + 0x8;
+pub const SPI0_SSPSR:                               u32 = SPI0_BASE + 0xC;
+pub const SPI0_SSPCPSR:                             u32 = SPI0_BASE + 0x10;
+pub const SPI0_SSPIMSC:                             u32 = SPI0_BASE + 0x14;
+pub const SPI0_SSPRIS:                              u32 = SPI0_BASE + 0x18;
+pub const SPI0_SSPMIS:                              u32 = SPI0_BASE + 0x1C;
+pub const SPI0_SSPICR:                              u32 = SPI0_BASE + 0x20;
+pub const SPI0_SSPDMACR:                            u32 = SPI0_BASE + 0x24;
 // SSPPERIPHID0..SSPPERIPHID3
-pub fn SPI_SSPPERIPHID_OFFSET(n: u32) -> u32 {
-    return 0xFE0 + n * 0x4
+pub fn SPI0_SSPPERIPHID(n: u32) -> u32 {
+    return SPI0_BASE + 0xFE0 + n * 0x4
 }
 
 // SSPPCELLID0..SSPPCELLID3
-pub fn SPI_SSPPCELLID_OFFSET(n: u32) -> u32 {
-    return 0xFF0 + n * 0x4
+pub fn SPI0_SSPPCELLID(n: u32) -> u32 {
+    return SPI0_BASE + 0xFF0 + n * 0x4
+}
+
+// SSPCR0..SSPCR1
+pub fn SPI1_SSPCR(n: u32) -> u32 {
+    return SPI1_BASE + 0x0 + n * 0x4
+}
+
+pub const SPI1_SSPDR:                               u32 = SPI1_BASE + 0x8;
+pub const SPI1_SSPSR:                               u32 = SPI1_BASE + 0xC;
+pub const SPI1_SSPCPSR:                             u32 = SPI1_BASE + 0x10;
+pub const SPI1_SSPIMSC:                             u32 = SPI1_BASE + 0x14;
+pub const SPI1_SSPRIS:                              u32 = SPI1_BASE + 0x18;
+pub const SPI1_SSPMIS:                              u32 = SPI1_BASE + 0x1C;
+pub const SPI1_SSPICR:                              u32 = SPI1_BASE + 0x20;
+pub const SPI1_SSPDMACR:                            u32 = SPI1_BASE + 0x24;
+// SSPPERIPHID0..SSPPERIPHID3
+pub fn SPI1_SSPPERIPHID(n: u32) -> u32 {
+    return SPI1_BASE + 0xFE0 + n * 0x4
+}
+
+// SSPPCELLID0..SSPPCELLID3
+pub fn SPI1_SSPPCELLID(n: u32) -> u32 {
+    return SPI1_BASE + 0xFF0 + n * 0x4
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 

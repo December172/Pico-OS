@@ -8,303 +8,603 @@ pub const PPB_BASE:                                 u32 = 0xE000_0000;
 pub const PPB_NS_BASE:                              u32 = 0xE002_0000;
 
 // ITM_STIM0..ITM_STIM31
-pub fn PPB_ITM_STIM_OFFSET(n: u32) -> u32 {
-    return 0x0 + n * 0x4
+pub fn PPB_ITM_STIM(n: u32) -> u32 {
+    return PPB_BASE + 0x0 + n * 0x4
 }
 
-pub const PPB_ITM_TER0_OFFSET:                      u32 = 0xE00;
-pub const PPB_ITM_TPR_OFFSET:                       u32 = 0xE40;
-pub const PPB_ITM_TCR_OFFSET:                       u32 = 0xE80;
-pub const PPB_INT_ATREADY_OFFSET:                   u32 = 0xEF0;
-pub const PPB_INT_ATVALID_OFFSET:                   u32 = 0xEF8;
-pub const PPB_ITM_ITCTRL_OFFSET:                    u32 = 0xF00;
-pub const PPB_ITM_DEVARCH_OFFSET:                   u32 = 0xFBC;
-pub const PPB_ITM_DEVTYPE_OFFSET:                   u32 = 0xFCC;
-pub const PPB_ITM_PIDR4_OFFSET:                     u32 = 0xFD0;
-pub const PPB_ITM_PIDR5_OFFSET:                     u32 = 0xFD4;
-pub const PPB_ITM_PIDR6_OFFSET:                     u32 = 0xFD8;
-pub const PPB_ITM_PIDR7_OFFSET:                     u32 = 0xFDC;
-pub const PPB_ITM_PIDR0_OFFSET:                     u32 = 0xFE0;
-pub const PPB_ITM_PIDR1_OFFSET:                     u32 = 0xFE4;
-pub const PPB_ITM_PIDR2_OFFSET:                     u32 = 0xFE8;
-pub const PPB_ITM_PIDR3_OFFSET:                     u32 = 0xFEC;
+pub const PPB_ITM_TER0:                             u32 = PPB_BASE + 0xE00;
+pub const PPB_ITM_TPR:                              u32 = PPB_BASE + 0xE40;
+pub const PPB_ITM_TCR:                              u32 = PPB_BASE + 0xE80;
+pub const PPB_INT_ATREADY:                          u32 = PPB_BASE + 0xEF0;
+pub const PPB_INT_ATVALID:                          u32 = PPB_BASE + 0xEF8;
+pub const PPB_ITM_ITCTRL:                           u32 = PPB_BASE + 0xF00;
+pub const PPB_ITM_DEVARCH:                          u32 = PPB_BASE + 0xFBC;
+pub const PPB_ITM_DEVTYPE:                          u32 = PPB_BASE + 0xFCC;
+pub const PPB_ITM_PIDR4:                            u32 = PPB_BASE + 0xFD0;
+pub const PPB_ITM_PIDR5:                            u32 = PPB_BASE + 0xFD4;
+pub const PPB_ITM_PIDR6:                            u32 = PPB_BASE + 0xFD8;
+pub const PPB_ITM_PIDR7:                            u32 = PPB_BASE + 0xFDC;
+pub const PPB_ITM_PIDR0:                            u32 = PPB_BASE + 0xFE0;
+pub const PPB_ITM_PIDR1:                            u32 = PPB_BASE + 0xFE4;
+pub const PPB_ITM_PIDR2:                            u32 = PPB_BASE + 0xFE8;
+pub const PPB_ITM_PIDR3:                            u32 = PPB_BASE + 0xFEC;
 // ITM_CIDR0..ITM_CIDR3
-pub fn PPB_ITM_CIDR_OFFSET(n: u32) -> u32 {
-    return 0xFF0 + n * 0x4
+pub fn PPB_ITM_CIDR(n: u32) -> u32 {
+    return PPB_BASE + 0xFF0 + n * 0x4
 }
 
-pub const PPB_DWT_CTRL_OFFSET:                      u32 = 0x1000;
-pub const PPB_DWT_CYCCNT_OFFSET:                    u32 = 0x1004;
-pub const PPB_DWT_EXCCNT_OFFSET:                    u32 = 0x100C;
-pub const PPB_DWT_LSUCNT_OFFSET:                    u32 = 0x1014;
-pub const PPB_DWT_FOLDCNT_OFFSET:                   u32 = 0x1018;
+pub const PPB_DWT_CTRL:                             u32 = PPB_BASE + 0x1000;
+pub const PPB_DWT_CYCCNT:                           u32 = PPB_BASE + 0x1004;
+pub const PPB_DWT_EXCCNT:                           u32 = PPB_BASE + 0x100C;
+pub const PPB_DWT_LSUCNT:                           u32 = PPB_BASE + 0x1014;
+pub const PPB_DWT_FOLDCNT:                          u32 = PPB_BASE + 0x1018;
 // DWT_COMP0..DWT_COMP3
-pub fn PPB_DWT_COMP_OFFSET(n: u32) -> u32 {
-    return 0x1020 + n * 0x10
+pub fn PPB_DWT_COMP(n: u32) -> u32 {
+    return PPB_BASE + 0x1020 + n * 0x10
 }
 
 // DWT_FUNCTION0..DWT_FUNCTION3
-pub fn PPB_DWT_FUNCTION_OFFSET(n: u32) -> u32 {
-    return 0x1028 + n * 0x10
+pub fn PPB_DWT_FUNCTION(n: u32) -> u32 {
+    return PPB_BASE + 0x1028 + n * 0x10
 }
 
-pub const PPB_DWT_DEVARCH_OFFSET:                   u32 = 0x1FBC;
-pub const PPB_DWT_DEVTYPE_OFFSET:                   u32 = 0x1FCC;
-pub const PPB_DWT_PIDR4_OFFSET:                     u32 = 0x1FD0;
-pub const PPB_DWT_PIDR5_OFFSET:                     u32 = 0x1FD4;
-pub const PPB_DWT_PIDR6_OFFSET:                     u32 = 0x1FD8;
-pub const PPB_DWT_PIDR7_OFFSET:                     u32 = 0x1FDC;
-pub const PPB_DWT_PIDR0_OFFSET:                     u32 = 0x1FE0;
-pub const PPB_DWT_PIDR1_OFFSET:                     u32 = 0x1FE4;
-pub const PPB_DWT_PIDR2_OFFSET:                     u32 = 0x1FE8;
-pub const PPB_DWT_PIDR3_OFFSET:                     u32 = 0x1FEC;
+pub const PPB_DWT_DEVARCH:                          u32 = PPB_BASE + 0x1FBC;
+pub const PPB_DWT_DEVTYPE:                          u32 = PPB_BASE + 0x1FCC;
+pub const PPB_DWT_PIDR4:                            u32 = PPB_BASE + 0x1FD0;
+pub const PPB_DWT_PIDR5:                            u32 = PPB_BASE + 0x1FD4;
+pub const PPB_DWT_PIDR6:                            u32 = PPB_BASE + 0x1FD8;
+pub const PPB_DWT_PIDR7:                            u32 = PPB_BASE + 0x1FDC;
+pub const PPB_DWT_PIDR0:                            u32 = PPB_BASE + 0x1FE0;
+pub const PPB_DWT_PIDR1:                            u32 = PPB_BASE + 0x1FE4;
+pub const PPB_DWT_PIDR2:                            u32 = PPB_BASE + 0x1FE8;
+pub const PPB_DWT_PIDR3:                            u32 = PPB_BASE + 0x1FEC;
 // DWT_CIDR0..DWT_CIDR3
-pub fn PPB_DWT_CIDR_OFFSET(n: u32) -> u32 {
-    return 0x1FF0 + n * 0x4
+pub fn PPB_DWT_CIDR(n: u32) -> u32 {
+    return PPB_BASE + 0x1FF0 + n * 0x4
 }
 
-pub const PPB_FP_CTRL_OFFSET:                       u32 = 0x2000;
-pub const PPB_FP_REMAP_OFFSET:                      u32 = 0x2004;
+pub const PPB_FP_CTRL:                              u32 = PPB_BASE + 0x2000;
+pub const PPB_FP_REMAP:                             u32 = PPB_BASE + 0x2004;
 // FP_COMP0..FP_COMP7
-pub fn PPB_FP_COMP_OFFSET(n: u32) -> u32 {
-    return 0x2008 + n * 0x4
+pub fn PPB_FP_COMP(n: u32) -> u32 {
+    return PPB_BASE + 0x2008 + n * 0x4
 }
 
-pub const PPB_FP_DEVARCH_OFFSET:                    u32 = 0x2FBC;
-pub const PPB_FP_DEVTYPE_OFFSET:                    u32 = 0x2FCC;
-pub const PPB_FP_PIDR4_OFFSET:                      u32 = 0x2FD0;
-pub const PPB_FP_PIDR5_OFFSET:                      u32 = 0x2FD4;
-pub const PPB_FP_PIDR6_OFFSET:                      u32 = 0x2FD8;
-pub const PPB_FP_PIDR7_OFFSET:                      u32 = 0x2FDC;
-pub const PPB_FP_PIDR0_OFFSET:                      u32 = 0x2FE0;
-pub const PPB_FP_PIDR1_OFFSET:                      u32 = 0x2FE4;
-pub const PPB_FP_PIDR2_OFFSET:                      u32 = 0x2FE8;
-pub const PPB_FP_PIDR3_OFFSET:                      u32 = 0x2FEC;
+pub const PPB_FP_DEVARCH:                           u32 = PPB_BASE + 0x2FBC;
+pub const PPB_FP_DEVTYPE:                           u32 = PPB_BASE + 0x2FCC;
+pub const PPB_FP_PIDR4:                             u32 = PPB_BASE + 0x2FD0;
+pub const PPB_FP_PIDR5:                             u32 = PPB_BASE + 0x2FD4;
+pub const PPB_FP_PIDR6:                             u32 = PPB_BASE + 0x2FD8;
+pub const PPB_FP_PIDR7:                             u32 = PPB_BASE + 0x2FDC;
+pub const PPB_FP_PIDR0:                             u32 = PPB_BASE + 0x2FE0;
+pub const PPB_FP_PIDR1:                             u32 = PPB_BASE + 0x2FE4;
+pub const PPB_FP_PIDR2:                             u32 = PPB_BASE + 0x2FE8;
+pub const PPB_FP_PIDR3:                             u32 = PPB_BASE + 0x2FEC;
 // FP_CIDR0..FP_CIDR3
-pub fn PPB_FP_CIDR_OFFSET(n: u32) -> u32 {
-    return 0x2FF0 + n * 0x4
+pub fn PPB_FP_CIDR(n: u32) -> u32 {
+    return PPB_BASE + 0x2FF0 + n * 0x4
 }
 
-pub const PPB_ICTR_OFFSET:                          u32 = 0xE004;
-pub const PPB_ACTLR_OFFSET:                         u32 = 0xE008;
-pub const PPB_SYST_CSR_OFFSET:                      u32 = 0xE010;
-pub const PPB_SYST_RVR_OFFSET:                      u32 = 0xE014;
-pub const PPB_SYST_CVR_OFFSET:                      u32 = 0xE018;
-pub const PPB_SYST_CALIB_OFFSET:                    u32 = 0xE01C;
+pub const PPB_ICTR:                                 u32 = PPB_BASE + 0xE004;
+pub const PPB_ACTLR:                                u32 = PPB_BASE + 0xE008;
+pub const PPB_SYST_CSR:                             u32 = PPB_BASE + 0xE010;
+pub const PPB_SYST_RVR:                             u32 = PPB_BASE + 0xE014;
+pub const PPB_SYST_CVR:                             u32 = PPB_BASE + 0xE018;
+pub const PPB_SYST_CALIB:                           u32 = PPB_BASE + 0xE01C;
 // NVIC_ISER0..NVIC_ISER1
-pub fn PPB_NVIC_ISER_OFFSET(n: u32) -> u32 {
-    return 0xE100 + n * 0x4
+pub fn PPB_NVIC_ISER(n: u32) -> u32 {
+    return PPB_BASE + 0xE100 + n * 0x4
 }
 
 // NVIC_ICER0..NVIC_ICER1
-pub fn PPB_NVIC_ICER_OFFSET(n: u32) -> u32 {
-    return 0xE180 + n * 0x4
+pub fn PPB_NVIC_ICER(n: u32) -> u32 {
+    return PPB_BASE + 0xE180 + n * 0x4
 }
 
 // NVIC_ISPR0..NVIC_ISPR1
-pub fn PPB_NVIC_ISPR_OFFSET(n: u32) -> u32 {
-    return 0xE200 + n * 0x4
+pub fn PPB_NVIC_ISPR(n: u32) -> u32 {
+    return PPB_BASE + 0xE200 + n * 0x4
 }
 
 // NVIC_ICPR0..NVIC_ICPR1
-pub fn PPB_NVIC_ICPR_OFFSET(n: u32) -> u32 {
-    return 0xE280 + n * 0x4
+pub fn PPB_NVIC_ICPR(n: u32) -> u32 {
+    return PPB_BASE + 0xE280 + n * 0x4
 }
 
 // NVIC_IABR0..NVIC_IABR1
-pub fn PPB_NVIC_IABR_OFFSET(n: u32) -> u32 {
-    return 0xE300 + n * 0x4
+pub fn PPB_NVIC_IABR(n: u32) -> u32 {
+    return PPB_BASE + 0xE300 + n * 0x4
 }
 
 // NVIC_ITNS0..NVIC_ITNS1
-pub fn PPB_NVIC_ITNS_OFFSET(n: u32) -> u32 {
-    return 0xE380 + n * 0x4
+pub fn PPB_NVIC_ITNS(n: u32) -> u32 {
+    return PPB_BASE + 0xE380 + n * 0x4
 }
 
 // NVIC_IPR0..NVIC_IPR15
-pub fn PPB_NVIC_IPR_OFFSET(n: u32) -> u32 {
-    return 0xE400 + n * 0x4
+pub fn PPB_NVIC_IPR(n: u32) -> u32 {
+    return PPB_BASE + 0xE400 + n * 0x4
 }
 
-pub const PPB_CPUID_OFFSET:                         u32 = 0xED00;
-pub const PPB_ICSR_OFFSET:                          u32 = 0xED04;
-pub const PPB_VTOR_OFFSET:                          u32 = 0xED08;
-pub const PPB_AIRCR_OFFSET:                         u32 = 0xED0C;
-pub const PPB_SCR_OFFSET:                           u32 = 0xED10;
-pub const PPB_CCR_OFFSET:                           u32 = 0xED14;
-pub const PPB_SHPR1_OFFSET:                         u32 = 0xED18;
-pub const PPB_SHPR2_OFFSET:                         u32 = 0xED1C;
-pub const PPB_SHPR3_OFFSET:                         u32 = 0xED20;
-pub const PPB_SHCSR_OFFSET:                         u32 = 0xED24;
-pub const PPB_CFSR_OFFSET:                          u32 = 0xED28;
-pub const PPB_HFSR_OFFSET:                          u32 = 0xED2C;
-pub const PPB_DFSR_OFFSET:                          u32 = 0xED30;
-pub const PPB_MMFAR_OFFSET:                         u32 = 0xED34;
-pub const PPB_BFAR_OFFSET:                          u32 = 0xED38;
+pub const PPB_CPUID:                                u32 = PPB_BASE + 0xED00;
+pub const PPB_ICSR:                                 u32 = PPB_BASE + 0xED04;
+pub const PPB_VTOR:                                 u32 = PPB_BASE + 0xED08;
+pub const PPB_AIRCR:                                u32 = PPB_BASE + 0xED0C;
+pub const PPB_SCR:                                  u32 = PPB_BASE + 0xED10;
+pub const PPB_CCR:                                  u32 = PPB_BASE + 0xED14;
+pub const PPB_SHPR1:                                u32 = PPB_BASE + 0xED18;
+pub const PPB_SHPR2:                                u32 = PPB_BASE + 0xED1C;
+pub const PPB_SHPR3:                                u32 = PPB_BASE + 0xED20;
+pub const PPB_SHCSR:                                u32 = PPB_BASE + 0xED24;
+pub const PPB_CFSR:                                 u32 = PPB_BASE + 0xED28;
+pub const PPB_HFSR:                                 u32 = PPB_BASE + 0xED2C;
+pub const PPB_DFSR:                                 u32 = PPB_BASE + 0xED30;
+pub const PPB_MMFAR:                                u32 = PPB_BASE + 0xED34;
+pub const PPB_BFAR:                                 u32 = PPB_BASE + 0xED38;
 // ID_PFR0..ID_PFR1
-pub fn PPB_ID_PFR_OFFSET(n: u32) -> u32 {
-    return 0xED40 + n * 0x4
+pub fn PPB_ID_PFR(n: u32) -> u32 {
+    return PPB_BASE + 0xED40 + n * 0x4
 }
 
-pub const PPB_ID_DFR0_OFFSET:                       u32 = 0xED48;
-pub const PPB_ID_AFR0_OFFSET:                       u32 = 0xED4C;
+pub const PPB_ID_DFR0:                              u32 = PPB_BASE + 0xED48;
+pub const PPB_ID_AFR0:                              u32 = PPB_BASE + 0xED4C;
 // ID_MMFR0..ID_MMFR3
-pub fn PPB_ID_MMFR_OFFSET(n: u32) -> u32 {
-    return 0xED50 + n * 0x4
+pub fn PPB_ID_MMFR(n: u32) -> u32 {
+    return PPB_BASE + 0xED50 + n * 0x4
 }
 
 // ID_ISAR0..ID_ISAR5
-pub fn PPB_ID_ISAR_OFFSET(n: u32) -> u32 {
-    return 0xED60 + n * 0x4
+pub fn PPB_ID_ISAR(n: u32) -> u32 {
+    return PPB_BASE + 0xED60 + n * 0x4
 }
 
-pub const PPB_CTR_OFFSET:                           u32 = 0xED7C;
-pub const PPB_CPACR_OFFSET:                         u32 = 0xED88;
-pub const PPB_NSACR_OFFSET:                         u32 = 0xED8C;
-pub const PPB_MPU_TYPE_OFFSET:                      u32 = 0xED90;
-pub const PPB_MPU_CTRL_OFFSET:                      u32 = 0xED94;
-pub const PPB_MPU_RNR_OFFSET:                       u32 = 0xED98;
-pub const PPB_MPU_RBAR_OFFSET:                      u32 = 0xED9C;
-pub const PPB_MPU_RLAR_OFFSET:                      u32 = 0xEDA0;
-pub const PPB_MPU_RBAR_A1_OFFSET:                   u32 = 0xEDA4;
-pub const PPB_MPU_RBAR_A2_OFFSET:                   u32 = 0xEDAC;
-pub const PPB_MPU_RBAR_A3_OFFSET:                   u32 = 0xEDB4;
-pub const PPB_MPU_RLAR_A1_OFFSET:                   u32 = 0xEDA8;
-pub const PPB_MPU_RLAR_A2_OFFSET:                   u32 = 0xEDB0;
-pub const PPB_MPU_RLAR_A3_OFFSET:                   u32 = 0xEDB8;
+pub const PPB_CTR:                                  u32 = PPB_BASE + 0xED7C;
+pub const PPB_CPACR:                                u32 = PPB_BASE + 0xED88;
+pub const PPB_NSACR:                                u32 = PPB_BASE + 0xED8C;
+pub const PPB_MPU_TYPE:                             u32 = PPB_BASE + 0xED90;
+pub const PPB_MPU_CTRL:                             u32 = PPB_BASE + 0xED94;
+pub const PPB_MPU_RNR:                              u32 = PPB_BASE + 0xED98;
+pub const PPB_MPU_RBAR:                             u32 = PPB_BASE + 0xED9C;
+pub const PPB_MPU_RLAR:                             u32 = PPB_BASE + 0xEDA0;
+pub const PPB_MPU_RBAR_A1:                          u32 = PPB_BASE + 0xEDA4;
+pub const PPB_MPU_RBAR_A2:                          u32 = PPB_BASE + 0xEDAC;
+pub const PPB_MPU_RBAR_A3:                          u32 = PPB_BASE + 0xEDB4;
+pub const PPB_MPU_RLAR_A1:                          u32 = PPB_BASE + 0xEDA8;
+pub const PPB_MPU_RLAR_A2:                          u32 = PPB_BASE + 0xEDB0;
+pub const PPB_MPU_RLAR_A3:                          u32 = PPB_BASE + 0xEDB8;
 // MPU_MAIR0..MPU_MAIR1
-pub fn PPB_MPU_MAIR_OFFSET(n: u32) -> u32 {
-    return 0xEDC0 + n * 0x4
+pub fn PPB_MPU_MAIR(n: u32) -> u32 {
+    return PPB_BASE + 0xEDC0 + n * 0x4
 }
 
-pub const PPB_SAU_CTRL_OFFSET:                      u32 = 0xEDD0;
-pub const PPB_SAU_TYPE_OFFSET:                      u32 = 0xEDD4;
-pub const PPB_SAU_RNR_OFFSET:                       u32 = 0xEDD8;
-pub const PPB_SAU_RBAR_OFFSET:                      u32 = 0xEDDC;
-pub const PPB_SAU_RLAR_OFFSET:                      u32 = 0xEDE0;
-pub const PPB_SFSR_OFFSET:                          u32 = 0xEDE4;
-pub const PPB_SFAR_OFFSET:                          u32 = 0xEDE8;
-pub const PPB_DHCSR_OFFSET:                         u32 = 0xEDF0;
-pub const PPB_DCRSR_OFFSET:                         u32 = 0xEDF4;
-pub const PPB_DCRDR_OFFSET:                         u32 = 0xEDF8;
-pub const PPB_DEMCR_OFFSET:                         u32 = 0xEDFC;
-pub const PPB_DSCSR_OFFSET:                         u32 = 0xEE08;
-pub const PPB_STIR_OFFSET:                          u32 = 0xEF00;
-pub const PPB_FPCCR_OFFSET:                         u32 = 0xEF34;
-pub const PPB_FPCAR_OFFSET:                         u32 = 0xEF38;
-pub const PPB_FPDSCR_OFFSET:                        u32 = 0xEF3C;
+pub const PPB_SAU_CTRL:                             u32 = PPB_BASE + 0xEDD0;
+pub const PPB_SAU_TYPE:                             u32 = PPB_BASE + 0xEDD4;
+pub const PPB_SAU_RNR:                              u32 = PPB_BASE + 0xEDD8;
+pub const PPB_SAU_RBAR:                             u32 = PPB_BASE + 0xEDDC;
+pub const PPB_SAU_RLAR:                             u32 = PPB_BASE + 0xEDE0;
+pub const PPB_SFSR:                                 u32 = PPB_BASE + 0xEDE4;
+pub const PPB_SFAR:                                 u32 = PPB_BASE + 0xEDE8;
+pub const PPB_DHCSR:                                u32 = PPB_BASE + 0xEDF0;
+pub const PPB_DCRSR:                                u32 = PPB_BASE + 0xEDF4;
+pub const PPB_DCRDR:                                u32 = PPB_BASE + 0xEDF8;
+pub const PPB_DEMCR:                                u32 = PPB_BASE + 0xEDFC;
+pub const PPB_DSCSR:                                u32 = PPB_BASE + 0xEE08;
+pub const PPB_STIR:                                 u32 = PPB_BASE + 0xEF00;
+pub const PPB_FPCCR:                                u32 = PPB_BASE + 0xEF34;
+pub const PPB_FPCAR:                                u32 = PPB_BASE + 0xEF38;
+pub const PPB_FPDSCR:                               u32 = PPB_BASE + 0xEF3C;
 // MVFR0..MVFR2
-pub fn PPB_MVFR_OFFSET(n: u32) -> u32 {
-    return 0xEF40 + n * 0x4
+pub fn PPB_MVFR(n: u32) -> u32 {
+    return PPB_BASE + 0xEF40 + n * 0x4
 }
 
-pub const PPB_DDEVARCH_OFFSET:                      u32 = 0xEFBC;
-pub const PPB_DDEVTYPE_OFFSET:                      u32 = 0xEFCC;
-pub const PPB_DPIDR4_OFFSET:                        u32 = 0xEFD0;
-pub const PPB_DPIDR5_OFFSET:                        u32 = 0xEFD4;
-pub const PPB_DPIDR6_OFFSET:                        u32 = 0xEFD8;
-pub const PPB_DPIDR7_OFFSET:                        u32 = 0xEFDC;
-pub const PPB_DPIDR0_OFFSET:                        u32 = 0xEFE0;
-pub const PPB_DPIDR1_OFFSET:                        u32 = 0xEFE4;
-pub const PPB_DPIDR2_OFFSET:                        u32 = 0xEFE8;
-pub const PPB_DPIDR3_OFFSET:                        u32 = 0xEFEC;
+pub const PPB_DDEVARCH:                             u32 = PPB_BASE + 0xEFBC;
+pub const PPB_DDEVTYPE:                             u32 = PPB_BASE + 0xEFCC;
+pub const PPB_DPIDR4:                               u32 = PPB_BASE + 0xEFD0;
+pub const PPB_DPIDR5:                               u32 = PPB_BASE + 0xEFD4;
+pub const PPB_DPIDR6:                               u32 = PPB_BASE + 0xEFD8;
+pub const PPB_DPIDR7:                               u32 = PPB_BASE + 0xEFDC;
+pub const PPB_DPIDR0:                               u32 = PPB_BASE + 0xEFE0;
+pub const PPB_DPIDR1:                               u32 = PPB_BASE + 0xEFE4;
+pub const PPB_DPIDR2:                               u32 = PPB_BASE + 0xEFE8;
+pub const PPB_DPIDR3:                               u32 = PPB_BASE + 0xEFEC;
 // DCIDR0..DCIDR3
-pub fn PPB_DCIDR_OFFSET(n: u32) -> u32 {
-    return 0xEFF0 + n * 0x4
+pub fn PPB_DCIDR(n: u32) -> u32 {
+    return PPB_BASE + 0xEFF0 + n * 0x4
 }
 
-pub const PPB_TRCPRGCTLR_OFFSET:                    u32 = 0x41004;
-pub const PPB_TRCSTATR_OFFSET:                      u32 = 0x4100C;
-pub const PPB_TRCCONFIGR_OFFSET:                    u32 = 0x41010;
+pub const PPB_TRCPRGCTLR:                           u32 = PPB_BASE + 0x41004;
+pub const PPB_TRCSTATR:                             u32 = PPB_BASE + 0x4100C;
+pub const PPB_TRCCONFIGR:                           u32 = PPB_BASE + 0x41010;
 // TRCEVENTCTL0R..TRCEVENTCTL1R
-pub fn PPB_TRCEVENTCTLR_OFFSET(n: u32) -> u32 {
-    return 0x41020 + n * 0x4
+pub fn PPB_TRCEVENTCTLR(n: u32) -> u32 {
+    return PPB_BASE + 0x41020 + n * 0x4
 }
 
-pub const PPB_TRCSTALLCTLR_OFFSET:                  u32 = 0x4102C;
-pub const PPB_TRCTSCTLR_OFFSET:                     u32 = 0x41030;
-pub const PPB_TRCSYNCPR_OFFSET:                     u32 = 0x41034;
-pub const PPB_TRCCCCTLR_OFFSET:                     u32 = 0x41038;
-pub const PPB_TRCVICTLR_OFFSET:                     u32 = 0x41080;
-pub const PPB_TRCCNTRLDVR0_OFFSET:                  u32 = 0x41140;
-pub const PPB_TRCIDR8_OFFSET:                       u32 = 0x41180;
-pub const PPB_TRCIDR9_OFFSET:                       u32 = 0x41184;
-pub const PPB_TRCIDR10_OFFSET:                      u32 = 0x41188;
-pub const PPB_TRCIDR11_OFFSET:                      u32 = 0x4118C;
-pub const PPB_TRCIDR12_OFFSET:                      u32 = 0x41190;
-pub const PPB_TRCIDR13_OFFSET:                      u32 = 0x41194;
+pub const PPB_TRCSTALLCTLR:                         u32 = PPB_BASE + 0x4102C;
+pub const PPB_TRCTSCTLR:                            u32 = PPB_BASE + 0x41030;
+pub const PPB_TRCSYNCPR:                            u32 = PPB_BASE + 0x41034;
+pub const PPB_TRCCCCTLR:                            u32 = PPB_BASE + 0x41038;
+pub const PPB_TRCVICTLR:                            u32 = PPB_BASE + 0x41080;
+pub const PPB_TRCCNTRLDVR0:                         u32 = PPB_BASE + 0x41140;
+pub const PPB_TRCIDR8:                              u32 = PPB_BASE + 0x41180;
+pub const PPB_TRCIDR9:                              u32 = PPB_BASE + 0x41184;
+pub const PPB_TRCIDR10:                             u32 = PPB_BASE + 0x41188;
+pub const PPB_TRCIDR11:                             u32 = PPB_BASE + 0x4118C;
+pub const PPB_TRCIDR12:                             u32 = PPB_BASE + 0x41190;
+pub const PPB_TRCIDR13:                             u32 = PPB_BASE + 0x41194;
 // TRCIDR0..TRCIDR7
-pub fn PPB_TRCIDR_OFFSET(n: u32) -> u32 {
-    return 0x411E0 + n * 0x4
+pub fn PPB_TRCIDR(n: u32) -> u32 {
+    return PPB_BASE + 0x411E0 + n * 0x4
 }
 
-pub const PPB_TRCIMSPEC_OFFSET:                     u32 = 0x411C0;
-pub const PPB_TRCRSCTLR2_OFFSET:                    u32 = 0x41208;
-pub const PPB_TRCRSCTLR3_OFFSET:                    u32 = 0x4120C;
-pub const PPB_TRCSSCSR_OFFSET:                      u32 = 0x412A0;
-pub const PPB_TRCSSPCICR_OFFSET:                    u32 = 0x412C0;
-pub const PPB_TRCPDCR_OFFSET:                       u32 = 0x41310;
-pub const PPB_TRCPDSR_OFFSET:                       u32 = 0x41314;
-pub const PPB_TRCITATBIDR_OFFSET:                   u32 = 0x41EE4;
-pub const PPB_TRCITIATBINR_OFFSET:                  u32 = 0x41EF4;
-pub const PPB_TRCITIATBOUTR_OFFSET:                 u32 = 0x41EFC;
-pub const PPB_TRCCLAIMSET_OFFSET:                   u32 = 0x41FA0;
-pub const PPB_TRCCLAIMCLR_OFFSET:                   u32 = 0x41FA4;
-pub const PPB_TRCAUTHSTATUS_OFFSET:                 u32 = 0x41FB8;
-pub const PPB_TRCDEVARCH_OFFSET:                    u32 = 0x41FBC;
-pub const PPB_TRCDEVID_OFFSET:                      u32 = 0x41FC8;
-pub const PPB_TRCDEVTYPE_OFFSET:                    u32 = 0x41FCC;
-pub const PPB_TRCPIDR4_OFFSET:                      u32 = 0x41FD0;
-pub const PPB_TRCPIDR5_OFFSET:                      u32 = 0x41FD4;
-pub const PPB_TRCPIDR6_OFFSET:                      u32 = 0x41FD8;
-pub const PPB_TRCPIDR7_OFFSET:                      u32 = 0x41FDC;
-pub const PPB_TRCPIDR0_OFFSET:                      u32 = 0x41FE0;
-pub const PPB_TRCPIDR1_OFFSET:                      u32 = 0x41FE4;
-pub const PPB_TRCPIDR2_OFFSET:                      u32 = 0x41FE8;
-pub const PPB_TRCPIDR3_OFFSET:                      u32 = 0x41FEC;
+pub const PPB_TRCIMSPEC:                            u32 = PPB_BASE + 0x411C0;
+pub const PPB_TRCRSCTLR2:                           u32 = PPB_BASE + 0x41208;
+pub const PPB_TRCRSCTLR3:                           u32 = PPB_BASE + 0x4120C;
+pub const PPB_TRCSSCSR:                             u32 = PPB_BASE + 0x412A0;
+pub const PPB_TRCSSPCICR:                           u32 = PPB_BASE + 0x412C0;
+pub const PPB_TRCPDCR:                              u32 = PPB_BASE + 0x41310;
+pub const PPB_TRCPDSR:                              u32 = PPB_BASE + 0x41314;
+pub const PPB_TRCITATBIDR:                          u32 = PPB_BASE + 0x41EE4;
+pub const PPB_TRCITIATBINR:                         u32 = PPB_BASE + 0x41EF4;
+pub const PPB_TRCITIATBOUTR:                        u32 = PPB_BASE + 0x41EFC;
+pub const PPB_TRCCLAIMSET:                          u32 = PPB_BASE + 0x41FA0;
+pub const PPB_TRCCLAIMCLR:                          u32 = PPB_BASE + 0x41FA4;
+pub const PPB_TRCAUTHSTATUS:                        u32 = PPB_BASE + 0x41FB8;
+pub const PPB_TRCDEVARCH:                           u32 = PPB_BASE + 0x41FBC;
+pub const PPB_TRCDEVID:                             u32 = PPB_BASE + 0x41FC8;
+pub const PPB_TRCDEVTYPE:                           u32 = PPB_BASE + 0x41FCC;
+pub const PPB_TRCPIDR4:                             u32 = PPB_BASE + 0x41FD0;
+pub const PPB_TRCPIDR5:                             u32 = PPB_BASE + 0x41FD4;
+pub const PPB_TRCPIDR6:                             u32 = PPB_BASE + 0x41FD8;
+pub const PPB_TRCPIDR7:                             u32 = PPB_BASE + 0x41FDC;
+pub const PPB_TRCPIDR0:                             u32 = PPB_BASE + 0x41FE0;
+pub const PPB_TRCPIDR1:                             u32 = PPB_BASE + 0x41FE4;
+pub const PPB_TRCPIDR2:                             u32 = PPB_BASE + 0x41FE8;
+pub const PPB_TRCPIDR3:                             u32 = PPB_BASE + 0x41FEC;
 // TRCCIDR0..TRCCIDR3
-pub fn PPB_TRCCIDR_OFFSET(n: u32) -> u32 {
-    return 0x41FF0 + n * 0x4
+pub fn PPB_TRCCIDR(n: u32) -> u32 {
+    return PPB_BASE + 0x41FF0 + n * 0x4
 }
 
-pub const PPB_CTICONTROL_OFFSET:                    u32 = 0x42000;
-pub const PPB_CTIINTACK_OFFSET:                     u32 = 0x42010;
-pub const PPB_CTIAPPSET_OFFSET:                     u32 = 0x42014;
-pub const PPB_CTIAPPCLEAR_OFFSET:                   u32 = 0x42018;
-pub const PPB_CTIAPPPULSE_OFFSET:                   u32 = 0x4201C;
+pub const PPB_CTICONTROL:                           u32 = PPB_BASE + 0x42000;
+pub const PPB_CTIINTACK:                            u32 = PPB_BASE + 0x42010;
+pub const PPB_CTIAPPSET:                            u32 = PPB_BASE + 0x42014;
+pub const PPB_CTIAPPCLEAR:                          u32 = PPB_BASE + 0x42018;
+pub const PPB_CTIAPPPULSE:                          u32 = PPB_BASE + 0x4201C;
 // CTIINEN0..CTIINEN7
-pub fn PPB_CTIINEN_OFFSET(n: u32) -> u32 {
-    return 0x42020 + n * 0x4
+pub fn PPB_CTIINEN(n: u32) -> u32 {
+    return PPB_BASE + 0x42020 + n * 0x4
 }
 
 // CTIOUTEN0..CTIOUTEN7
-pub fn PPB_CTIOUTEN_OFFSET(n: u32) -> u32 {
-    return 0x420A0 + n * 0x4
+pub fn PPB_CTIOUTEN(n: u32) -> u32 {
+    return PPB_BASE + 0x420A0 + n * 0x4
 }
 
-pub const PPB_CTITRIGINSTATUS_OFFSET:               u32 = 0x42130;
-pub const PPB_CTITRIGOUTSTATUS_OFFSET:              u32 = 0x42134;
-pub const PPB_CTICHINSTATUS_OFFSET:                 u32 = 0x42138;
-pub const PPB_CTIGATE_OFFSET:                       u32 = 0x42140;
-pub const PPB_ASICCTL_OFFSET:                       u32 = 0x42144;
-pub const PPB_ITCHOUT_OFFSET:                       u32 = 0x42EE4;
-pub const PPB_ITTRIGOUT_OFFSET:                     u32 = 0x42EE8;
-pub const PPB_ITCHIN_OFFSET:                        u32 = 0x42EF4;
-pub const PPB_ITCTRL_OFFSET:                        u32 = 0x42F00;
-pub const PPB_DEVARCH_OFFSET:                       u32 = 0x42FBC;
-pub const PPB_DEVID_OFFSET:                         u32 = 0x42FC8;
-pub const PPB_DEVTYPE_OFFSET:                       u32 = 0x42FCC;
-pub const PPB_PIDR4_OFFSET:                         u32 = 0x42FD0;
-pub const PPB_PIDR5_OFFSET:                         u32 = 0x42FD4;
-pub const PPB_PIDR6_OFFSET:                         u32 = 0x42FD8;
-pub const PPB_PIDR7_OFFSET:                         u32 = 0x42FDC;
-pub const PPB_PIDR0_OFFSET:                         u32 = 0x42FE0;
-pub const PPB_PIDR1_OFFSET:                         u32 = 0x42FE4;
-pub const PPB_PIDR2_OFFSET:                         u32 = 0x42FE8;
-pub const PPB_PIDR3_OFFSET:                         u32 = 0x42FEC;
+pub const PPB_CTITRIGINSTATUS:                      u32 = PPB_BASE + 0x42130;
+pub const PPB_CTITRIGOUTSTATUS:                     u32 = PPB_BASE + 0x42134;
+pub const PPB_CTICHINSTATUS:                        u32 = PPB_BASE + 0x42138;
+pub const PPB_CTIGATE:                              u32 = PPB_BASE + 0x42140;
+pub const PPB_ASICCTL:                              u32 = PPB_BASE + 0x42144;
+pub const PPB_ITCHOUT:                              u32 = PPB_BASE + 0x42EE4;
+pub const PPB_ITTRIGOUT:                            u32 = PPB_BASE + 0x42EE8;
+pub const PPB_ITCHIN:                               u32 = PPB_BASE + 0x42EF4;
+pub const PPB_ITCTRL:                               u32 = PPB_BASE + 0x42F00;
+pub const PPB_DEVARCH:                              u32 = PPB_BASE + 0x42FBC;
+pub const PPB_DEVID:                                u32 = PPB_BASE + 0x42FC8;
+pub const PPB_DEVTYPE:                              u32 = PPB_BASE + 0x42FCC;
+pub const PPB_PIDR4:                                u32 = PPB_BASE + 0x42FD0;
+pub const PPB_PIDR5:                                u32 = PPB_BASE + 0x42FD4;
+pub const PPB_PIDR6:                                u32 = PPB_BASE + 0x42FD8;
+pub const PPB_PIDR7:                                u32 = PPB_BASE + 0x42FDC;
+pub const PPB_PIDR0:                                u32 = PPB_BASE + 0x42FE0;
+pub const PPB_PIDR1:                                u32 = PPB_BASE + 0x42FE4;
+pub const PPB_PIDR2:                                u32 = PPB_BASE + 0x42FE8;
+pub const PPB_PIDR3:                                u32 = PPB_BASE + 0x42FEC;
 // CIDR0..CIDR3
-pub fn PPB_CIDR_OFFSET(n: u32) -> u32 {
-    return 0x42FF0 + n * 0x4
+pub fn PPB_CIDR(n: u32) -> u32 {
+    return PPB_BASE + 0x42FF0 + n * 0x4
+}
+
+// ITM_STIM0..ITM_STIM31
+pub fn PPB_NS_ITM_STIM(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x0 + n * 0x4
+}
+
+pub const PPB_NS_ITM_TER0:                          u32 = PPB_NS_BASE + 0xE00;
+pub const PPB_NS_ITM_TPR:                           u32 = PPB_NS_BASE + 0xE40;
+pub const PPB_NS_ITM_TCR:                           u32 = PPB_NS_BASE + 0xE80;
+pub const PPB_NS_INT_ATREADY:                       u32 = PPB_NS_BASE + 0xEF0;
+pub const PPB_NS_INT_ATVALID:                       u32 = PPB_NS_BASE + 0xEF8;
+pub const PPB_NS_ITM_ITCTRL:                        u32 = PPB_NS_BASE + 0xF00;
+pub const PPB_NS_ITM_DEVARCH:                       u32 = PPB_NS_BASE + 0xFBC;
+pub const PPB_NS_ITM_DEVTYPE:                       u32 = PPB_NS_BASE + 0xFCC;
+pub const PPB_NS_ITM_PIDR4:                         u32 = PPB_NS_BASE + 0xFD0;
+pub const PPB_NS_ITM_PIDR5:                         u32 = PPB_NS_BASE + 0xFD4;
+pub const PPB_NS_ITM_PIDR6:                         u32 = PPB_NS_BASE + 0xFD8;
+pub const PPB_NS_ITM_PIDR7:                         u32 = PPB_NS_BASE + 0xFDC;
+pub const PPB_NS_ITM_PIDR0:                         u32 = PPB_NS_BASE + 0xFE0;
+pub const PPB_NS_ITM_PIDR1:                         u32 = PPB_NS_BASE + 0xFE4;
+pub const PPB_NS_ITM_PIDR2:                         u32 = PPB_NS_BASE + 0xFE8;
+pub const PPB_NS_ITM_PIDR3:                         u32 = PPB_NS_BASE + 0xFEC;
+// ITM_CIDR0..ITM_CIDR3
+pub fn PPB_NS_ITM_CIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xFF0 + n * 0x4
+}
+
+pub const PPB_NS_DWT_CTRL:                          u32 = PPB_NS_BASE + 0x1000;
+pub const PPB_NS_DWT_CYCCNT:                        u32 = PPB_NS_BASE + 0x1004;
+pub const PPB_NS_DWT_EXCCNT:                        u32 = PPB_NS_BASE + 0x100C;
+pub const PPB_NS_DWT_LSUCNT:                        u32 = PPB_NS_BASE + 0x1014;
+pub const PPB_NS_DWT_FOLDCNT:                       u32 = PPB_NS_BASE + 0x1018;
+// DWT_COMP0..DWT_COMP3
+pub fn PPB_NS_DWT_COMP(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x1020 + n * 0x10
+}
+
+// DWT_FUNCTION0..DWT_FUNCTION3
+pub fn PPB_NS_DWT_FUNCTION(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x1028 + n * 0x10
+}
+
+pub const PPB_NS_DWT_DEVARCH:                       u32 = PPB_NS_BASE + 0x1FBC;
+pub const PPB_NS_DWT_DEVTYPE:                       u32 = PPB_NS_BASE + 0x1FCC;
+pub const PPB_NS_DWT_PIDR4:                         u32 = PPB_NS_BASE + 0x1FD0;
+pub const PPB_NS_DWT_PIDR5:                         u32 = PPB_NS_BASE + 0x1FD4;
+pub const PPB_NS_DWT_PIDR6:                         u32 = PPB_NS_BASE + 0x1FD8;
+pub const PPB_NS_DWT_PIDR7:                         u32 = PPB_NS_BASE + 0x1FDC;
+pub const PPB_NS_DWT_PIDR0:                         u32 = PPB_NS_BASE + 0x1FE0;
+pub const PPB_NS_DWT_PIDR1:                         u32 = PPB_NS_BASE + 0x1FE4;
+pub const PPB_NS_DWT_PIDR2:                         u32 = PPB_NS_BASE + 0x1FE8;
+pub const PPB_NS_DWT_PIDR3:                         u32 = PPB_NS_BASE + 0x1FEC;
+// DWT_CIDR0..DWT_CIDR3
+pub fn PPB_NS_DWT_CIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x1FF0 + n * 0x4
+}
+
+pub const PPB_NS_FP_CTRL:                           u32 = PPB_NS_BASE + 0x2000;
+pub const PPB_NS_FP_REMAP:                          u32 = PPB_NS_BASE + 0x2004;
+// FP_COMP0..FP_COMP7
+pub fn PPB_NS_FP_COMP(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x2008 + n * 0x4
+}
+
+pub const PPB_NS_FP_DEVARCH:                        u32 = PPB_NS_BASE + 0x2FBC;
+pub const PPB_NS_FP_DEVTYPE:                        u32 = PPB_NS_BASE + 0x2FCC;
+pub const PPB_NS_FP_PIDR4:                          u32 = PPB_NS_BASE + 0x2FD0;
+pub const PPB_NS_FP_PIDR5:                          u32 = PPB_NS_BASE + 0x2FD4;
+pub const PPB_NS_FP_PIDR6:                          u32 = PPB_NS_BASE + 0x2FD8;
+pub const PPB_NS_FP_PIDR7:                          u32 = PPB_NS_BASE + 0x2FDC;
+pub const PPB_NS_FP_PIDR0:                          u32 = PPB_NS_BASE + 0x2FE0;
+pub const PPB_NS_FP_PIDR1:                          u32 = PPB_NS_BASE + 0x2FE4;
+pub const PPB_NS_FP_PIDR2:                          u32 = PPB_NS_BASE + 0x2FE8;
+pub const PPB_NS_FP_PIDR3:                          u32 = PPB_NS_BASE + 0x2FEC;
+// FP_CIDR0..FP_CIDR3
+pub fn PPB_NS_FP_CIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x2FF0 + n * 0x4
+}
+
+pub const PPB_NS_ICTR:                              u32 = PPB_NS_BASE + 0xE004;
+pub const PPB_NS_ACTLR:                             u32 = PPB_NS_BASE + 0xE008;
+pub const PPB_NS_SYST_CSR:                          u32 = PPB_NS_BASE + 0xE010;
+pub const PPB_NS_SYST_RVR:                          u32 = PPB_NS_BASE + 0xE014;
+pub const PPB_NS_SYST_CVR:                          u32 = PPB_NS_BASE + 0xE018;
+pub const PPB_NS_SYST_CALIB:                        u32 = PPB_NS_BASE + 0xE01C;
+// NVIC_ISER0..NVIC_ISER1
+pub fn PPB_NS_NVIC_ISER(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE100 + n * 0x4
+}
+
+// NVIC_ICER0..NVIC_ICER1
+pub fn PPB_NS_NVIC_ICER(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE180 + n * 0x4
+}
+
+// NVIC_ISPR0..NVIC_ISPR1
+pub fn PPB_NS_NVIC_ISPR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE200 + n * 0x4
+}
+
+// NVIC_ICPR0..NVIC_ICPR1
+pub fn PPB_NS_NVIC_ICPR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE280 + n * 0x4
+}
+
+// NVIC_IABR0..NVIC_IABR1
+pub fn PPB_NS_NVIC_IABR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE300 + n * 0x4
+}
+
+// NVIC_ITNS0..NVIC_ITNS1
+pub fn PPB_NS_NVIC_ITNS(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE380 + n * 0x4
+}
+
+// NVIC_IPR0..NVIC_IPR15
+pub fn PPB_NS_NVIC_IPR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xE400 + n * 0x4
+}
+
+pub const PPB_NS_CPUID:                             u32 = PPB_NS_BASE + 0xED00;
+pub const PPB_NS_ICSR:                              u32 = PPB_NS_BASE + 0xED04;
+pub const PPB_NS_VTOR:                              u32 = PPB_NS_BASE + 0xED08;
+pub const PPB_NS_AIRCR:                             u32 = PPB_NS_BASE + 0xED0C;
+pub const PPB_NS_SCR:                               u32 = PPB_NS_BASE + 0xED10;
+pub const PPB_NS_CCR:                               u32 = PPB_NS_BASE + 0xED14;
+pub const PPB_NS_SHPR1:                             u32 = PPB_NS_BASE + 0xED18;
+pub const PPB_NS_SHPR2:                             u32 = PPB_NS_BASE + 0xED1C;
+pub const PPB_NS_SHPR3:                             u32 = PPB_NS_BASE + 0xED20;
+pub const PPB_NS_SHCSR:                             u32 = PPB_NS_BASE + 0xED24;
+pub const PPB_NS_CFSR:                              u32 = PPB_NS_BASE + 0xED28;
+pub const PPB_NS_HFSR:                              u32 = PPB_NS_BASE + 0xED2C;
+pub const PPB_NS_DFSR:                              u32 = PPB_NS_BASE + 0xED30;
+pub const PPB_NS_MMFAR:                             u32 = PPB_NS_BASE + 0xED34;
+pub const PPB_NS_BFAR:                              u32 = PPB_NS_BASE + 0xED38;
+// ID_PFR0..ID_PFR1
+pub fn PPB_NS_ID_PFR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xED40 + n * 0x4
+}
+
+pub const PPB_NS_ID_DFR0:                           u32 = PPB_NS_BASE + 0xED48;
+pub const PPB_NS_ID_AFR0:                           u32 = PPB_NS_BASE + 0xED4C;
+// ID_MMFR0..ID_MMFR3
+pub fn PPB_NS_ID_MMFR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xED50 + n * 0x4
+}
+
+// ID_ISAR0..ID_ISAR5
+pub fn PPB_NS_ID_ISAR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xED60 + n * 0x4
+}
+
+pub const PPB_NS_CTR:                               u32 = PPB_NS_BASE + 0xED7C;
+pub const PPB_NS_CPACR:                             u32 = PPB_NS_BASE + 0xED88;
+pub const PPB_NS_NSACR:                             u32 = PPB_NS_BASE + 0xED8C;
+pub const PPB_NS_MPU_TYPE:                          u32 = PPB_NS_BASE + 0xED90;
+pub const PPB_NS_MPU_CTRL:                          u32 = PPB_NS_BASE + 0xED94;
+pub const PPB_NS_MPU_RNR:                           u32 = PPB_NS_BASE + 0xED98;
+pub const PPB_NS_MPU_RBAR:                          u32 = PPB_NS_BASE + 0xED9C;
+pub const PPB_NS_MPU_RLAR:                          u32 = PPB_NS_BASE + 0xEDA0;
+pub const PPB_NS_MPU_RBAR_A1:                       u32 = PPB_NS_BASE + 0xEDA4;
+pub const PPB_NS_MPU_RBAR_A2:                       u32 = PPB_NS_BASE + 0xEDAC;
+pub const PPB_NS_MPU_RBAR_A3:                       u32 = PPB_NS_BASE + 0xEDB4;
+pub const PPB_NS_MPU_RLAR_A1:                       u32 = PPB_NS_BASE + 0xEDA8;
+pub const PPB_NS_MPU_RLAR_A2:                       u32 = PPB_NS_BASE + 0xEDB0;
+pub const PPB_NS_MPU_RLAR_A3:                       u32 = PPB_NS_BASE + 0xEDB8;
+// MPU_MAIR0..MPU_MAIR1
+pub fn PPB_NS_MPU_MAIR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xEDC0 + n * 0x4
+}
+
+pub const PPB_NS_SAU_CTRL:                          u32 = PPB_NS_BASE + 0xEDD0;
+pub const PPB_NS_SAU_TYPE:                          u32 = PPB_NS_BASE + 0xEDD4;
+pub const PPB_NS_SAU_RNR:                           u32 = PPB_NS_BASE + 0xEDD8;
+pub const PPB_NS_SAU_RBAR:                          u32 = PPB_NS_BASE + 0xEDDC;
+pub const PPB_NS_SAU_RLAR:                          u32 = PPB_NS_BASE + 0xEDE0;
+pub const PPB_NS_SFSR:                              u32 = PPB_NS_BASE + 0xEDE4;
+pub const PPB_NS_SFAR:                              u32 = PPB_NS_BASE + 0xEDE8;
+pub const PPB_NS_DHCSR:                             u32 = PPB_NS_BASE + 0xEDF0;
+pub const PPB_NS_DCRSR:                             u32 = PPB_NS_BASE + 0xEDF4;
+pub const PPB_NS_DCRDR:                             u32 = PPB_NS_BASE + 0xEDF8;
+pub const PPB_NS_DEMCR:                             u32 = PPB_NS_BASE + 0xEDFC;
+pub const PPB_NS_DSCSR:                             u32 = PPB_NS_BASE + 0xEE08;
+pub const PPB_NS_STIR:                              u32 = PPB_NS_BASE + 0xEF00;
+pub const PPB_NS_FPCCR:                             u32 = PPB_NS_BASE + 0xEF34;
+pub const PPB_NS_FPCAR:                             u32 = PPB_NS_BASE + 0xEF38;
+pub const PPB_NS_FPDSCR:                            u32 = PPB_NS_BASE + 0xEF3C;
+// MVFR0..MVFR2
+pub fn PPB_NS_MVFR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xEF40 + n * 0x4
+}
+
+pub const PPB_NS_DDEVARCH:                          u32 = PPB_NS_BASE + 0xEFBC;
+pub const PPB_NS_DDEVTYPE:                          u32 = PPB_NS_BASE + 0xEFCC;
+pub const PPB_NS_DPIDR4:                            u32 = PPB_NS_BASE + 0xEFD0;
+pub const PPB_NS_DPIDR5:                            u32 = PPB_NS_BASE + 0xEFD4;
+pub const PPB_NS_DPIDR6:                            u32 = PPB_NS_BASE + 0xEFD8;
+pub const PPB_NS_DPIDR7:                            u32 = PPB_NS_BASE + 0xEFDC;
+pub const PPB_NS_DPIDR0:                            u32 = PPB_NS_BASE + 0xEFE0;
+pub const PPB_NS_DPIDR1:                            u32 = PPB_NS_BASE + 0xEFE4;
+pub const PPB_NS_DPIDR2:                            u32 = PPB_NS_BASE + 0xEFE8;
+pub const PPB_NS_DPIDR3:                            u32 = PPB_NS_BASE + 0xEFEC;
+// DCIDR0..DCIDR3
+pub fn PPB_NS_DCIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0xEFF0 + n * 0x4
+}
+
+pub const PPB_NS_TRCPRGCTLR:                        u32 = PPB_NS_BASE + 0x41004;
+pub const PPB_NS_TRCSTATR:                          u32 = PPB_NS_BASE + 0x4100C;
+pub const PPB_NS_TRCCONFIGR:                        u32 = PPB_NS_BASE + 0x41010;
+// TRCEVENTCTL0R..TRCEVENTCTL1R
+pub fn PPB_NS_TRCEVENTCTLR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x41020 + n * 0x4
+}
+
+pub const PPB_NS_TRCSTALLCTLR:                      u32 = PPB_NS_BASE + 0x4102C;
+pub const PPB_NS_TRCTSCTLR:                         u32 = PPB_NS_BASE + 0x41030;
+pub const PPB_NS_TRCSYNCPR:                         u32 = PPB_NS_BASE + 0x41034;
+pub const PPB_NS_TRCCCCTLR:                         u32 = PPB_NS_BASE + 0x41038;
+pub const PPB_NS_TRCVICTLR:                         u32 = PPB_NS_BASE + 0x41080;
+pub const PPB_NS_TRCCNTRLDVR0:                      u32 = PPB_NS_BASE + 0x41140;
+pub const PPB_NS_TRCIDR8:                           u32 = PPB_NS_BASE + 0x41180;
+pub const PPB_NS_TRCIDR9:                           u32 = PPB_NS_BASE + 0x41184;
+pub const PPB_NS_TRCIDR10:                          u32 = PPB_NS_BASE + 0x41188;
+pub const PPB_NS_TRCIDR11:                          u32 = PPB_NS_BASE + 0x4118C;
+pub const PPB_NS_TRCIDR12:                          u32 = PPB_NS_BASE + 0x41190;
+pub const PPB_NS_TRCIDR13:                          u32 = PPB_NS_BASE + 0x41194;
+// TRCIDR0..TRCIDR7
+pub fn PPB_NS_TRCIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x411E0 + n * 0x4
+}
+
+pub const PPB_NS_TRCIMSPEC:                         u32 = PPB_NS_BASE + 0x411C0;
+pub const PPB_NS_TRCRSCTLR2:                        u32 = PPB_NS_BASE + 0x41208;
+pub const PPB_NS_TRCRSCTLR3:                        u32 = PPB_NS_BASE + 0x4120C;
+pub const PPB_NS_TRCSSCSR:                          u32 = PPB_NS_BASE + 0x412A0;
+pub const PPB_NS_TRCSSPCICR:                        u32 = PPB_NS_BASE + 0x412C0;
+pub const PPB_NS_TRCPDCR:                           u32 = PPB_NS_BASE + 0x41310;
+pub const PPB_NS_TRCPDSR:                           u32 = PPB_NS_BASE + 0x41314;
+pub const PPB_NS_TRCITATBIDR:                       u32 = PPB_NS_BASE + 0x41EE4;
+pub const PPB_NS_TRCITIATBINR:                      u32 = PPB_NS_BASE + 0x41EF4;
+pub const PPB_NS_TRCITIATBOUTR:                     u32 = PPB_NS_BASE + 0x41EFC;
+pub const PPB_NS_TRCCLAIMSET:                       u32 = PPB_NS_BASE + 0x41FA0;
+pub const PPB_NS_TRCCLAIMCLR:                       u32 = PPB_NS_BASE + 0x41FA4;
+pub const PPB_NS_TRCAUTHSTATUS:                     u32 = PPB_NS_BASE + 0x41FB8;
+pub const PPB_NS_TRCDEVARCH:                        u32 = PPB_NS_BASE + 0x41FBC;
+pub const PPB_NS_TRCDEVID:                          u32 = PPB_NS_BASE + 0x41FC8;
+pub const PPB_NS_TRCDEVTYPE:                        u32 = PPB_NS_BASE + 0x41FCC;
+pub const PPB_NS_TRCPIDR4:                          u32 = PPB_NS_BASE + 0x41FD0;
+pub const PPB_NS_TRCPIDR5:                          u32 = PPB_NS_BASE + 0x41FD4;
+pub const PPB_NS_TRCPIDR6:                          u32 = PPB_NS_BASE + 0x41FD8;
+pub const PPB_NS_TRCPIDR7:                          u32 = PPB_NS_BASE + 0x41FDC;
+pub const PPB_NS_TRCPIDR0:                          u32 = PPB_NS_BASE + 0x41FE0;
+pub const PPB_NS_TRCPIDR1:                          u32 = PPB_NS_BASE + 0x41FE4;
+pub const PPB_NS_TRCPIDR2:                          u32 = PPB_NS_BASE + 0x41FE8;
+pub const PPB_NS_TRCPIDR3:                          u32 = PPB_NS_BASE + 0x41FEC;
+// TRCCIDR0..TRCCIDR3
+pub fn PPB_NS_TRCCIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x41FF0 + n * 0x4
+}
+
+pub const PPB_NS_CTICONTROL:                        u32 = PPB_NS_BASE + 0x42000;
+pub const PPB_NS_CTIINTACK:                         u32 = PPB_NS_BASE + 0x42010;
+pub const PPB_NS_CTIAPPSET:                         u32 = PPB_NS_BASE + 0x42014;
+pub const PPB_NS_CTIAPPCLEAR:                       u32 = PPB_NS_BASE + 0x42018;
+pub const PPB_NS_CTIAPPPULSE:                       u32 = PPB_NS_BASE + 0x4201C;
+// CTIINEN0..CTIINEN7
+pub fn PPB_NS_CTIINEN(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x42020 + n * 0x4
+}
+
+// CTIOUTEN0..CTIOUTEN7
+pub fn PPB_NS_CTIOUTEN(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x420A0 + n * 0x4
+}
+
+pub const PPB_NS_CTITRIGINSTATUS:                   u32 = PPB_NS_BASE + 0x42130;
+pub const PPB_NS_CTITRIGOUTSTATUS:                  u32 = PPB_NS_BASE + 0x42134;
+pub const PPB_NS_CTICHINSTATUS:                     u32 = PPB_NS_BASE + 0x42138;
+pub const PPB_NS_CTIGATE:                           u32 = PPB_NS_BASE + 0x42140;
+pub const PPB_NS_ASICCTL:                           u32 = PPB_NS_BASE + 0x42144;
+pub const PPB_NS_ITCHOUT:                           u32 = PPB_NS_BASE + 0x42EE4;
+pub const PPB_NS_ITTRIGOUT:                         u32 = PPB_NS_BASE + 0x42EE8;
+pub const PPB_NS_ITCHIN:                            u32 = PPB_NS_BASE + 0x42EF4;
+pub const PPB_NS_ITCTRL:                            u32 = PPB_NS_BASE + 0x42F00;
+pub const PPB_NS_DEVARCH:                           u32 = PPB_NS_BASE + 0x42FBC;
+pub const PPB_NS_DEVID:                             u32 = PPB_NS_BASE + 0x42FC8;
+pub const PPB_NS_DEVTYPE:                           u32 = PPB_NS_BASE + 0x42FCC;
+pub const PPB_NS_PIDR4:                             u32 = PPB_NS_BASE + 0x42FD0;
+pub const PPB_NS_PIDR5:                             u32 = PPB_NS_BASE + 0x42FD4;
+pub const PPB_NS_PIDR6:                             u32 = PPB_NS_BASE + 0x42FD8;
+pub const PPB_NS_PIDR7:                             u32 = PPB_NS_BASE + 0x42FDC;
+pub const PPB_NS_PIDR0:                             u32 = PPB_NS_BASE + 0x42FE0;
+pub const PPB_NS_PIDR1:                             u32 = PPB_NS_BASE + 0x42FE4;
+pub const PPB_NS_PIDR2:                             u32 = PPB_NS_BASE + 0x42FE8;
+pub const PPB_NS_PIDR3:                             u32 = PPB_NS_BASE + 0x42FEC;
+// CIDR0..CIDR3
+pub fn PPB_NS_CIDR(n: u32) -> u32 {
+    return PPB_NS_BASE + 0x42FF0 + n * 0x4
 }
 // ==== END AUTO-GENERATED REGISTER OFFSETS ====
 
