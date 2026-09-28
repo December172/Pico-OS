@@ -1,0 +1,7 @@
+INCLUDE linkers/core/RP2350.ld
+
+MEMORY
+{
+    FLASH(rx) : ORIGIN = 0x10000000, LENGTH = 4096K
+    RAM(rwx)  : ORIGIN = 0x20000000, LENGTH = 512K
+}
