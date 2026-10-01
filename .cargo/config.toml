@@ -1,2 +1,16 @@
+# Default target for a bare `cargo build` (RP2350 / Pico 2).
 [build]
 target = "thumbv6m-none-eabi"
+
+# --- Architecture switch ------------------------------------------------------
+# Instead of editing [build] target by hand, pick the chip with an alias:
+#
+#   cargo pico2040 [extra args]   # RP2040 / Cortex-M0+  (Pico, Pico 16M)
+#   cargo pico2350 [extra args]   # RP2350 / Cortex-M33  (Pico 2)
+#
+# Extra arguments are appended, e.g. `cargo pico2350 --profile release`.
+# The explicit --target below overrides [build] target, and each alias also
+# selects the matching feature set, so the two builds stay independent.
+[alias]
+pico2040 = "build --target thumbv6m-none-eabi -Zbuild-std=core --no-default-features --features Pico_16M"
+pico2350 = "build --target thumbv8m.main-none-eabi -Zbuild-std=core --no-default-features --features Pico2"

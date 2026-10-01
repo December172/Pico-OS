@@ -10,21 +10,28 @@ build(){
         mkdir output
     fi
 
+    # The cargo aliases in .cargo/config.toml select the target triple, the
+    # architecture-specific core and the feature set for each board.
     case "$board" in
         pico2|rp2350)
+            alias="pico2350"
             target="thumbv8m.main-none-eabi"
-            cargo build --profile "$1" --target "$target" -Zbuild-std=core \
-                --no-default-features --features Pico2
+            # RP2350-E10 (A2): absolute block so UF2 drag-and-drop works when a
+            # partition table is present. Ignored by A3+ bootroms.
+            absBlock="--abs-block"
             ;;
         *)
+            alias="pico2040"
             target="thumbv6m-none-eabi"
-            cargo build --profile "$1" -Zjson-target-spec
+            absBlock=""
             ;;
     esac
 
+    cargo "$alias" --profile "$1"
+
     rm -rf output/*
     mv "target/$target/$profile/kernel" output/kernel.elf
-    ./tools/picotool uf2 convert output/kernel.elf output/kernel.uf2
+    ./tools/picotool uf2 convert output/kernel.elf output/kernel.uf2 $absBlock
     arm-none-eabi-objdump -d -Mforce-thumb output/kernel.elf > output/disassembly.S
 }
 
