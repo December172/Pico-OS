@@ -13,7 +13,7 @@ use crate::Native::Drivers::RP2350::GPIO::PinCapabilities::PIN_CAPABILITIES;
 pub struct _GPIODriver;
 
 impl GPIODriver for _GPIODriver {
-    fn initPin(&self, pin: u32) {
+    fn initPin(&self, pin: u32) -> bool {
         let gpioCtrl = Register::new(IO_BANK0_GPIO_CTRL(pin));
         // FUNCSEL = 5 (SIO)
         gpioCtrl.write(5);
@@ -25,6 +25,7 @@ impl GPIODriver for _GPIODriver {
         // it (like this driver) tend to miss this step.
         let padCtrl = Register::new(PADS_BANK0_GPIO(pin));
         padCtrl.bitSet(PADS_BANK0_GPIO_ISO_BIT, false);
+        return true;
     }
 
     fn getMode(&self, pin: u32) -> GPIOMode {

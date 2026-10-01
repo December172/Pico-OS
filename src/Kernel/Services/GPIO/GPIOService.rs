@@ -1,5 +1,6 @@
+use crate::HAL::Pin::*;
 use crate::HAL::GPIO::GPIO;
-use crate::HAL::Pin::PinCapability;
+
 use crate::Kernel::Drivers::GPIODriver::GPIODriver;
 use crate::Kernel::Managers::Pin::PinManager::PinManager;
 use crate::Kernel::Services::Service::Service;
@@ -16,10 +17,11 @@ impl<DriverType: GPIODriver> GPIOService<DriverType> {
         }
     }
 
-    pub fn claim(&self, pinManager: &mut PinManager, pin: u32) -> Option<GPIO<'_>> {
-        if let Some(basePin) = pinManager.claim(pin) {
-            self.driver.initPin(pin);
-            return Some(GPIO::new(&self.driver, basePin));
+    pub fn claim(&self, pinManager: &mut PinManager, pin: Pin) -> Option<GPIO<'_>> {
+        if self.driver.initPin(pin.get()) {
+            return Some(GPIO::new(&self.driver, pin));
+        } else {
+            pinManager.release(pin);
         }
         return None;
     }

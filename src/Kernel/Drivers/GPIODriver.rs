@@ -3,7 +3,7 @@ use crate::HAL::Pin::PinCapability;
 
 pub trait GPIODriver {
     /// Initialize a pin for GPIO function
-    fn initPin(&self, pin: u32);
+    fn initPin(&self, pin: u32) -> bool;
 
     fn getMode(&self, pin: u32) -> GPIOMode;
     fn setMode(&self, pin: u32, mode: GPIOMode);
