@@ -18,5 +18,5 @@ Small RTOS for Raspberry Pico & Pico 2, using Rust
 - ❌ Basic Shell
 
 ## Acknowledgement
-GPT-5.6-Luna for architecture design
-Deepseek-v4.1-flash for constants generating tools
+- GPT-5.6-Luna for architecture design
+- Deepseek-v4.1-flash for constants generating tools

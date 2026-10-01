@@ -1,7 +1,5 @@
 /target/
 /output/
 /unused/
-/tmp/
-/__pycache__/
 
 Cargo.lock
