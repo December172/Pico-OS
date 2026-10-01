@@ -1,7 +1,4 @@
-pub mod GPIODriver;
-pub mod XOSCDriver;
-pub mod ROSCDriver;
-pub mod TimerDriver;
+pub mod GPIO;
 
-// Internal implementations
-mod PLLDriver;
+pub mod Clock;
+pub mod Timer;

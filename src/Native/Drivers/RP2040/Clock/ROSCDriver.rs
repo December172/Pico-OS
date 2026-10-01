@@ -1,6 +1,6 @@
 use crate::Kernel::Drivers::ClockDriver::*;
 
-use crate::Native::Drivers::RP2040::PLLDriver::*;
+use crate::Native::Drivers::RP2040::Clock::PLLDriver::*;
 use crate::Native::Constants::RP2040::ROSC::*;
 use crate::Native::Constants::RP2040::CLOCKS::*;
 use crate::Native::Constants::RP2040::Config::ROSC_BASE_FREQ;
@@ -37,13 +37,14 @@ impl ClockDriver for _ROSCDriver {
 
     fn disable(&self, domain: ClockDomain) {
         match domain {
-            // clk_ref must run continuously, it cannot be disabled.
+            // clk_sys & clk_ref cannot be disabled
             ClockDomain::Reference => return (),
             ClockDomain::System => return (),
             ClockDomain::Peripherals => {
                         let clockPeriCtrl = Register::new(CLOCKS_CLK_PERI_CTRL);
                         clockPeriCtrl.bitSet(CLOCKS_CLK_PERI_CTRL_ENABLE_BIT, false);
             },
+            // since clk_usb is not enabled under ROSCDriver - maybe this can be skipped?
             ClockDomain::USB => {
                 let clockUSBCtrl = Register::new(CLOCKS_CLK_USB_CTRL);
                 clockUSBCtrl.bitSet(CLOCKS_CLK_CTRL_ENABLE_BIT, false);

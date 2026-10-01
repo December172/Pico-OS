@@ -1,22 +1,33 @@
 use crate::HAL::GPIO::GPIOMode;
+use crate::HAL::Pin::PinCapability;
 use crate::Util::Register::Register;
 use crate::Kernel::Drivers::GPIODriver::*;
 
 use crate::Native::Constants::Config::*;
+use crate::Native::Constants::RP2350::IO_BANK0::*;
+use crate::Native::Constants::RP2350::PADS_BANK0::*;
+use crate::Native::Constants::RP2350::SIO::*;
 
-use crate::Native::Constants::RP2040::IO_BANK0::*;
-use crate::Native::Constants::RP2040::SIO::*;
+use crate::Native::Drivers::RP2350::GPIO::PinCapabilities::PIN_CAPABILITIES;
 
 pub struct _GPIODriver;
 
 impl GPIODriver for _GPIODriver {
-    fn initPin(&self, pin: u8) {
-        let gpioCtrl = Register::new(IO_BANK0_GPIO_CTRL(pin.into()));
+    fn initPin(&self, pin: u32) {
+        let gpioCtrl = Register::new(IO_BANK0_GPIO_CTRL(pin));
         // FUNCSEL = 5 (SIO)
         gpioCtrl.write(5);
+
+        // RP2350 pads come out of reset *isolated* (PADS_BANK0.GPIOx.ISO = 1)
+        // and the isolation latches keep the pad's output enable / level frozen,
+        // so nothing the SIO writes ever reaches the pin. The bit has to be
+        // cleared once the pad is muxed. RP2040 had no ISO bit, so ports from
+        // it (like this driver) tend to miss this step.
+        let padCtrl = Register::new(PADS_BANK0_GPIO(pin));
+        padCtrl.bitSet(PADS_BANK0_GPIO_ISO_BIT, false);
     }
 
-    fn getMode(&self, pin: u8) -> GPIOMode {
+    fn getMode(&self, pin: u32) -> GPIOMode {
         let register = if pin >= GPIO_HI_PIN_START {
             Register::new(SIO_GPIO_HI_OE)
         }else {
@@ -28,16 +39,14 @@ impl GPIODriver for _GPIODriver {
             pin
         };
 
-        let mask = 1u32 << bit;
-
-        return if register.read() & mask != 0 {
+        return if register.bitGet(bit) {
             GPIOMode::Out
         } else {
             GPIOMode::In
         }
     }
 
-    fn toggleMode(&self, pin: u8) {
+    fn toggleMode(&self, pin: u32) {
         let register = if pin >= GPIO_HI_PIN_START {
             Register::new(SIO_GPIO_HI_OE_XOR)
         } else {
@@ -49,12 +58,10 @@ impl GPIODriver for _GPIODriver {
             pin
         };
 
-        let mask = 1u32 << bit;
-
-        register.write(mask);
+        register.bitSet(bit, true);
     }
 
-    fn setMode(&self, pin: u8, mode: GPIOMode) {
+    fn setMode(&self, pin: u32, mode: GPIOMode) {
         let registerSet = if pin >= GPIO_HI_PIN_START {
             Register::new(SIO_GPIO_HI_OE_SET)
         } else {
@@ -71,16 +78,14 @@ impl GPIODriver for _GPIODriver {
             pin
         };
 
-        let mask = 1u32 << bit;
-
         if mode == GPIOMode::In {
-            registerClear.write(mask);
+            registerClear.bitSet(bit, true);
         } else {
-            registerSet.write(mask);
+            registerSet.bitSet(bit, true);
         }
     }
 
-    fn write(&self, pin: u8, state: bool) {
+    fn write(&self, pin: u32, state: bool) {
         if self.getMode(pin) == GPIOMode::Out {
             let registerSet = if pin >= GPIO_HI_PIN_START {
                 Register::new(SIO_GPIO_HI_OUT_SET)
@@ -98,17 +103,15 @@ impl GPIODriver for _GPIODriver {
                 pin
             };
 
-            let mask = 1u32 << bit;
-
             if !state {
-                registerClear.write(mask);
+                registerClear.bitSet(bit, true);
             } else {
-                registerSet.write(mask);
+                registerSet.bitSet(bit, true);
             }
         }
     }
 
-    fn toggle(&self, pin: u8) {
+    fn toggle(&self, pin: u32) {
         let register = if pin >= GPIO_HI_PIN_START {
             Register::new(SIO_GPIO_HI_OUT_XOR)
         } else {
@@ -120,11 +123,10 @@ impl GPIODriver for _GPIODriver {
             pin
         };
 
-        let mask = 1u32 << bit;
-        register.write(mask);
+        register.bitSet(bit, true);
     }
 
-    fn read(&self, pin: u8) -> bool {
+    fn read(&self, pin: u32) -> bool {
         if self.getMode(pin) == GPIOMode::In {
             let register = if pin >= GPIO_HI_PIN_START {
                 Register::new(SIO_GPIO_HI_IN)
@@ -137,15 +139,17 @@ impl GPIODriver for _GPIODriver {
                 pin
             };
 
-            let mask = 1u32 << bit;
-
-            return if register.read() & mask != 0 {
+            return if register.bitGet(bit) {
                 true
             } else {
                 false
             }
         }
         return false;
+    }
+
+    fn getPinCapabilities(&self) -> &'static [PinCapability] {
+        return PIN_CAPABILITIES;
     }
 }
 

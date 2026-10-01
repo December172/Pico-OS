@@ -4,8 +4,6 @@ use crate::Util::LowLevel::_poll;
 use crate::Native::Constants::Config::*;
 use crate::Native::Constants::RP2040::PLL::*;
 
-
-
 #[derive(Clone, Copy)]
 pub struct PLLConfig {
     pub cs: u32,

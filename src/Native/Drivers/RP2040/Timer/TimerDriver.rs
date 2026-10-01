@@ -9,9 +9,6 @@ use crate::Native::Constants::RP2040::WATCHDOG::*;
 pub struct _TimerDriver {
     timehr : Register,
     timelr : Register,
-
-    // The tick generator behind the 1us reference lives in the WATCHDOG block.
-    // It is owned by this driver and deliberately not exposed any further.
     watchdogTick : Register,
 }
 
@@ -29,35 +26,34 @@ impl TimerDriver for _TimerDriver {
     /// instead of by the bootrom, nobody else brings this up.
     fn init(&self, refFreq: u32) -> bool {
         // `refFreq` is the clk_ref frequency: the tick generator divides clk_ref
-        // down to the 1us reference. Never feed it the CPU/PLL clock - that
-        // scales every delay by clk_sys/clk_ref (~10x at 125MHz vs 12MHz).
+        // down to the 1us reference.
         // (Truncating division: a 6.5MHz ROSC reference is ~8% off, which is
         // unavoidable since the divider is an integer.)
         self.watchdogTick.fieldSet(WATCHDOG_TICK_CYCLES_HIGH,
                                    WATCHDOG_TICK_CYCLES_LOW,
                                    refFreq / 1_000_000);
 
-        // Configure watchdog first
+        // configure watchdog first
         self.watchdogTick.bitSet(WATCHDOG_TICK_ENABLE_BIT, true);
-        if !_poll(100_000, || self.watchdogTick.bitGet(WATCHDOG_TICK_RUNNING_BIT)) {
+        if !_poll(10_000, || self.watchdogTick.bitGet(WATCHDOG_TICK_RUNNING_BIT)) {
             return false;
         }
 
-        // Give the timer a reset pulse *after* the tick is live
-        // Otherwise the timer will not notice watchdog
+        // give the timer a reset pulse *after* the tick is live
+        // otherwise the timer will not notice watchdog
         let reset = Register::new(RESETS_RESET);
         let resetDone = Register::new(RESETS_RESET_DONE);
         reset.bitSet(RESETS_RESET_TIMER_BIT, true);
         reset.bitSet(RESETS_RESET_TIMER_BIT, false);
-        if !_poll(100_000, || resetDone.bitGet(RESETS_RESET_DONE_TIMER_BIT)) {
+        if !_poll(10_000, || resetDone.bitGet(RESETS_RESET_DONE_TIMER_BIT)) {
             return false;
         }
 
-        // Clear PAUSE / DBGPAUSE *after* the reset pulse
+        // clear PAUSE / DBGPAUSE *after* the reset pulse
         // the watchdog will continue to run under debugger
         let timerPause = Register::new(TIMER_PAUSE);
         let timerDbgPause = Register::new(TIMER_DBGPAUSE);
-        // Resume hardware timer
+        // resume hardware timer
         timerPause.write(0);
         // TIMER_DBGPAUSE_DBG0_BIT: pause watchdong when core0 is in debug mode
         // TIMER_DBGPAUSE_DBG1_BIT: ... when core1 is in debug mode
@@ -66,8 +62,8 @@ impl TimerDriver for _TimerDriver {
             return false;
         }
 
-        // Finally prove the counter actually counts
-        return _poll(100_000, || self.nowTick() != 0);
+        // finally prove the counter actually counts
+        return _poll(10_000, || self.nowTick() != 0);
     }
 }
 

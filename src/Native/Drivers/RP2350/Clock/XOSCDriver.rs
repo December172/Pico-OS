@@ -2,10 +2,10 @@ use crate::Util::Register::Register;
 use crate::Util::LowLevel::_poll;
 use crate::Kernel::Drivers::ClockDriver::*;
 
-use crate::Native::Constants::RP2040::CLOCKS::*;
-use crate::Native::Constants::RP2040::Config::XOSC_BASE_FREQ;
-use crate::Native::Constants::RP2040::XOSC::*;
-use crate::Native::Drivers::RP2040::PLLDriver::*;
+use crate::Native::Constants::RP2350::CLOCKS::*;
+use crate::Native::Constants::RP2350::Config::XOSC_BASE_FREQ;
+use crate::Native::Constants::RP2350::XOSC::*;
+use crate::Native::Drivers::RP2350::Clock::PLLDriver::*;
 
 pub struct _XOSCDriver {
     pllSysDriver : PLLDriver,
@@ -36,27 +36,19 @@ impl ClockDriver for _XOSCDriver {
                                XOSC_CTRL_ENABLE_LOW,
                                XOSC_CTRL_ENABLE_ENABLE);
 
-        // Give the crystal enough time to come up before trusting STABLE.
+        // give the crystal enough time to come up before trusting STABLE.
         if !_poll(100_000, || self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT)) {
             return false;
         }
 
-        // Migrate clk_ref from the ring oscillator to the crystal.
-        //
-        // clk_ref is the parent of clk_tick, which clocks the watchdog tick
-        // generator and with it the whole TIMER/SysTick time base. The switch
-        // is therefore only safe while the crystal is demonstrably alive: on
-        // any doubt fall back to the ROSC, because a dead clk_ref kills the
-        // time base silently (clk_sys still comes from the PLL, so the CPU
-        // keeps running while WATCHDOG_TICK writes stop landing and
-        // TIMELR/TIMEHR read back as 0).
+        // set up clk_ref source to XOSC
         let clockRefCtrl = Register::new(CLOCKS_CLK_REF_CTRL);
         let clockRefSelected = Register::new(CLOCKS_CLK_REF_SELECTED);
         clockRefCtrl.fieldSet(CLOCKS_CLK_REF_CTRL_SRC_HIGH,
                               CLOCKS_CLK_REF_CTRL_SRC_LOW,
                               CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC);
         
-        // Check if XOSC died
+        // check if XOSC died
         if !_poll(10_000, || clockRefSelected.bitGet(CLOCKS_CLK_REF_CTRL_SRC_XOSC_CLKSRC))
         || !self.xoscStatus.bitGet(XOSC_STATUS_STABLE_BIT) {
             // the cleanup work will be done at ROSCDriver.init();
@@ -110,7 +102,7 @@ impl ClockDriver for _XOSCDriver {
     fn disable(&self, domain: ClockDomain) {
         // TODO: Implement disable xosc source itself, not only clk_*
         match domain {
-            // clk_ref must run continuously, it cannot be disabled.
+            // clk_sys & clk_ref cannot be disabled
             ClockDomain::Reference => return (),
             ClockDomain::System => return (),
             ClockDomain::Peripherals => {
@@ -131,8 +123,6 @@ impl ClockDriver for _XOSCDriver {
     /// Return corresponded clock's frequency in Hz
     fn getFrequency(&self, domain: ClockDomain) -> u32 {
         match domain {
-            // This driver is only selected when init() successfully migrated
-            // clk_ref onto the crystal, so the reference really is the XOSC.
             ClockDomain::Reference => return XOSC_BASE_FREQ,
             ClockDomain::System => return self.pllSysDriver.getFrequency(XOSC_BASE_FREQ),
             ClockDomain::Peripherals => return self.pllSysDriver.getFrequency(XOSC_BASE_FREQ),

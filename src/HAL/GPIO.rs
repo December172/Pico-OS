@@ -13,12 +13,15 @@ pub struct GPIO<'a> {
 }
 
 impl<'a> GPIO<'a> {
-    pub fn new(driver: &'a dyn GPIODriver, pin: Pin) -> GPIO<'a> {
-        driver.initPin(pin.get());
-        return GPIO {
+    pub fn new(driver: &'a dyn GPIODriver, pin: Pin) -> Self {
+        Self {
             driver,
             pin,
         }
+    }
+
+    pub fn destroy(self) -> Pin {
+        return self.pin;
     }
 
     pub fn setHigh(&self) {
@@ -35,10 +38,6 @@ impl<'a> GPIO<'a> {
 
     pub fn toggle(&self) {
         self.driver.toggle(self.pin.get());
-    }
-
-    pub fn destroy(self) -> Pin {
-        return self.pin;
     }
 
     pub fn getMode(&self) -> GPIOMode {
