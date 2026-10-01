@@ -6,6 +6,7 @@ edition = "2024"
 [features]
 default = ["Pico_16M"]
 Pico_16M = ["RP2040"]
+Pico2 = ["RP2350"]
 RP2040 = []
 RP2350 = []
 
