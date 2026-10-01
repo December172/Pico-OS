@@ -1,6 +1,7 @@
 #![allow(dead_code)]
-pub const GPIO_MAX_PIN:      u8  = 29;
-pub const GPIO_HI_PIN_START: u8  = 30;
+pub const MAX_PIN:      u32  = 29;
+pub const MAX_CAPABILITY_SOURCES: usize = 8;
+pub const GPIO_HI_PIN_START: u32  = 30;
 
 /// Crystal frequency driving the XOSC. Unit is in Hz.
 pub const XOSC_BASE_FREQ:    u32 = 12_000_000;

@@ -26,16 +26,5 @@ impl<DriverType: TimerDriver> TimerService<DriverType>  {
     pub fn claimTimer(&self) -> Timer<'_> {
         return Timer::new(&self.driver);
     }
-
-    pub fn claimAlarm(&self) {
-        // Stub
-    }
-
-    pub fn releaseAlarm(&mut self) {
-        // Stub
-        // Note that the async alarm system may involve interrupts and core1 related codes
-        // it will be a hard work to implement full-edged alarm system
-        // TODO: alarm & rtc-alarm system
-    }
 }
 

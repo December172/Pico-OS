@@ -1,8 +1,5 @@
-use core::time::Duration;
-
-use crate::HAL::GPIO::*;
-use crate::Kernel::Drivers::ClockDriver::{ClockDomain, ClockDriver};
-use crate::Kernel::Services::Pin::PinService::PinService;
+use crate::Kernel::Drivers::ClockDriver::*;
+use crate::Kernel::Managers::Pin::PinManager::PinManager;
 use crate::Kernel::Services::GPIO::GPIOService::GPIOService;
 use crate::Kernel::Services::Clock::ClockService::ClockService;
 use crate::Kernel::Services::Timer::TimerService::TimerService;
@@ -14,37 +11,28 @@ use crate::Native::Drivers::*;
 /// no reentry
 pub fn kernelMain() {
     _init();
+
+    // TODO: Switch to heap-allocated kernel object after finishing slab allocator
     let roscDriver = ROSCDriver::new();
     let xoscDriver = XOSCDriver::new();
     let clockDriver: &dyn ClockDriver;
-    if !xoscDriver.init() {
-        roscDriver.init();
+    // Fallback clock source
+    roscDriver.init();
+    if !xoscDriver.init() {        
         clockDriver = &roscDriver;
     } else {
         clockDriver = &xoscDriver
     }
     clockDriver.enable();
-
-    let mut pinService = PinService::new();
     let clockService = ClockService::new(clockDriver);
 
-    // The tick generator counts on clk_ref, not on clk_sys, so ask for the
-    // *reference* frequency. Using ClockDomain::System here makes every delay
-    // clk_sys/clk_ref times too long (125/12 ~= 10x on the RP2040).
     let timerService = TimerService::new(TimerDriver::new(), 
                                          clockService.getFrequency(ClockDomain::Reference));
 
+    let mut pinManager = PinManager::new();
     let gpioService = GPIOService::new(GPIODriver::new());
 
-    let timer = timerService.claimTimer();
+    pinManager.registerCapabilities(gpioService.getPinCapabilities());
 
-    // Testing GPIO / Clock system is working correctly
-    let led2 = gpioService.claim(&mut pinService, 25)
-                          .unwrap_or_else(|| panic!("GPIO initialization Failed"));
-    led2.setMode(GPIOMode::Out);
-    let waitTime = Duration::from_millis(100);
-    loop {
-        timer.delay(waitTime);
-        led2.toggle();
-    }
+    loop {}
 }

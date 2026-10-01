@@ -17,5 +17,4 @@ pub trait ClockDriver {
     fn isPrecise(&self) -> bool;
 
     fn getFrequency(&self, domain: ClockDomain) -> u32;
-
 }
