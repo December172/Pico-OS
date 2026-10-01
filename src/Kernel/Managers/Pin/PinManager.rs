@@ -39,7 +39,7 @@ impl PinManager {
         }
         let pinCap = self.pinCapLookup[pin as usize];
         for cap in pinCap.iter().flatten() {
-            if cap.function == function && cap.peripherialBlock == periBlock {
+            if cap.function == function && cap.peripheralBlock == periBlock {
                 return true;
             }
         }

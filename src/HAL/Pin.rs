@@ -27,7 +27,7 @@ pub enum PinFunction {
 pub struct PinCapability {
     pub pin: u32,
     pub function: PinFunction,
-    pub peripherialBlock: u32,
+    pub peripheralBlock: u32,
 }
 
 pub struct Pin {
