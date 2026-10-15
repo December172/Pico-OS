@@ -2,5 +2,7 @@ pub mod Drivers;
 pub mod Services;
 pub mod Managers;
 
-pub mod Kernel;
+#[cfg(feature = "RP2040")]
+pub mod Tasks;
 
+pub mod Kernel;
