@@ -1,4 +1,4 @@
-# Default target for a bare `cargo build` (RP2350 / Pico 2).
+# Default target for a bare `cargo build` (RP2040 / Pico 16M).
 [build]
 target = "thumbv6m-none-eabi"
 

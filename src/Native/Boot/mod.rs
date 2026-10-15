@@ -1,4 +1,6 @@
-#[cfg(feature = "Pico_16M")]
+mod Runtime;
+
+#[cfg(feature = "RP2040")]
 pub mod RP2040;
 
 #[cfg(feature = "RP2350")]
