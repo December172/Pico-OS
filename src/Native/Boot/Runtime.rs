@@ -22,9 +22,7 @@ pub unsafe extern "C" fn runtimeInit() {
     let mut offset = 0;
 
     while offset < dataLength {
-        let value = unsafe {
-            dataSource.wrapping_add(offset).read_volatile()
-        };
+        let value = unsafe { dataSource.wrapping_add(offset).read_volatile() };
 
         unsafe {
             dataStart.wrapping_add(offset).write_volatile(value);

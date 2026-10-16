@@ -1,16 +1,16 @@
-use crate::Util::Register::Register;
-use crate::Util::LowLevel::_poll;
 use crate::Kernel::Drivers::TimerDriver::TimerDriver;
+use crate::Util::LowLevel::_poll;
+use crate::Util::Register::Register;
 
 use crate::Native::Constants::RP2350::RESETS::*;
-use crate::Native::Constants::RP2350::TIMER::*;
 use crate::Native::Constants::RP2350::TICKS::*;
+use crate::Native::Constants::RP2350::TIMER::*;
 
 pub struct _TimerDriver {
-    timehr : Register,
-    timelr : Register,
-    ticksTimerCtrl : Register,
-    ticksTimerCycles : Register,
+    timehr: Register,
+    timelr: Register,
+    ticksTimerCtrl: Register,
+    ticksTimerCycles: Register,
 }
 
 impl TimerDriver for _TimerDriver {
@@ -25,12 +25,16 @@ impl TimerDriver for _TimerDriver {
         // set up TICKS first
         // `refFreq` is the clk_ref frequency: the tick generator divides clk_ref
         // down to the 1us reference.
-        self.ticksTimerCycles.fieldSet(TICKS_TIMER_CYCLES_HIGH,
-                                       TICKS_TIMER_CYCLES_LOW,
-                                       refFreq / 1_000_000);
+        self.ticksTimerCycles.fieldSet(
+            TICKS_TIMER_CYCLES_HIGH,
+            TICKS_TIMER_CYCLES_LOW,
+            refFreq / 1_000_000,
+        );
 
         self.ticksTimerCtrl.bitSet(TICKS_CTRL_ENABLE_BIT, true);
-        if !_poll(10_000, || self.ticksTimerCtrl.bitGet(TICKS_CTRL_RUNNING_BIT)) {
+        if !_poll(10_000, || {
+            self.ticksTimerCtrl.bitGet(TICKS_CTRL_RUNNING_BIT)
+        }) {
             return false;
         }
 
@@ -68,10 +72,10 @@ impl TimerDriver for _TimerDriver {
 impl _TimerDriver {
     pub fn new() -> Self {
         Self {
-            timehr : Register::new(TIMER0_TIMEHR),
-            timelr : Register::new(TIMER0_TIMELR),
-            ticksTimerCtrl : Register::new(TICKS_TIMER_CTRL(0)),
-            ticksTimerCycles : Register::new(TICKS_TIMER_CYCLES(0)),
+            timehr: Register::new(TIMER0_TIMEHR),
+            timelr: Register::new(TIMER0_TIMELR),
+            ticksTimerCtrl: Register::new(TICKS_TIMER_CTRL(0)),
+            ticksTimerCycles: Register::new(TICKS_TIMER_CYCLES(0)),
         }
     }
 }

@@ -15,9 +15,9 @@ pub const TASK_SYSCALL_TABLE_ID: u8 = 0x1;
 /// Syscall yieldCurrentTask() kernel implementation
 /// # Arguments
 /// arguments[0] : TaskEntry = taskEntry
-/// 
+///
 /// arguments[1] : *mut ()   = taskArgument
-fn createTask(_context: SyscallContext, arguments: SyscallArguments)-> SyscallDispatchResult {
+fn createTask(_context: SyscallContext, arguments: SyscallArguments) -> SyscallDispatchResult {
     let address: u32 = arguments[0];
 
     /// invaild address or non-thumb address
@@ -25,20 +25,18 @@ fn createTask(_context: SyscallContext, arguments: SyscallArguments)-> SyscallDi
         return SyscallError::InvalidArgument.into();
     }
 
-    let entry = unsafe { 
-        transmute::<usize, TaskEntry>(address as usize)
-    };
+    let entry = unsafe { transmute::<usize, TaskEntry>(address as usize) };
 
     unsafe {
         SCHEDULER.withExclusive(|scheduler| {
             scheduler.insertTask(Task {
-                    id: TASKID_UNASSIGNED,
-                    state: TaskState::Ready,
-                    savedStackPointer: null_mut(),
+                id: TASKID_UNASSIGNED,
+                state: TaskState::Ready,
+                savedStackPointer: null_mut(),
 
-                    entry,
-                    argument: arguments[1] as *mut (),
-                });
+                entry,
+                argument: arguments[1] as *mut (),
+            });
         });
     };
     return SyscallAction::Return.into();
@@ -47,7 +45,10 @@ fn createTask(_context: SyscallContext, arguments: SyscallArguments)-> SyscallDi
 /// Syscall yieldCurrentTask() kernel implementation
 /// # Arguments
 /// None
-fn yieldCurrentTask(_context: SyscallContext, _arguments: SyscallArguments) -> SyscallDispatchResult {
+fn yieldCurrentTask(
+    _context: SyscallContext,
+    _arguments: SyscallArguments,
+) -> SyscallDispatchResult {
     unsafe {
         SCHEDULER.withExclusive(|scheduler| {
             scheduler.yieldCurrentTask();
@@ -68,13 +69,16 @@ fn killTask(context: SyscallContext, arguments: SyscallArguments) -> SyscallDisp
         })
     };
     match result {
-        Ok(true)  => return SyscallAction::Reschedule.into(),
-        Ok(false) => return SyscallAction::Return.into(), 
-        Err(err)  => return err.into(),
+        Ok(true) => return SyscallAction::Reschedule.into(),
+        Ok(false) => return SyscallAction::Return.into(),
+        Err(err) => return err.into(),
     }
 }
 
-fn getCurrentTaskId(context: SyscallContext, _arguments: SyscallArguments) -> SyscallDispatchResult {
+fn getCurrentTaskId(
+    context: SyscallContext,
+    _arguments: SyscallArguments,
+) -> SyscallDispatchResult {
     return (context.currentTaskId as u32).into();
 }
 
@@ -85,7 +89,5 @@ pub static TASK_SYSCALL_TABLE: SyscallTable = SyscallTable {
         Some(SyscallEntry::new(yieldCurrentTask)),
         Some(SyscallEntry::new(killTask)),
         Some(SyscallEntry::new(getCurrentTaskId)),
-    ]
+    ],
 };
-
-

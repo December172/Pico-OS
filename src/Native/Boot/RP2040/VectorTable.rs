@@ -51,7 +51,7 @@ pub static vectorTable: VectorTable = VectorTable {
 pub extern "C" fn defaultHandler() -> ! {
     loop {
         unsafe {
-           core::arch::asm!("wfi");
+            core::arch::asm!("wfi");
         }
     }
 }

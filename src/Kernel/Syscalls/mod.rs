@@ -1,3 +1,3 @@
 pub mod Syscall;
-pub mod SyscallTable;
 pub mod SyscallRegistry;
+pub mod SyscallTable;

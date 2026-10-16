@@ -1,11 +1,11 @@
 pub struct Register {
-    address : *mut u32
+    address: *mut u32,
 }
 
 impl Register {
-    pub fn new(addr : u32) -> Self {
+    pub fn new(addr: u32) -> Self {
         Self {
-            address : (addr) as *mut u32,
+            address: (addr) as *mut u32,
         }
     }
 
@@ -20,7 +20,7 @@ impl Register {
             return self.address.read_volatile();
         }
     }
-    
+
     // fxxking bitset - i cant understand any of them before
     // thx for glorious assistance of gpt-5.6-luna
 
@@ -45,7 +45,7 @@ impl Register {
 
     pub fn bitGet(&self, shift: u32) -> bool {
         let mask: u32 = 0x1 << shift;
-        return self.read() & mask != 0; 
+        return self.read() & mask != 0;
     }
 
     /// An trimmed version of fieldSet - without the need of width

@@ -1,18 +1,16 @@
-use crate::HAL::Pin::*;
 use crate::HAL::GPIO::GPIO;
+use crate::HAL::Pin::*;
 
 use crate::Kernel::Drivers::GPIODriver::GPIODriver;
 use crate::Kernel::Managers::Pin::PinManager::PinManager;
 
 pub struct GPIOService<DriverType: GPIODriver> {
-    driver: DriverType
+    driver: DriverType,
 }
 
 impl<DriverType: GPIODriver> GPIOService<DriverType> {
     pub const fn new(driver: DriverType) -> GPIOService<DriverType> {
-        GPIOService {
-            driver
-        }
+        GPIOService { driver }
     }
 
     pub fn claim(&self, pinManager: &mut PinManager, pin: Pin) -> Option<GPIO<'_>> {

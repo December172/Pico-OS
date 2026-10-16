@@ -6,7 +6,7 @@ use crate::Native::Constants::Config::MAX_PIN;
 pub struct PinManager {
     usedPin: u64,
     /// without `+ 1`, the MAX_PIN cannot be indexed - causes index out of bounds expection
-    pinCapLookup : [[Option<&'static PinCapability>; MAX_CAPABILITY_SOURCES]; MAX_PIN as usize + 1],
+    pinCapLookup: [[Option<&'static PinCapability>; MAX_CAPABILITY_SOURCES]; MAX_PIN as usize + 1],
     pinCapCount: [u8; MAX_PIN as usize + 1],
 }
 
@@ -51,7 +51,7 @@ impl PinManager {
     }
 
     // TODO: implement batchClaim() / batchRelease() when heap allocation is available (Vec<> based)
-    pub fn claim(&mut self, n: u32) -> Option<Pin>{
+    pub fn claim(&mut self, n: u32) -> Option<Pin> {
         if self.isUsed(n) || n > MAX_PIN {
             return None;
         }

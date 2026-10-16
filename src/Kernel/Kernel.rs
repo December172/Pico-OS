@@ -12,7 +12,7 @@ use crate::Native::Drivers::*;
 
 /// Kernel entry point
 /// no reentry
-pub fn kernelMain() -> !{
+pub fn kernelMain() -> ! {
     _init();
 
     // TODO: Switch to heap-allocated kernel object after finishing slab allocator
@@ -21,7 +21,7 @@ pub fn kernelMain() -> !{
     let clockDriver: &dyn ClockDriver;
     // Fallback clock source
     roscDriver.init();
-    if !xoscDriver.init() {        
+    if !xoscDriver.init() {
         clockDriver = &roscDriver;
     } else {
         clockDriver = &xoscDriver

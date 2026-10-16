@@ -2,10 +2,10 @@ use core::cell::UnsafeCell;
 
 use crate::Arch::General::ASM;
 
-use crate::Kernel::Tasks::Task::*;
-use crate::Kernel::Tasks::IdleTask::IDLE_TASK_ID;
-use crate::Kernel::Tasks::TaskTable::*;
 use crate::Kernel::Syscalls::Syscall::*;
+use crate::Kernel::Tasks::IdleTask::IDLE_TASK_ID;
+use crate::Kernel::Tasks::Task::*;
+use crate::Kernel::Tasks::TaskTable::*;
 
 pub const TASK_SELF: TaskId = 0xFF;
 
@@ -83,7 +83,11 @@ impl Scheduler {
         currentTask.state = TaskState::Ready;
     }
 
-    pub fn killTask(&mut self, callerTaskId: TaskId, targetTaskId: TaskId) -> Result<bool, SyscallError> {
+    pub fn killTask(
+        &mut self,
+        callerTaskId: TaskId,
+        targetTaskId: TaskId,
+    ) -> Result<bool, SyscallError> {
         let rawTargetTaskId = if targetTaskId == TASK_SELF {
             callerTaskId
         } else {
@@ -97,8 +101,10 @@ impl Scheduler {
 
         let killCurrentTask = self.currentTaskId == Some(rawTargetTaskId);
 
-        let targetTask = self.taskTable.getMut(rawTargetTaskId)
-                                       .ok_or(SyscallError::InvalidHandle)?;
+        let targetTask = self
+            .taskTable
+            .getMut(rawTargetTaskId)
+            .ok_or(SyscallError::InvalidHandle)?;
 
         if targetTask.state == TaskState::Dead {
             return Err(SyscallError::NotRunning);

@@ -1,15 +1,15 @@
-use crate::Arch::CortexM::General::ExceptionFrame::HardwareFrame;
 use crate::Arch::CortexM::General::ASM::pendPendSv;
+use crate::Arch::CortexM::General::ExceptionFrame::HardwareFrame;
 
-use crate::Kernel::Tasks::Scheduler::SCHEDULER;
 use crate::Kernel::Syscalls::Syscall::*;
 use crate::Kernel::Syscalls::SyscallRegistry::SYSCALL_REGISTRY;
+use crate::Kernel::Tasks::Scheduler::SCHEDULER;
 
 #[unsafe(no_mangle)]
 unsafe extern "C" fn svcBridge(framePtr: *mut HardwareFrame, tableId: u32, fromKernel: u32) {
     let frame = unsafe { &mut *framePtr };
 
-    if tableId == 0  {
+    if tableId == 0 {
         if fromKernel != 0x1 {
             frame.r0 = SyscallError::PermissionDenied as u32;
             frame.r1 = 0;
@@ -18,31 +18,22 @@ unsafe extern "C" fn svcBridge(framePtr: *mut HardwareFrame, tableId: u32, fromK
             pendPendSv();
         }
         return;
-    } 
+    }
 
-    let currentTaskId = unsafe {
-        SCHEDULER.withExclusive(|scheduler| {
-            scheduler.getCurrentTaskId()
-        })
-    };
+    let currentTaskId =
+        unsafe { SCHEDULER.withExclusive(|scheduler| scheduler.getCurrentTaskId()) };
 
     let mut context = SyscallContext {
-            currentTaskId: currentTaskId.unwrap_or_else(|| {
-                panic!("ordinary SVC entered without a running task")
-            }),
-        };
+        currentTaskId: currentTaskId
+            .unwrap_or_else(|| panic!("ordinary SVC entered without a running task")),
+    };
 
     let result = SYSCALL_REGISTRY.dispatch(
-                                    tableId as u8,
-                                    frame.r12,
-                                    context,
-                                    [
-                                        frame.r0,
-                                        frame.r1,
-                                        frame.r2,
-                                        frame.r3,
-                                    ]
-                                    );
+        tableId as u8,
+        frame.r12,
+        context,
+        [frame.r0, frame.r1, frame.r2, frame.r3],
+    );
     frame.r0 = result.status as u32;
     frame.r1 = result.value;
 
@@ -52,19 +43,19 @@ unsafe extern "C" fn svcBridge(framePtr: *mut HardwareFrame, tableId: u32, fromK
 }
 
 /// The main entry of syscalls
-/// 
+///
 /// asm: `svc #n`. the number `n` should be registered at kernel init
 /// # Internals
 /// 1. Hardware frames have been saved to stack (user / kernel stack) when calling this (<SP> = MSP; handler uses kernel stack)
-/// 
+///
 /// 2. Do some works
-/// 
+///
 /// 3. Normal return (non-task syscalls) / tail-chain by pendPendSv() (for rescheduling)
 
 #[unsafe(no_mangle)]
 #[unsafe(naked)]
 pub unsafe extern "C" fn svcHandler() -> ! {
-    // the bridge between kernel space and user space; 
+    // the bridge between kernel space and user space;
     // privileged code entry, isn't it exciting?
 
     // current reg structure:
@@ -77,14 +68,14 @@ pub unsafe extern "C" fn svcHandler() -> ! {
     // stacks structure: (for normal userspace syscall)
     // psp top: basicExceptionFrame.r0
     // msp top: <current kernel stack top>
-    // where: 
+    // where:
     // basicExceptionFrame.lr: caller's lr
     // basicExceptionFrame.pc: caller's pc (syscall returns to this normally)
     // basicExceptionFrame.r0-r3, r12: caller's current reg state
     core::arch::naked_asm!(
         // EXC_RETURN[2]:
         // 0 : msp = <exception frame>
-        // 1 : psp = <exception frame> 
+        // 1 : psp = <exception frame>
                                   // 1. Get *basicException
         "mov  r2, lr",            // r2 = lr = EXC_RETURN
         "movs r3, #4",            // r3 = 0b100
@@ -93,14 +84,14 @@ pub unsafe extern "C" fn svcHandler() -> ! {
 
                                   // (EXC_RETURN[2]: 1): from user space syscall
         "mrs  r0, psp",           // r0 = psp
-        "movs r2, #0",            // r2 = 0x0 (not from kernel)  
+        "movs r2, #0",            // r2 = 0x0 (not from kernel)
         "b    .Lsvc_frame_ready", // jump to label svc_frame_ready (normal routine)
-                                
+
         ".Lsvc_from_msp:",        // (EXC_RETURN[2]: 0): from kernel space syscall
         "mrs  r0, msp",           // r0 = msp
         "movs r2, #1",            // r2 = 0x1 (from kernel)
                                   // continue to label 3 (normal routine)
-                                   
+
         ".Lsvc_frame_ready:",     // normal routine; r0 = *basicExceptionFrame
 
                                   // 2. Get the svc immediate #n

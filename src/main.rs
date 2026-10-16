@@ -7,8 +7,8 @@
 #[cfg(feature = "RP2040")]
 mod Arch;
 
-mod Kernel;
 mod HAL;
+mod Kernel;
 mod Native;
 mod Util;
 
@@ -17,4 +17,3 @@ mod Util;
 pub extern "C" fn entry() {
     crate::Kernel::Kernel::kernelMain();
 }
-

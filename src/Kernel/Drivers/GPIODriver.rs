@@ -1,4 +1,4 @@
-use crate::HAL::GPIO::GPIOMode; 
+use crate::HAL::GPIO::GPIOMode;
 use crate::HAL::Pin::PinCapability;
 
 pub trait GPIODriver {

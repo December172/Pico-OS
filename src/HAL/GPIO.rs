@@ -4,7 +4,7 @@ use crate::Kernel::Drivers::GPIODriver::GPIODriver;
 #[derive(PartialEq)]
 pub enum GPIOMode {
     In,
-    Out
+    Out,
 }
 
 pub struct GPIO<'a> {
@@ -14,10 +14,7 @@ pub struct GPIO<'a> {
 
 impl<'a> GPIO<'a> {
     pub fn new(driver: &'a dyn GPIODriver, pin: Pin) -> Self {
-        Self {
-            driver,
-            pin,
-        }
+        Self { driver, pin }
     }
 
     pub fn destroy(self) -> Pin {

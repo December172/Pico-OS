@@ -39,9 +39,7 @@ pub fn initializeTaskStack(
         stack.as_mut_ptr().add(stack.len())
     };
 
-    let framePointer = unsafe {
-        stackTop.sub(CONTEXT_WORDS).cast::<InitialTaskContext>()
-    };
+    let framePointer = unsafe { stackTop.sub(CONTEXT_WORDS).cast::<InitialTaskContext>() };
 
     unsafe {
         framePointer.write(InitialTaskContext {

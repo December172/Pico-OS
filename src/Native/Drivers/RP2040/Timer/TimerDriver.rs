@@ -1,15 +1,15 @@
-use crate::Util::Register::Register;
-use crate::Util::LowLevel::_poll;
 use crate::Kernel::Drivers::TimerDriver::TimerDriver;
+use crate::Util::LowLevel::_poll;
+use crate::Util::Register::Register;
 
 use crate::Native::Constants::RP2040::RESETS::*;
 use crate::Native::Constants::RP2040::TIMER::*;
 use crate::Native::Constants::RP2040::WATCHDOG::*;
 
 pub struct _TimerDriver {
-    timehr : Register,
-    timelr : Register,
-    watchdogTick : Register,
+    timehr: Register,
+    timelr: Register,
+    watchdogTick: Register,
 }
 
 impl TimerDriver for _TimerDriver {
@@ -29,13 +29,17 @@ impl TimerDriver for _TimerDriver {
         // down to the 1us reference.
         // (Truncating division: a 6.5MHz ROSC reference is ~8% off, which is
         // unavoidable since the divider is an integer.)
-        self.watchdogTick.fieldSet(WATCHDOG_TICK_CYCLES_HIGH,
-                                   WATCHDOG_TICK_CYCLES_LOW,
-                                   refFreq / 1_000_000);
+        self.watchdogTick.fieldSet(
+            WATCHDOG_TICK_CYCLES_HIGH,
+            WATCHDOG_TICK_CYCLES_LOW,
+            refFreq / 1_000_000,
+        );
 
         // configure watchdog first
         self.watchdogTick.bitSet(WATCHDOG_TICK_ENABLE_BIT, true);
-        if !_poll(10_000, || self.watchdogTick.bitGet(WATCHDOG_TICK_RUNNING_BIT)) {
+        if !_poll(10_000, || {
+            self.watchdogTick.bitGet(WATCHDOG_TICK_RUNNING_BIT)
+        }) {
             return false;
         }
 
@@ -70,9 +74,9 @@ impl TimerDriver for _TimerDriver {
 impl _TimerDriver {
     pub fn new() -> Self {
         Self {
-            timehr : Register::new(TIMER_TIMEHR),
-            timelr : Register::new(TIMER_TIMELR),
-            watchdogTick : Register::new(WATCHDOG_TICK),
+            timehr: Register::new(TIMER_TIMEHR),
+            timelr: Register::new(TIMER_TIMELR),
+            watchdogTick: Register::new(WATCHDOG_TICK),
         }
     }
 }

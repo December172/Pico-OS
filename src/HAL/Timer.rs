@@ -1,22 +1,20 @@
 use core::time::Duration;
 
-use crate::Util::Time::*;
 use crate::Kernel::Drivers::TimerDriver::TimerDriver;
+use crate::Util::Time::*;
 
 pub struct Timer<'a> {
-    driver : &'a dyn TimerDriver,
+    driver: &'a dyn TimerDriver,
 }
 
 impl<'a> Timer<'a> {
     pub fn new(driver: &'a dyn TimerDriver) -> Self {
-        Self { 
-            driver
-        }        
+        Self { driver }
     }
 
     pub fn now(&self) -> Time {
         return Time::fromTicks(self.driver.nowTick());
-    }   
+    }
 
     pub fn delay(&self, timeout: Duration) {
         let startTime = Time::fromTicks(self.driver.nowTick());

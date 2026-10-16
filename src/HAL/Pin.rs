@@ -1,8 +1,7 @@
 pub const PINOUT_UNUSED: u32 = 0xFF;
 
 #[repr(u8)]
-#[derive(Clone, Copy)]
-#[derive(PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq)]
 pub enum PinFunction {
     GPIO,
 
@@ -31,14 +30,12 @@ pub struct PinCapability {
 }
 
 pub struct Pin {
-    N : u32
+    N: u32,
 }
 
 impl Pin {
-    pub(crate) fn new(n : u32) -> Pin {
-        Pin {
-            N : n 
-        }
+    pub(crate) fn new(n: u32) -> Pin {
+        Pin { N: n }
     }
 
     pub fn get(&self) -> u32 {

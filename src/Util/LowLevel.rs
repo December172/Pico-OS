@@ -1,5 +1,5 @@
 /// used before clock system successfully initialized.
-/// 
+///
 /// at this point, we cannot trust hardware tick counter
 pub fn _poll(count: u32, func: impl Fn() -> bool) -> bool {
     let mut counter = count;

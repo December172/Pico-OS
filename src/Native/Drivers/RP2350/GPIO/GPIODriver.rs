@@ -1,7 +1,7 @@
 use crate::HAL::GPIO::GPIOMode;
 use crate::HAL::Pin::PinCapability;
-use crate::Util::Register::Register;
 use crate::Kernel::Drivers::GPIODriver::*;
+use crate::Util::Register::Register;
 
 use crate::Native::Constants::Config::*;
 use crate::Native::Constants::RP2350::IO_BANK0::*;
@@ -31,7 +31,7 @@ impl GPIODriver for _GPIODriver {
     fn getMode(&self, pin: u32) -> GPIOMode {
         let register = if pin >= GPIO_HI_PIN_START {
             Register::new(SIO_GPIO_HI_OE)
-        }else {
+        } else {
             Register::new(SIO_GPIO_OE)
         };
         let bit = if pin >= GPIO_HI_PIN_START {
@@ -44,7 +44,7 @@ impl GPIODriver for _GPIODriver {
             GPIOMode::Out
         } else {
             GPIOMode::In
-        }
+        };
     }
 
     fn toggleMode(&self, pin: u32) {
@@ -140,11 +140,7 @@ impl GPIODriver for _GPIODriver {
                 pin
             };
 
-            return if register.bitGet(bit) {
-                true
-            } else {
-                false
-            }
+            return if register.bitGet(bit) { true } else { false };
         }
         return false;
     }

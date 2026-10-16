@@ -1,4 +1,3 @@
-pub mod SIO;
 pub mod ADC;
 pub mod BUSCTRL;
 pub mod CLOCKS;
@@ -16,6 +15,7 @@ pub mod PWM;
 pub mod RESETS;
 pub mod ROSC;
 pub mod RTC;
+pub mod SIO;
 pub mod SPI;
 pub mod SSI;
 pub mod SYSCFG;

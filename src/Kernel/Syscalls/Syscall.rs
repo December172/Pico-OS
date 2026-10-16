@@ -6,23 +6,23 @@ use crate::Util::Syscall::SyscallArguments;
 #[repr(i32)]
 pub enum SyscallError {
     RegistryNotReady = -1,
-    UnknownSyscall   = -2,
-    NotRunning       = -3,
-    InvalidArgument  = -4,
-    InvalidHandle    = -5,
+    UnknownSyscall = -2,
+    NotRunning = -3,
+    InvalidArgument = -4,
+    InvalidHandle = -5,
     PermissionDenied = -6,
 }
 
 #[derive(PartialEq)]
 pub enum SyscallAction {
     Return,
-    Reschedule
+    Reschedule,
 }
 
 pub struct SyscallDispatchResult {
     pub status: i32,
-    pub value:  u32,
-    pub action: SyscallAction
+    pub value: u32,
+    pub action: SyscallAction,
 }
 
 pub struct SyscallContext {
@@ -34,7 +34,7 @@ impl From<()> for SyscallDispatchResult {
         Self {
             status: 0,
             value: 0,
-            action: SyscallAction::Return
+            action: SyscallAction::Return,
         }
     }
 }
@@ -44,7 +44,7 @@ impl From<u32> for SyscallDispatchResult {
         Self {
             status: 0,
             value,
-            action: SyscallAction::Return
+            action: SyscallAction::Return,
         }
     }
 }
@@ -54,7 +54,7 @@ impl From<SyscallError> for SyscallDispatchResult {
         Self {
             status: error as i32,
             value: 0,
-            action: SyscallAction::Return
+            action: SyscallAction::Return,
         }
     }
 }
@@ -69,11 +69,14 @@ impl From<SyscallAction> for SyscallDispatchResult {
     }
 }
 
-impl<T> From<Result<T, SyscallError>> for SyscallDispatchResult where T: Into<SyscallDispatchResult> {
+impl<T> From<Result<T, SyscallError>> for SyscallDispatchResult
+where
+    T: Into<SyscallDispatchResult>,
+{
     fn from(result: Result<T, SyscallError>) -> Self {
         match result {
             Ok(value) => return value.into(),
-            Err(error)=> return error.into(),        
+            Err(error) => return error.into(),
         }
     }
 }

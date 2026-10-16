@@ -37,10 +37,12 @@ impl TaskTable {
                 self.tasks[taskId] = Some(task);
                 unsafe {
                     let movedTask = self.tasks[taskId].as_mut().unwrap();
-                    movedTask.savedStackPointer = initializeTaskStack(&mut TASK_STACKS.stacks[taskId],
-                                                                 taskEntry,
-                                                                 movedTask as *mut Task,
-                                                                 taskExit)
+                    movedTask.savedStackPointer = initializeTaskStack(
+                        &mut TASK_STACKS.stacks[taskId],
+                        taskEntry,
+                        movedTask as *mut Task,
+                        taskExit,
+                    )
                 }
                 return Ok(taskId);
             }

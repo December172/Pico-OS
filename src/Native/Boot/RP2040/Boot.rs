@@ -17,9 +17,5 @@ fn panic(_info: &PanicInfo) -> ! {
 #[unsafe(naked)]
 #[unsafe(link_section = ".text._start")]
 pub unsafe extern "C" fn _start() -> ! {
-    core::arch::naked_asm!(
-        "bl runtimeInit",
-        "bl entry",
-        "b ."
-    );
+    core::arch::naked_asm!("bl runtimeInit", "bl entry", "b .");
 }

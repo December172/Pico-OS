@@ -1,9 +1,9 @@
-use crate::Arch::General::ExceptionFrame::HardwareFrame;
 use crate::Arch::Current::Context::SoftwareFrame;
+use crate::Arch::General::ExceptionFrame::HardwareFrame;
 use crate::Kernel::Tasks::Scheduler::SCHEDULER;
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn switchBridge(currentStackPointer: *mut u32) -> *mut u32{
+pub unsafe extern "C" fn switchBridge(currentStackPointer: *mut u32) -> *mut u32 {
     unsafe {
         return SCHEDULER.withExclusive(|scheduler| {
             return scheduler.scheduleNextTask(currentStackPointer);
@@ -11,9 +11,8 @@ pub unsafe extern "C" fn switchBridge(currentStackPointer: *mut u32) -> *mut u32
     }
 }
 
-
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn freshStartBridge() -> *mut u32{
+pub unsafe extern "C" fn freshStartBridge() -> *mut u32 {
     unsafe {
         return SCHEDULER.withExclusive(|scheduler| {
             return scheduler.start();
@@ -26,7 +25,7 @@ pub unsafe extern "C" fn freshStartBridge() -> *mut u32{
 pub unsafe extern "C" fn pendSvHandler() -> ! {
     core::arch::naked_asm!(
         "mov   r0,  lr",
-        "movs  r1,  #4",  // r1 = 0b100 
+        "movs  r1,  #4",  // r1 = 0b100
         "tst   r0,  r1",  // CPSR.eq = r0 & r1
         "bne   .Lnormal_switch",
 

@@ -1,7 +1,7 @@
 use core::ptr::{null, null_mut};
 
-use crate::Kernel::Tasks::Task::*;
 use crate::Kernel::Tasks::Syscalls::TASK_SYSCALL_TABLE_ID;
+use crate::Kernel::Tasks::Task::*;
 
 use crate::Util::Syscall::syscallWrapper;
 
