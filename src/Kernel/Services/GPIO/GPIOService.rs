@@ -3,8 +3,6 @@ use crate::HAL::GPIO::GPIO;
 
 use crate::Kernel::Drivers::GPIODriver::GPIODriver;
 use crate::Kernel::Managers::Pin::PinManager::PinManager;
-use crate::Kernel::Services::Service::Service;
-use crate::Kernel::Services::ServiceID::ServiceID;
 
 pub struct GPIOService<DriverType: GPIODriver> {
     driver: DriverType
@@ -33,11 +31,5 @@ impl<DriverType: GPIODriver> GPIOService<DriverType> {
 
     pub fn getPinCapabilities(&self) -> &'static [PinCapability] {
         return self.driver.getPinCapabilities();
-    }
-}
-
-impl<DriverType: GPIODriver> Service for GPIOService<DriverType> {
-    fn getID(&self) -> ServiceID {
-        return ServiceID::GPIOService;
     }
 }
