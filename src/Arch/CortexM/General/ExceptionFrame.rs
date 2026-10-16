@@ -1,5 +1,5 @@
 #[repr(C)]
-pub struct BasicExceptionFrame {
+pub struct HardwareFrame {
     pub r0: u32,
     pub r1: u32,
     pub r2: u32,

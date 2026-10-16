@@ -22,6 +22,8 @@ pub struct VectorTable {
 
 unsafe extern "C" {
     fn _start() -> !;
+    fn svcHandler() -> !;
+    fn pendSvHandler() -> !;
 }
 
 #[unsafe(link_section = ".vector_table")]
@@ -35,11 +37,11 @@ pub static vectorTable: VectorTable = VectorTable {
 
     reserved: [0; 7],
 
-    svcall: defaultHandler,
+    svcall: svcHandler,
 
     reserved2: [0; 2],
 
-    pendsv: defaultHandler,
+    pendsv: pendSvHandler,
     sysTick: defaultHandler,
 
     irq: [defaultHandler; 32],

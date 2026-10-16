@@ -5,6 +5,8 @@ use crate::Arch::General::ASM;
 use crate::Kernel::Syscalls::Syscall::*;
 use crate::Kernel::Syscalls::SyscallTable::*;
 
+use crate::Util::Syscall::SyscallArguments;
+
 const MAX_SYSCALL_TABLES: usize = 8;
 
 pub struct SyscallRegistry {
@@ -29,6 +31,7 @@ impl SyscallRegistry {
             panic!("Syscall registry has been sealed");
         }
 
+        assert_ne!(table.id, 0, "Table id #0 is reserved");
         assert!((table.id as usize) < MAX_SYSCALL_TABLES, "Syscall table id is out of range");
         
         let slot: &mut Option<&'static SyscallTable> = &mut self.tables[table.id as usize];
@@ -38,7 +41,7 @@ impl SyscallRegistry {
         *slot = Some(table);
     }
 
-    pub fn dispatch(&self, tableId: u8, syscallId: u32, context: SyscallContext, arguments: RawSyscallArguments) -> SyscallResult {
+    pub fn dispatch(&self, tableId: u8, syscallId: u32, context: SyscallContext, arguments: SyscallArguments) -> SyscallDispatchResult {
         if !self.sealed {
             return SyscallError::RegistryNotReady.into();
         }
@@ -83,7 +86,7 @@ impl SyscallRegistryWrapper {
         });
     }
 
-    pub fn dispatch(&self, tableId: u8, syscallId: u32, context: SyscallContext, arguments: RawSyscallArguments) -> SyscallResult {
+    pub fn dispatch(&self, tableId: u8, syscallId: u32, context: SyscallContext, arguments: SyscallArguments) -> SyscallDispatchResult {
         let registry = unsafe {
             &*self.inner.get()
         };

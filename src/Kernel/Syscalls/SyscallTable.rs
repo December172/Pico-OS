@@ -1,13 +1,11 @@
 use crate::Kernel::Syscalls::Syscall::*;
 
-/// Arguments of the syscall,
-/// grabbed from regs of the exception frame
-pub type RawSyscallArguments = [u32; 4];
+use crate::Util::Syscall::SyscallArguments;
 
 pub type SyscallThunk = fn(
     context: SyscallContext,
-    arguments: RawSyscallArguments,
-) -> SyscallResult;
+    arguments: SyscallArguments,
+) -> SyscallDispatchResult;
 
 #[derive(Clone, Copy)]
 pub struct SyscallEntry {
@@ -21,7 +19,7 @@ impl SyscallEntry {
         }
     }
 
-    pub fn invoke(&self, context: SyscallContext, arguments: RawSyscallArguments) -> SyscallResult {
+    pub fn invoke(&self, context: SyscallContext, arguments: SyscallArguments) -> SyscallDispatchResult {
         return (self.invoke)(context, arguments);
     }
 }
@@ -30,7 +28,4 @@ pub struct SyscallTable {
     pub id: u8,
     pub entries: &'static [Option<SyscallEntry>],
 }
-
-
-
 

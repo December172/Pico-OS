@@ -24,3 +24,23 @@ pub fn withInterruptsDisabled<Output>(method: impl FnOnce() -> Output) -> Output
 
     return output;
 }
+
+
+const SCB_ICSR: *mut u32 = 0xE000_ED04 as *mut u32;
+const SCB_ICSR_PENDSVSET: u32 = 1 << 28;
+
+#[inline(always)]
+pub fn pendPendSv() {
+    unsafe {
+        core::ptr::write_volatile(
+            SCB_ICSR,
+            SCB_ICSR_PENDSVSET,
+        );
+
+        core::arch::asm!(
+            "dsb",
+            "isb",
+            options(nostack, preserves_flags),
+        );
+    }
+}

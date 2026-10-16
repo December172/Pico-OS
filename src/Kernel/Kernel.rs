@@ -1,15 +1,18 @@
-use crate::Kernel::Drivers::ClockDriver::*;
-use crate::Kernel::Managers::Pin::PinManager::PinManager;
-use crate::Kernel::Services::GPIO::GPIOService::GPIOService;
-use crate::Kernel::Services::Clock::ClockService::ClockService;
-use crate::Kernel::Services::Timer::TimerService::TimerService;
+use core::ptr::null_mut;
+
+use crate::Kernel::Drivers::ClockDriver::ClockDriver;
+use crate::Kernel::Syscalls::SyscallRegistry::SYSCALL_REGISTRY;
+use crate::Kernel::Tasks::IdleTask::IdleTask;
+use crate::Kernel::Tasks::Scheduler::SCHEDULER;
+use crate::Kernel::Tasks::Syscalls::TASK_SYSCALL_TABLE;
+use crate::Util::Syscall::syscallWrapper;
 
 use crate::Native::Boot::_init;
 use crate::Native::Drivers::*;
 
 /// Kernel entry point
 /// no reentry
-pub fn kernelMain() {
+pub fn kernelMain() -> !{
     _init();
 
     // TODO: Switch to heap-allocated kernel object after finishing slab allocator
@@ -24,15 +27,20 @@ pub fn kernelMain() {
         clockDriver = &xoscDriver
     }
     clockDriver.enable();
-    let clockService = ClockService::new(clockDriver);
 
-    let timerService = TimerService::new(TimerDriver::new(), 
-                                         clockService.getFrequency(ClockDomain::Reference));
+    unsafe {
+        SYSCALL_REGISTRY.initialize(|registry| {
+            registry.register(&TASK_SYSCALL_TABLE);
+        });
 
-    let mut pinManager = PinManager::new();
-    let gpioService = GPIOService::new(GPIODriver::new());
+        SCHEDULER.withExclusive(|scheduler| {
+            scheduler.insertTask(IdleTask::new(null_mut()));
+        })
+    }
 
-    pinManager.registerCapabilities(gpioService.getPinCapabilities());
+    unsafe {
+        syscallWrapper::<0>(0, [0, 0, 0, 0]);
+    }
 
-    loop {}
+    unreachable!();
 }

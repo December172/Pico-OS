@@ -3,7 +3,11 @@ use core::cell::UnsafeCell;
 use crate::Arch::General::ASM;
 
 use crate::Kernel::Tasks::Task::*;
+use crate::Kernel::Tasks::IdleTask::IDLE_TASK_ID;
 use crate::Kernel::Tasks::TaskTable::*;
+use crate::Kernel::Syscalls::Syscall::*;
+
+pub const TASK_SELF: TaskId = 0xFF;
 
 pub struct Scheduler {
     taskTable: TaskTable,
@@ -29,8 +33,7 @@ impl Scheduler {
             .unwrap_or_else(|_| panic!("Task table is full"));
     }
 
-    // Called when starting the scheduler
-    // Returns saved stack pointer on success
+    /// For the PendSv bridge use only
     pub fn start(&mut self) -> *mut u32 {
         assert!(self.currentTaskId.is_none(), "scheduler already started");
         let nextTaskId = self.selectNextReadyTask();
@@ -46,6 +49,7 @@ impl Scheduler {
         return nextTask.savedStackPointer;
     }
 
+    /// For the PendSv bridge use only
     pub fn scheduleNextTask(&mut self, currentStackPointer: *mut u32) -> *mut u32 {
         {
             let currentTaskId = self.currentTaskId.expect("No running task");
@@ -79,6 +83,32 @@ impl Scheduler {
         currentTask.state = TaskState::Ready;
     }
 
+    pub fn killTask(&mut self, callerTaskId: TaskId, targetTaskId: TaskId) -> Result<bool, SyscallError> {
+        let rawTargetTaskId = if targetTaskId == TASK_SELF {
+            callerTaskId
+        } else {
+            targetTaskId
+        };
+
+        if rawTargetTaskId == IDLE_TASK_ID {
+            // trying to kill the idle task
+            return Err(SyscallError::PermissionDenied);
+        }
+
+        let killCurrentTask = self.currentTaskId == Some(rawTargetTaskId);
+
+        let targetTask = self.taskTable.getMut(rawTargetTaskId)
+                                       .ok_or(SyscallError::InvalidHandle)?;
+
+        if targetTask.state == TaskState::Dead {
+            return Err(SyscallError::NotRunning);
+        }
+
+        targetTask.state = TaskState::Dead;
+
+        return Ok(killCurrentTask);
+    }
+
     fn selectNextReadyTask(&self) -> TaskId {
         let startIndex = match self.currentTaskId {
             // wrap task ids inside the taskTable (% MAX_TASKS)
@@ -89,6 +119,10 @@ impl Scheduler {
         for offset in 0..MAX_TASKS {
             // wrap task ids inside the taskTable (% MAX_TASKS)
             let taskId = (startIndex + offset) % MAX_TASKS;
+            if taskId == IDLE_TASK_ID {
+                // choose non-idle task first
+                continue;
+            }
 
             let Some(task) = self.taskTable.get(taskId) else {
                 continue;
@@ -100,7 +134,7 @@ impl Scheduler {
 
             return taskId;
         }
-        panic!("No ready task");
+        return IDLE_TASK_ID;
     }
 }
 

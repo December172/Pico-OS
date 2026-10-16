@@ -1,5 +1,7 @@
 use crate::Kernel::Tasks::Task::TaskId;
 
+use crate::Util::Syscall::SyscallArguments;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 #[repr(i32)]
 pub enum SyscallError {
@@ -11,13 +13,13 @@ pub enum SyscallError {
     PermissionDenied = -6,
 }
 
-#[repr(u16)]
+#[derive(PartialEq)]
 pub enum SyscallAction {
-    Return = 0x00,
-    Reschedule = 0x01,
+    Return,
+    Reschedule
 }
 
-pub struct SyscallResult {
+pub struct SyscallDispatchResult {
     pub status: i32,
     pub value:  u32,
     pub action: SyscallAction
@@ -27,7 +29,7 @@ pub struct SyscallContext {
     pub currentTaskId: TaskId,
 }
 
-impl From<()> for SyscallResult {
+impl From<()> for SyscallDispatchResult {
     fn from(_: ()) -> Self {
         Self {
             status: 0,
@@ -37,7 +39,7 @@ impl From<()> for SyscallResult {
     }
 }
 
-impl From<u32> for SyscallResult {
+impl From<u32> for SyscallDispatchResult {
     fn from(value: u32) -> Self {
         Self {
             status: 0,
@@ -47,7 +49,7 @@ impl From<u32> for SyscallResult {
     }
 }
 
-impl From<SyscallError> for SyscallResult {
+impl From<SyscallError> for SyscallDispatchResult {
     fn from(error: SyscallError) -> Self {
         Self {
             status: error as i32,
@@ -57,7 +59,7 @@ impl From<SyscallError> for SyscallResult {
     }
 }
 
-impl From<SyscallAction> for SyscallResult {
+impl From<SyscallAction> for SyscallDispatchResult {
     fn from(action: SyscallAction) -> Self {
         Self {
             status: 0,
@@ -67,7 +69,7 @@ impl From<SyscallAction> for SyscallResult {
     }
 }
 
-impl<T> From<Result<T, SyscallError>> for SyscallResult where T: Into<SyscallResult> {
+impl<T> From<Result<T, SyscallError>> for SyscallDispatchResult where T: Into<SyscallDispatchResult> {
     fn from(result: Result<T, SyscallError>) -> Self {
         match result {
             Ok(value) => return value.into(),
