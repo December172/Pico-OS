@@ -11,12 +11,12 @@ Small RTOS for Raspberry Pico & Pico 2, using Rust
 ## Roadmap
 - ✅ LED Blink
 - ✅ Clock / Timer 
+- ✅ Task Scheduler
 - 🛠️ UART Output
 - ❌ Heap allocation
-- ❌ Task Scheduler
 - ❌ Displaying
 - ❌ Basic Shell
 
 ## Acknowledgement
-- GPT-5.6-Luna for architecture design
+- ChatGPT Codex for architecture design
 - Deepseek-v4.1-flash for constants generating tools
