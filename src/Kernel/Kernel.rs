@@ -2,9 +2,11 @@ use core::ptr::null_mut;
 
 use crate::Kernel::Drivers::ClockDriver::ClockDriver;
 use crate::Kernel::Syscalls::SyscallRegistry::SYSCALL_REGISTRY;
-use crate::Kernel::Tasks::IdleTask::IdleTask;
+use crate::Kernel::Tasks::Task::*;
 use crate::Kernel::Tasks::Scheduler::SCHEDULER;
 use crate::Kernel::Tasks::Syscalls::TASK_SYSCALL_TABLE;
+use crate::Kernel::Tasks::IdleTask;
+
 use crate::Util::Syscall::syscallWrapper;
 
 use crate::Native::Boot::_init;
@@ -34,7 +36,15 @@ pub fn kernelMain() -> ! {
         });
 
         SCHEDULER.withExclusive(|scheduler| {
-            scheduler.insertTask(IdleTask::new(null_mut()));
+            let idleId = scheduler.insertTask(Task {
+                id: TASKID_UNASSIGNED,
+                state: TaskState::Ready,
+                savedStackPointer: null_mut(),
+
+                entry: IdleTask::entry,
+                argument: null_mut(),
+            });
+            assert_eq!(idleId, IdleTask::IDLE_TASK_ID, "IdleTask is not at slot 0")
         })
     }
 
