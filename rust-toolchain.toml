@@ -2,4 +2,4 @@
 channel = "nightly-2026-09-05"
 profile = "minimal"
 components = ["rustfmt", "rust-src"]
-targets = ["thumbv6m-none-eabi", "thumbv8m.main-none-eabi"]
+targets = ["thumbv6m-none-eabi"]

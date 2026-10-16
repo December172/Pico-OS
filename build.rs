@@ -4,20 +4,8 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
-    if cfg!(feature = "RP2040") && cfg!(feature = "RP2350") {
-        panic!("RP2040 and RP2350 features cannot be enabled together");
-    }
-
     let (boardLinker, memoryLinker, architectureLinker, bootAsset, expectedTarget) =
-        if cfg!(feature = "RP2350") {
-            (
-                "Pico2.ld",
-                "memory/Pico2.ld",
-                "arch/RP2350.ld",
-                None,
-                "thumbv8m.main-none-eabi",
-            )
-        } else if cfg!(feature = "Pico_16M") {
+        if cfg!(feature = "Pico_16M") {
             (
                 "Pico_16M.ld",
                 "memory/Pico_16M.ld",
@@ -34,7 +22,7 @@ fn main() {
                 "thumbv6m-none-eabi",
             )
         } else {
-            panic!("enable an RP2040 or RP2350 board feature before building");
+            panic!("enable an RP2040 board feature before building");
         };
 
     let target = env::var("TARGET").expect("Cargo must provide TARGET to build.rs");

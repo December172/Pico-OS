@@ -12,20 +12,9 @@ build(){
 
     # The cargo aliases in .cargo/config.toml select the target triple, the
     # architecture-specific core and the feature set for each board.
-    case "$board" in
-        pico2|rp2350)
-            alias="pico2350"
-            target="thumbv8m.main-none-eabi"
-            # RP2350-E10 (A2): absolute block so UF2 drag-and-drop works when a
-            # partition table is present. Ignored by A3+ bootroms.
-            absBlock="--abs-block"
-            ;;
-        *)
-            alias="pico2040"
-            target="thumbv6m-none-eabi"
-            absBlock=""
-            ;;
-    esac
+    alias="pico2040"
+    target="thumbv6m-none-eabi"
+    absBlock=""
 
     cargo "$alias" --profile "$1"
 
