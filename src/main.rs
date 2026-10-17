@@ -1,19 +1,17 @@
 #![no_std]
 #![no_main]
-#![allow(non_snake_case)]
-#![allow(non_camel_case_types)]
 #![allow(unused)]
 
 #[cfg(feature = "RP2040")]
-mod Arch;
+mod arch;
 
-mod HAL;
-mod Kernel;
-mod Native;
-mod Util;
+mod hal;
+mod kernel;
+mod native;
+mod util;
 
 /// Rust entry point
 #[unsafe(no_mangle)]
 pub extern "C" fn entry() {
-    crate::Kernel::Kernel::kernelMain();
+    crate::kernel::kernel::kernel_main();
 }

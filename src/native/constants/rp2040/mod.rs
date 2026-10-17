@@ -1,0 +1,35 @@
+pub mod adc;
+pub mod busctrl;
+pub mod clocks;
+pub mod dma;
+pub mod i2c;
+pub mod io_bank0;
+pub mod io_qspi;
+pub mod pads_bank0;
+pub mod pads_qspi;
+pub mod pio;
+pub mod pll;
+pub mod ppb;
+pub mod psm;
+pub mod pwm;
+pub mod resets;
+pub mod rosc;
+pub mod rtc;
+pub mod sio;
+pub mod spi;
+pub mod ssi;
+pub mod syscfg;
+pub mod sysinfo;
+pub mod tbman;
+pub mod timer;
+pub mod uart;
+pub mod usb;
+pub mod usb_device_dpram;
+pub mod r#virtual;
+pub mod vreg_and_chip_reset;
+pub mod watchdog;
+pub mod xip_ctrl;
+pub mod xosc;
+
+// For non-predefined user values
+pub mod config;

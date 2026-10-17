@@ -1,2 +1,0 @@
-mod PendSv;
-mod SvCall;
