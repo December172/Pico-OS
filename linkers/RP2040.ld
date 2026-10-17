@@ -71,6 +71,35 @@ SECTIONS
     } > FLASH
 
     /*
+     * Prelinked user image.
+     *
+     * The user ELF is converted to a flat binary and then wrapped in
+     * a relocatable object whose input section is named `.user.image`.
+     *
+     * The user image was already linked for ORIGIN(USER_FLASH), so it
+     * must be placed here without further relocation.
+     */
+    .user_image ORIGIN(USER_FLASH) :
+    {
+        __user_image_start = .;
+
+        KEEP(*(.user.image))
+
+        . = ALIGN(4);
+        __user_image_end = .;
+    } > USER_FLASH
+
+    ASSERT(__user_image_start == __user_flash_start,
+           "user image must start at USER_FLASH origin")
+
+    ASSERT(SIZEOF(.user_image) <= LENGTH(USER_FLASH),
+           "user image exceeds USER_FLASH")
+
+    ASSERT(__user_image_end <= __user_flash_end,
+           "user image crosses USER_FLASH boundary")
+
+
+    /*
      * VMA: RAM
      * LMA: flash, immediately following the preceding flash sections.
      *
