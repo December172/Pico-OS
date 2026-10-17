@@ -3,9 +3,12 @@ name = "Pico-OS"
 version = "0.0.1"
 edition = "2024"
 
+[package.metadata.pico-os]
+flash-size-mb = 16
+user-flash-size-kb = 256
+
 [features]
-default = ["Pico_16M"]
-Pico_16M = ["RP2040"]
+default = ["RP2040"]
 RP2040 = []
 
 [profile.dev]
@@ -24,3 +27,7 @@ name = "kernel"
 path = "src/main.rs"
 test = false
 bench = false
+
+[build-dependencies]
+toml = "0.8"
+
