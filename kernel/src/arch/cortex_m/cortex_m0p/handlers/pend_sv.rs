@@ -19,7 +19,7 @@ pub unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
 }
 
 #[unsafe(naked)]
-pub unsafe extern "C" fn pend_sv_handler() -> ! {
+pub unsafe extern "C" fn pendsv_handler() -> ! {
     core::arch::naked_asm!(
         "mov   r0,  lr",
         "movs  r1,  #4",  // r1 = 0b100

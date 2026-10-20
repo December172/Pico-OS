@@ -1,3 +1,7 @@
+use crate::arch::cortex_m::cortex_m0p::handlers::pendsv_handler;
+use crate::arch::cortex_m::cortex_m0p::handlers::svc_handler;
+use crate::native::boot::rp2040::boot::_start;
+
 type Handler = unsafe extern "C" fn() -> !;
 
 #[repr(C)]
@@ -20,12 +24,6 @@ pub struct VectorTable {
     pub irq: [Handler; 32],
 }
 
-unsafe extern "C" {
-    fn _start() -> !;
-    fn svc_handler() -> !;
-    fn pend_sv_handler() -> !;
-}
-
 #[unsafe(link_section = ".vector_table")]
 pub static VECTOR_TABLE: VectorTable = VectorTable {
     initial_sp: 0x2004_2000,
@@ -40,7 +38,7 @@ pub static VECTOR_TABLE: VectorTable = VectorTable {
 
     reserved2: [0; 2],
 
-    pendsv: pend_sv_handler,
+    pendsv: pendsv_handler,
     sys_tick: default_handler,
 
     irq: [default_handler; 32],
