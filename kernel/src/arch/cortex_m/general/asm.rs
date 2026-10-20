@@ -29,7 +29,7 @@ const SCB_ICSR: *mut u32 = 0xE000_ED04 as *mut u32;
 const SCB_ICSR_PENDSVSET: u32 = 1 << 28;
 
 #[inline(always)]
-pub fn pend_pend_sv() {
+pub fn pend_pendsv() {
     unsafe {
         core::ptr::write_volatile(SCB_ICSR, SCB_ICSR_PENDSVSET);
 

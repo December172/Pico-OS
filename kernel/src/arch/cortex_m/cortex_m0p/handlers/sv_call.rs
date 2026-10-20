@@ -1,11 +1,10 @@
-use crate::arch::cortex_m::general::asm::pend_pend_sv;
+use crate::arch::cortex_m::general::asm::pend_pendsv;
 use crate::arch::cortex_m::general::exception_frame::HardwareFrame;
 
 use crate::kernel::syscalls::syscall::*;
 use crate::kernel::syscalls::syscall_registry::SYSCALL_REGISTRY;
 use crate::kernel::tasks::scheduler::SCHEDULER;
 
-#[unsafe(export_name = "svcBridge")]
 unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, from_kernel: u32) {
     let frame = unsafe { &mut *frame_ptr };
 
@@ -15,7 +14,7 @@ unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, fr
             frame.r1 = 0;
         } else {
             // `svc #0`: pull up idle task
-            pend_pend_sv();
+            pend_pendsv();
         }
         return;
     }
@@ -38,7 +37,7 @@ unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, fr
     frame.r1 = result.value;
 
     if result.action == SyscallAction::Reschedule {
-        pend_pend_sv();
+        pend_pendsv();
     }
 }
 
@@ -52,7 +51,6 @@ unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, fr
 ///
 /// 3. Normal return (non-task syscalls) / tail-chain by pend_pend_sv() (for rescheduling)
 
-#[unsafe(export_name = "svcHandler")]
 #[unsafe(naked)]
 pub unsafe extern "C" fn svc_handler() -> ! {
     // the bridge between kernel space and user space;

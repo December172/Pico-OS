@@ -22,14 +22,11 @@ pub struct VectorTable {
 
 unsafe extern "C" {
     fn _start() -> !;
-    #[link_name = "svcHandler"]
     fn svc_handler() -> !;
-    #[link_name = "pendSvHandler"]
     fn pend_sv_handler() -> !;
 }
 
 #[unsafe(link_section = ".vector_table")]
-#[unsafe(export_name = "vectorTable")]
 pub static VECTOR_TABLE: VectorTable = VectorTable {
     initial_sp: 0x2004_2000,
 
@@ -49,7 +46,6 @@ pub static VECTOR_TABLE: VectorTable = VectorTable {
     irq: [default_handler; 32],
 };
 
-#[unsafe(export_name = "defaultHandler")]
 pub extern "C" fn default_handler() -> ! {
     loop {
         unsafe {

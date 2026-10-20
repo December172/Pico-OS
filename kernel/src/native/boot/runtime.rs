@@ -10,7 +10,6 @@ unsafe extern "C" {
 
 /// Initialize Rust's writable static memory.
 #[inline(never)]
-#[unsafe(export_name = "runtimeInit")]
 pub unsafe extern "C" fn runtime_init() {
     // Copy the initial .data image from flash into SRAM.
     let data_source = unsafe { core::ptr::addr_of!(__data_load_start) };

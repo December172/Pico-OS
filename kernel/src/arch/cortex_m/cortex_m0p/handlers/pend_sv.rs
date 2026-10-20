@@ -2,7 +2,6 @@ use crate::arch::current::context::SoftwareFrame;
 use crate::arch::general::exception_frame::HardwareFrame;
 use crate::kernel::tasks::scheduler::SCHEDULER;
 
-#[unsafe(export_name = "switchBridge")]
 pub unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut u32 {
     unsafe {
         return SCHEDULER.with_exclusive(|scheduler| {
@@ -11,7 +10,6 @@ pub unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut 
     }
 }
 
-#[unsafe(export_name = "freshStartBridge")]
 pub unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
     unsafe {
         return SCHEDULER.with_exclusive(|scheduler| {
@@ -20,7 +18,6 @@ pub unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
     }
 }
 
-#[unsafe(export_name = "pendSvHandler")]
 #[unsafe(naked)]
 pub unsafe extern "C" fn pend_sv_handler() -> ! {
     core::arch::naked_asm!(

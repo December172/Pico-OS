@@ -1,5 +1,8 @@
 use core::panic::PanicInfo;
 
+use crate::entry;
+use crate::native::boot::runtime::runtime_init;
+
 #[unsafe(no_mangle)]
 #[unsafe(link_section = ".boot2")]
 pub static boot2: [u8; 256] = *include_bytes!("boot2.bin");
@@ -21,7 +24,7 @@ pub unsafe extern "C" fn _start() -> ! {
         "bl {runtime_init}",
         "bl {entry}",
         "b .",
-        runtime_init = sym crate::native::boot::runtime::runtime_init,
-        entry = sym crate::entry,
+        runtime_init = sym runtime_init,
+        entry = sym entry,
     );
 }
