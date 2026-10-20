@@ -4,7 +4,8 @@
 """Generate enumerated-value constants for every register field of the active device.
 
 The active device is selected with the SVD_DEVICE environment variable (default
-RP2040); constants are written to src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs.
+RP2040); constants are written to
+kernel/src/native/constants/<device>/<peripheral>.rs.
 
 For each register field that carries `<enumeratedValues>` in the CMSIS-SVD file
 this script writes one constant per enumerated value:
@@ -55,6 +56,7 @@ from svd_common import (
     parse_svd,
     register_family_names,
     resolve,
+    rust_source_filename,
     sanitize,
     split_block,
     token,
@@ -156,7 +158,7 @@ def main():
             continue  # folded into the primary peripheral's merged file
 
         stem = primary_stem.get(name, name)
-        path = os.path.join(CONST_DIR, stem + ".rs")
+        path = os.path.join(CONST_DIR, rust_source_filename(stem))
         if not os.path.isfile(path):
             continue
 

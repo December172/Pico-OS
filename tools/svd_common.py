@@ -45,6 +45,7 @@ import re
 import xml.etree.ElementTree as ET
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KERNEL_SRC = os.path.join(ROOT, "kernel", "src")
 
 # Device profiles.  The active device is selected with the SVD_DEVICE
 # environment variable (default RP2040) so an existing generator invocation
@@ -60,7 +61,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEVICES = {
     "RP2040": {
         "svd": os.path.join(ROOT, "specs", "RP2040.svd"),
-        "const_dir": os.path.join(ROOT, "src", "Native", "Constants", "RP2040"),
+        "const_dir": os.path.join(KERNEL_SRC, "native", "constants", "rp2040"),
         "merged": {
             "PIO": "PIO0",
             "I2C": "I2C0",
@@ -71,7 +72,7 @@ DEVICES = {
     },
     "RP2350": {
         "svd": os.path.join(ROOT, "specs", "RP2350.svd"),
-        "const_dir": os.path.join(ROOT, "src", "Native", "Constants", "RP2350"),
+        "const_dir": os.path.join(KERNEL_SRC, "native", "constants", "rp2350"),
         "merged": {
             "PIO": "PIO0",
             "I2C": "I2C0",
@@ -169,6 +170,16 @@ def token(name: str) -> str:
 def ident(*parts) -> str:
     """Join parts into a strict UPPER_SNAKE_CASE identifier."""
     return sanitize("_".join(p for p in parts if p))
+
+
+def rust_source_stem(name: str) -> str:
+    """Return the lowercase Rust module/file stem for an SVD output name."""
+    return sanitize(name).lower()
+
+
+def rust_source_filename(name: str) -> str:
+    """Return the `.rs` filename for an SVD output name."""
+    return rust_source_stem(name) + ".rs"
 
 
 def resolve(periphs, name, seen=None):

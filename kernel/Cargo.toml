@@ -1,0 +1,22 @@
+[package]
+name = "pico-kernel"
+version.workspace = true
+edition.workspace = true
+build = "build.rs"
+
+[package.metadata.pico-os]
+flash-size-mb = 16
+user-flash-size-kb = 256
+
+[features]
+default = ["RP2040"]
+RP2040 = []
+
+[[bin]]
+name = "kernel"
+path = "src/main.rs"
+test = false
+bench = false
+
+[build-dependencies]
+toml = { workspace = true }

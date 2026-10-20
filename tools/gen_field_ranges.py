@@ -4,12 +4,13 @@
 """Generate per-field bit-range constants for the active SVD device.
 
 The active device is selected with the SVD_DEVICE environment variable (default
-RP2040); constants are written to src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs.
+RP2040); constants are written to
+kernel/src/native/constants/<device>/<peripheral>.rs.
 Set SVD_EMIT_BASES_OFFSETS=0 when tools/gen_register_offsets.py owns the base
 and register-offset declarations (the tools/gen_constants.py driver does this).
 
 For every register field this script writes two constants into the matching
-src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs file:
+kernel/src/native/constants/<device>/<peripheral>.rs file:
 
     pub const <PERIPHERAL>_<REGISTER>_<FIELD>_LOW:  u32 = <low bit>;
     pub const <PERIPHERAL>_<REGISTER>_<FIELD>_HIGH: u32 = <high bit>;
@@ -64,6 +65,7 @@ from svd_common import (
     parse_svd,
     register_families,
     resolve,
+    rust_source_filename,
     sanitize,
     split_block,
     upsert_block,
@@ -172,7 +174,7 @@ def main():
 
     total = 0
     for stem, primary, aliases in build_outputs(periphs):
-        path = os.path.join(CONST_DIR, stem + ".rs")
+        path = os.path.join(CONST_DIR, rust_source_filename(stem))
         exists = os.path.isfile(path)
         if not exists and not aliases:
             print(f"  ! no constants file for peripheral {primary} (skipped)", file=sys.stderr)

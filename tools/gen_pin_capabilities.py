@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-"""Generate the <Peripheral>/PinCapabilities.rs pin-mux tables from the SVD.
+"""Generate the <peripheral>/pin_capabilities.rs pin-mux tables from the SVD.
 
     python tools/gen_pin_capabilities.py RP2040
     python tools/gen_pin_capabilities.py RP2350 --write
@@ -29,7 +29,7 @@ Output
 ------
 One file per peripheral folder, matching the existing layout:
 
-    src/Native/Drivers/<DEVICE>/<Peripheral>/PinCapabilities.rs
+    kernel/src/native/drivers/<device>/<peripheral>/pin_capabilities.rs
 
 A file is only replaced when it already carries the AUTO-GENERATED marker this
 tool writes; a hand-written (or work-in-progress) file is left alone unless
@@ -44,13 +44,14 @@ from collections import Counter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+KERNEL_SRC = os.path.join(ROOT, "kernel", "src")
 
 # Signal name -> HAL::PinFunction.  Each family owns one FUNCSEL (the F number
 # in the datasheet table) and is emitted into its own peripheral folder.
 #
 #   pattern : how the SVD signal name is split; the "sig" group picks the
 #             variant out of `signals`, the "blk" group is the instance index.
-#   block   : peripherialBlock for a match (uart0/uart1 -> 0/1, pwm slice ...).
+#   block   : peripheral_block for a match (uart0/uart1 -> 0/1, pwm slice ...).
 #
 # `signals` maps the captured "sig" token to a variant; GPIO has no signal
 # token (its pattern only captures the pin) so it maps the empty token.
@@ -69,8 +70,8 @@ FAMILIES = (
         "folder": "UART",
         "label": "UART",
         "pattern": re.compile(r"^uart(?P<blk>\d+)_(?P<sig>tx|rx|cts|rts)$"),
-        "signals": {"tx": "UART_TX", "rx": "UART_RX",
-                    "cts": "UART_CTS", "rts": "UART_RTS"},
+        "signals": {"tx": "UartTx", "rx": "UartRx",
+                    "cts": "UartCts", "rts": "UartRts"},
         "block": lambda m: int(m.group("blk")),
         "block_prefix": "uart",
     },
@@ -79,8 +80,8 @@ FAMILIES = (
         "folder": "SPI",
         "label": "SPI",
         "pattern": re.compile(r"^spi(?P<blk>\d+)_(?P<sig>tx|rx|sclk|ss_n)$"),
-        "signals": {"tx": "SPI_TX", "rx": "SPI_RX",
-                    "sclk": "SPI_SCK", "ss_n": "SPI_CS"},
+        "signals": {"tx": "SpiTx", "rx": "SpiRx",
+                    "sclk": "SpiSck", "ss_n": "SpiCs"},
         "block": lambda m: int(m.group("blk")),
         "block_prefix": "spi",
     },
@@ -89,7 +90,7 @@ FAMILIES = (
         "folder": "I2C",
         "label": "I2C",
         "pattern": re.compile(r"^i2c(?P<blk>\d+)_(?P<sig>sda|scl)$"),
-        "signals": {"sda": "I2C_SDA", "scl": "I2C_SCL"},
+        "signals": {"sda": "I2cSda", "scl": "I2cScl"},
         "block": lambda m: int(m.group("blk")),
         "block_prefix": "i2c",
     },
@@ -98,7 +99,7 @@ FAMILIES = (
         "folder": "PWM",
         "label": "PWM",
         "pattern": re.compile(r"^pwm_(?P<sig>a|b)_(?P<blk>\d+)$"),
-        "signals": {"a": "PWM_A", "b": "PWM_B"},
+        "signals": {"a": "PwmA", "b": "PwmB"},
         "block": lambda m: int(m.group("blk")),
         "block_prefix": None,
     },
@@ -192,8 +193,8 @@ def collect_capabilities(pins):
 
 
 def hal_variants():
-    """Return the PinFunction variant names declared in src/HAL/Pin.rs."""
-    path = os.path.join(ROOT, "src", "HAL", "Pin.rs")
+    """Return the PinFunction variants declared in kernel/src/hal/pin.rs."""
+    path = os.path.join(KERNEL_SRC, "hal", "pin.rs")
     text = open(path).read()
     body = re.search(r"enum\s+PinFunction\s*\{(.*?)\}", text, re.S)
     if not body:
@@ -204,20 +205,20 @@ def hal_variants():
 # ==== rendering =======================================================
 
 def block_note(family, rows):
-    """Comment line describing the peripherialBlock column."""
+    """Comment line describing the peripheral_block column."""
     blocks = sorted({block for _pin, _variant, block in rows})
     pins = [pin for pin, _variant, _block in rows]
     if family["name"] == "GPIO":
-        return (f"// peripherialBlock: 0 = SIO; GPIO{min(pins)}..GPIO{max(pins)} can all "
+        return (f"// peripheral_block: 0 = SIO; GPIO{min(pins)}..GPIO{max(pins)} can all "
                 f"be used as plain software GPIO.")
     if family["block_prefix"] is None:
-        return f"// peripherialBlock: {blocks[0]}..{blocks[-1]} = {family['name']} slice index."
+        return f"// peripheral_block: {blocks[0]}..{blocks[-1]} = {family['name']} slice index."
     listed = ", ".join(f"{b} = {family['block_prefix']}{b}" for b in blocks)
-    return f"// peripherialBlock: {listed}."
+    return f"// peripheral_block: {listed}."
 
 
 def render(device, family, rows, svd_name, io_name):
-    """Return the PinCapabilities.rs text for one peripheral."""
+    """Return the pin_capabilities.rs text for one peripheral."""
     selects = sorted({funcsel for funcsel in rows.values()})
     funcsels = "/".join(f"F{s}" for s in selects)
     # Variants are padded to the longest name so the table stays column aligned
@@ -232,8 +233,8 @@ def render(device, family, rows, svd_name, io_name):
         "//         (datasheet \"GPIO function table\").",
         block_note(family, rows),
         "",
-        "use crate::HAL::Pin::PinCapability;",
-        "use crate::HAL::Pin::PinFunction;",
+        "use crate::hal::pin::PinCapability;",
+        "use crate::hal::pin::PinFunction;",
         "",
         "pub static PIN_CAPABILITIES: &[PinCapability] = &[",
     ]
@@ -241,7 +242,7 @@ def render(device, family, rows, svd_name, io_name):
         (pin, variant, block), _funcsel = row
         entry = f"PinFunction::{variant},"
         lines.append(f"    PinCapability {{ pin: {pin:>2}, function: {entry:<{width}}"
-                     f"peripherialBlock: {block} }},")
+                     f"peripheral_block: {block} }},")
     lines.append("];")
     return "\n".join(lines) + "\n"
 
@@ -249,8 +250,8 @@ def render(device, family, rows, svd_name, io_name):
 # ==== output ==========================================================
 
 def target_path(device, family):
-    return os.path.join(ROOT, "src", "Native", "Drivers", device,
-                        family["folder"], "PinCapabilities.rs")
+    return os.path.join(KERNEL_SRC, "native", "drivers", device.lower(),
+                        family["folder"].lower(), "pin_capabilities.rs")
 
 
 def emit(path, current, text, args):
@@ -325,7 +326,7 @@ def main():
         for variant in {v for _p, v, _b in rows}:
             if variant not in known:
                 raise SystemExit(f"{family['name']}: PinFunction::{variant} is not "
-                                 f"declared in src/HAL/Pin.rs")
+                                 f"declared in kernel/src/hal/pin.rs")
         text = render(device, family, rows, SVD_NAME, io_name)
         path = target_path(device, family)
         current = open(path).read() if os.path.isfile(path) else None

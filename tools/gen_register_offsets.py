@@ -4,7 +4,7 @@
 """Generate register-address accessors for the active SVD device.
 
 For every peripheral this script writes the register-address section of the
-matching src/Native/Constants/<DEVICE>/<PERIPHERAL>.rs file.  Every accessor is
+matching kernel/src/native/constants/<device>/<peripheral>.rs file.  Every accessor is
 an absolute address: one `pub const` per register, or one `pub fn` for a
 collapsed instance family:
 
@@ -60,6 +60,7 @@ from svd_common import (
     parse_svd,
     peripheral_base,
     resolve,
+    rust_source_filename,
     sanitize,
     split_block,
     token,
@@ -265,7 +266,7 @@ def main():
     total = 0
     skipped = []
     for stem, primary, aliases in output_groups(periphs):
-        path = os.path.join(CONST_DIR, stem + ".rs")
+        path = os.path.join(CONST_DIR, rust_source_filename(stem))
         exists = os.path.isfile(path)
         if not exists and not aliases:
             print(f"  ! no constants file for peripheral {primary} (skipped)", file=sys.stderr)

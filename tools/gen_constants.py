@@ -57,7 +57,14 @@ def main():
 
     # Imported after SVD_DEVICE is set: svd_common resolves the device profile
     # (SVD path, constants dir, merge map) at import time.
-    from svd_common import CONST_DIR, SVD_NAME, output_groups, parse_svd
+    from svd_common import (
+        CONST_DIR,
+        SVD_NAME,
+        output_groups,
+        parse_svd,
+        rust_source_filename,
+        rust_source_stem,
+    )
 
     if args.offsets is None:
         args.offsets = args.device != "RP2040"
@@ -72,7 +79,7 @@ def main():
     if args.create:
         created = 0
         for stem, _primary, _aliases in groups:
-            path = os.path.join(CONST_DIR, stem + ".rs")
+            path = os.path.join(CONST_DIR, rust_source_filename(stem))
             if not os.path.exists(path):
                 with open(path, "w") as fh:
                     fh.write(f"#![allow(dead_code)]\n// {stem}\n")
@@ -102,9 +109,9 @@ def main():
 
     mod_path = os.path.join(CONST_DIR, "mod.rs")
     if args.write_mod or not os.path.exists(mod_path):
-        lines = [f"pub mod {stem};" for stem, _p, _a in groups]
-        if os.path.exists(os.path.join(CONST_DIR, "Config.rs")):
-            lines += ["", "// For non-predefined user values", "pub mod Config;"]
+        lines = [f"pub mod {rust_source_stem(stem)};" for stem, _p, _a in groups]
+        if os.path.exists(os.path.join(CONST_DIR, "config.rs")):
+            lines += ["", "// For non-predefined user values", "pub mod config;"]
         with open(mod_path, "w") as fh:
             fh.write("\n".join(lines) + "\n")
         print(f"\nwrote {mod_path}")

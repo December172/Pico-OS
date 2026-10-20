@@ -1,15 +1,18 @@
-[package]
-name = "Pico-OS"
+[workspace]
+members = [
+    "kernel",
+]
+default-members = [
+    "kernel",
+]
+resolver = "3"
+
+[workspace.package]
 version = "0.0.1"
 edition = "2024"
 
-[package.metadata.pico-os]
-flash-size-mb = 16
-user-flash-size-kb = 256
-
-[features]
-default = ["RP2040"]
-RP2040 = []
+[workspace.dependencies]
+toml = "0.8"
 
 [profile.dev]
 panic = "abort"
@@ -21,13 +24,3 @@ panic = "abort"
 opt-level = "z"
 lto = true
 strip = true
-
-[[bin]]
-name = "kernel"
-path = "src/main.rs"
-test = false
-bench = false
-
-[build-dependencies]
-toml = "0.8"
-
