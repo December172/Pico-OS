@@ -36,17 +36,7 @@ impl Scheduler {
     /// For the pend_sv bridge use only
     pub fn start(&mut self) -> *mut u32 {
         assert!(self.current_task_id.is_none(), "scheduler already started");
-        let next_task_id = self.select_next_ready_task();
-        let next_task = self
-            .task_table
-            .get_mut(next_task_id)
-            .expect("Selected task disappeared");
-
-        assert!(next_task.state == TaskState::Ready);
-        next_task.state = TaskState::Running;
-        self.current_task_id = Some(next_task_id);
-
-        return next_task.saved_stack_pointer;
+        return self.activate_next_ready_task();
     }
 
     /// For the pend_sv bridge use only
@@ -62,12 +52,16 @@ impl Scheduler {
             }
             current_task.saved_stack_pointer = current_stack_pointer;
         }
-        let next_task_id = self.select_next_ready_task();
-        let next_task = self.task_table.get_mut(next_task_id).unwrap();
+        return self.activate_next_ready_task();
+    }
 
-        next_task.state = TaskState::Running;
-        self.current_task_id = Some(next_task_id);
-        return next_task.saved_stack_pointer;
+    /// For the hard_fault bridge use only
+    pub fn discard_current_task(&mut self) -> Result<*mut u32, SyscallError> {
+        let id = self.current_task_id.ok_or(SyscallError::NotRunning)?;
+
+        self.kill_task(id, id)?;
+
+        return Ok(self.activate_next_ready_task());
     }
 
     pub fn yield_task(&mut self) {
@@ -111,13 +105,14 @@ impl Scheduler {
         return Ok(kill_current_task);
     }
 
-    fn select_next_ready_task(&self) -> TaskId {
+    fn activate_next_ready_task(&mut self) -> *mut u32 {
         let start_index = match self.current_task_id {
             // wrap task ids inside the task_table (% MAX_TASKS)
             Some(task_id) => (task_id + 1) % MAX_TASKS,
             None => 0,
         };
 
+        let mut next_task_id = IDLE_TASK_ID;
         for offset in 0..MAX_TASKS {
             // wrap task ids inside the task_table (% MAX_TASKS)
             let task_id = (start_index + offset) % MAX_TASKS;
@@ -134,9 +129,20 @@ impl Scheduler {
                 continue;
             }
 
-            return task_id;
+            next_task_id = task_id;
+            break;
         }
-        return IDLE_TASK_ID;
+
+        let next_task = self
+            .task_table
+            .get_mut(next_task_id)
+            .expect("Selected task disappeared");
+
+        assert!(next_task.state == TaskState::Ready);
+        next_task.state = TaskState::Running;
+        self.current_task_id = Some(next_task_id);
+
+        return next_task.saved_stack_pointer;
     }
 }
 

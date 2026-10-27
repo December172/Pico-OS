@@ -1,3 +1,4 @@
+use crate::arch::cortex_m::cortex_m0p::handlers::hard_fault_handler;
 use crate::arch::cortex_m::cortex_m0p::handlers::pendsv_handler;
 use crate::arch::cortex_m::cortex_m0p::handlers::svc_handler;
 use crate::native::boot::rp2040::boot::_start;
@@ -30,7 +31,7 @@ pub static VECTOR_TABLE: VectorTable = VectorTable {
 
     reset: _start,
     nmi: default_handler,
-    hard_fault: default_handler,
+    hard_fault: hard_fault_handler,
 
     reserved: [0; 7],
 

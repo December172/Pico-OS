@@ -1,8 +1,11 @@
-use crate::arch::current::context::SoftwareFrame;
+use crate::arch::cortex_m::cortex_m0p::handlers::general::resume_task_context;
+
+use crate::arch::cortex_m::cortex_m0p::context::SoftwareFrame;
 use crate::arch::general::exception_frame::HardwareFrame;
+
 use crate::kernel::tasks::scheduler::SCHEDULER;
 
-pub unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut u32 {
+unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut u32 {
     unsafe {
         return SCHEDULER.with_exclusive(|scheduler| {
             return scheduler.schedule_next_task(current_stack_pointer);
@@ -10,7 +13,7 @@ pub unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut 
     }
 }
 
-pub unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
+unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
     unsafe {
         return SCHEDULER.with_exclusive(|scheduler| {
             return scheduler.start();
@@ -31,7 +34,8 @@ pub unsafe extern "C" fn pendsv_handler() -> ! {
         "mrs   r1,  msp",
         "adds  r1,  #{hardware_frame_size}",
         "msr   msp, r1",
-        "b     .Lrestore",
+        "bl    {resume}",
+        "b     .",
 
         ".Lnormal_switch:",
         "mrs   r0,  psp",
@@ -45,23 +49,12 @@ pub unsafe extern "C" fn pendsv_handler() -> ! {
         "stmia r1!, {{r2-r3}}",
         "stmia r1!, {{r4-r7}}",
         "bl    {switch_bridge}",
-
-        ".Lrestore:",
-        "ldmia r0!, {{r4-r7}}",
-        "mov   r8,  r4",
-        "mov   r9,  r5",
-        "mov   r10, r6",
-        "mov   r11, r7",
-        "ldmia r0!, {{r4-r7}}",
-        "msr   psp, r0",
-
-        "movs  r0,  #2",
-        "mvns  r0,  r0",
-        "mov   lr,  r0",
-        "bx    lr",
+        "bl    {resume}",
+        "b     .",
 
         fresh_start_bridge = sym fresh_start_bridge,
         switch_bridge = sym switch_bridge,
+        resume = sym resume_task_context,
 
         hardware_frame_size = const(size_of::<HardwareFrame>()),
         software_frame_size = const(size_of::<SoftwareFrame>()),
