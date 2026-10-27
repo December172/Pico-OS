@@ -36,3 +36,15 @@ pub fn pend_pendsv() {
         core::arch::asm!("dsb", "isb", options(nostack, preserves_flags),);
     }
 }
+
+pub fn pull_idle_task() {
+    unsafe {
+        core::arch::asm!(
+            "mov r12, r4",
+
+            "svc  #0",
+
+            in("r4") const { 0 },
+        );
+    }
+}

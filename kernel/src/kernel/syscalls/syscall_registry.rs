@@ -1,11 +1,11 @@
 use core::cell::UnsafeCell;
 
+use pico_abi::syscall::*;
+
 use crate::arch::general::asm;
 
 use crate::kernel::syscalls::syscall::*;
 use crate::kernel::syscalls::syscall_table::*;
-
-use crate::util::syscall::SyscallArguments;
 
 const MAX_SYSCALL_TABLES: usize = 8;
 
@@ -49,7 +49,7 @@ impl SyscallRegistry {
         table_id: u8,
         syscall_id: u32,
         context: SyscallContext,
-        arguments: SyscallArguments,
+        arguments: RawSyscallArguments,
     ) -> SyscallDispatchResult {
         if !self.sealed {
             return SyscallError::RegistryNotReady.into();
@@ -98,7 +98,7 @@ impl SyscallRegistryWrapper {
         table_id: u8,
         syscall_id: u32,
         context: SyscallContext,
-        arguments: SyscallArguments,
+        arguments: RawSyscallArguments,
     ) -> SyscallDispatchResult {
         let registry = unsafe { &*self.inner.get() };
         return registry.dispatch(table_id, syscall_id, context, arguments);

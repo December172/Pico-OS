@@ -1,17 +1,6 @@
+use pico_abi::syscall::SyscallError;
+
 use crate::kernel::tasks::task::TaskId;
-
-use crate::util::syscall::SyscallArguments;
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[repr(i32)]
-pub enum SyscallError {
-    RegistryNotReady = -1,
-    UnknownSyscall = -2,
-    NotRunning = -3,
-    InvalidArgument = -4,
-    InvalidHandle = -5,
-    PermissionDenied = -6,
-}
 
 #[derive(PartialEq)]
 pub enum SyscallAction {

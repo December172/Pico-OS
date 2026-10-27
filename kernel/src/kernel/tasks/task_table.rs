@@ -1,8 +1,7 @@
 use core::mem::size_of;
 
 use crate::arch::current::context::initialize_task_stack;
-use crate::kernel::tasks::task::*;
-use crate::kernel::tasks::task_trampoline::*;
+use crate::kernel::tasks::task::{Task, TaskId};
 
 pub const MAX_TASKS: usize = 8;
 pub const TASK_STACK_SIZE: usize = 2048;
@@ -39,9 +38,8 @@ impl TaskTable {
                     let moved_task = self.tasks[task_id].as_mut().unwrap();
                     moved_task.saved_stack_pointer = initialize_task_stack(
                         &mut TASK_STACKS.stacks[task_id],
-                        task_entry,
-                        moved_task as *mut Task,
-                        task_exit,
+                        moved_task.entry,
+                        moved_task.argument,
                     )
                 }
                 return Ok(task_id);

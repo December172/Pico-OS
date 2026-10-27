@@ -18,3 +18,11 @@ pub fn _breakpoint() {
         core::arch::asm!("bkpt #1");
     }
 }
+
+pub fn read_from_bytes<T>(bytes: &[u8]) -> Option<T> {
+    if bytes.len() < size_of::<T>() {
+        return None;
+    }
+
+    return Some(unsafe { bytes.as_ptr().cast::<T>().read_unaligned() });
+}

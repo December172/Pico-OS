@@ -2,12 +2,9 @@ use core::mem::size_of;
 
 use crate::arch::cortex_m::general::exception_frame::HardwareFrame;
 
-use crate::kernel::tasks::task::Task;
+use crate::kernel::tasks::task::TaskEntry;
 
 const CONTEXT_WORDS: usize = size_of::<InitialTaskContext>() / size_of::<u32>();
-
-pub type TaskEntry = extern "C" fn(*mut Task);
-pub type TaskExit = extern "C" fn() -> !;
 
 /// the regs layout is intentional - for symmetric load / save
 #[repr(C)]
@@ -31,8 +28,7 @@ pub struct InitialTaskContext {
 pub fn initialize_task_stack(
     stack: &'static mut [u32],
     task_entry: TaskEntry,
-    task_body: *mut Task,
-    task_exit: TaskExit,
+    task_argument: u32,
 ) -> *mut u32 {
     let stack_top = unsafe {
         // Note that raw pointer's `.add()` / `.sub` shifts the pointed address by size of the pointer's type (word length, for u32)
@@ -54,13 +50,13 @@ pub fn initialize_task_stack(
                 r11: 0,
             },
             hardware_frame: HardwareFrame {
-                r0: task_body as u32,
+                r0: task_argument,
                 r1: 0,
                 r2: 0,
                 r3: 0,
                 r12: 0,
-                lr: task_exit as u32,
-                pc: ((task_entry as usize) & !1) as u32, // `& !1` to ensure pc[0] = 0; to ensure thumb mode
+                lr: 0,
+                pc: task_entry & !1, // `& !1` to ensure pc[0] = 0; to ensure thumb mode
                 xpsr: 1 << 24,
             },
         });

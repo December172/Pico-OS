@@ -1,3 +1,5 @@
+use pico_abi::syscall::SyscallError;
+
 use crate::arch::cortex_m::general::asm::pend_pendsv;
 use crate::arch::cortex_m::general::exception_frame::HardwareFrame;
 
@@ -77,8 +79,8 @@ pub unsafe extern "C" fn svc_handler() -> ! {
                                   // 1. Get *basic_exception
         "mov  r2, lr",            // r2 = lr = EXC_RETURN
         "movs r3, #4",            // r3 = 0b100
-        "tst  r2, r3",            // CPSR.eq = r2 & r3
-        "beq  .Lsvc_from_msp",    // CPSR.eq == 0: jump to label svc_from_msp (EXC_RETURN[2]: 0)
+        "tst  r2, r3",            // CPSR.Z = r2 & r3
+        "beq  .Lsvc_from_msp",    // CPSR.Z == 0: jump to label svc_from_msp (EXC_RETURN[2]: 0)
 
                                   // (EXC_RETURN[2]: 1): from user space syscall
         "mrs  r0, psp",           // r0 = psp

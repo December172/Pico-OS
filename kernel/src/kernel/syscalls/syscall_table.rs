@@ -1,9 +1,9 @@
+use pico_abi::syscall::RawSyscallArguments;
+
 use crate::kernel::syscalls::syscall::*;
 
-use crate::util::syscall::SyscallArguments;
-
 pub type SyscallThunk =
-    fn(context: SyscallContext, arguments: SyscallArguments) -> SyscallDispatchResult;
+    fn(context: SyscallContext, arguments: RawSyscallArguments) -> SyscallDispatchResult;
 
 #[derive(Clone, Copy)]
 pub struct SyscallEntry {
@@ -18,7 +18,7 @@ impl SyscallEntry {
     pub fn invoke(
         &self,
         context: SyscallContext,
-        arguments: SyscallArguments,
+        arguments: RawSyscallArguments,
     ) -> SyscallDispatchResult {
         return (self.invoke)(context, arguments);
     }

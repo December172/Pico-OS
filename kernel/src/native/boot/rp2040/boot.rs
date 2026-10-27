@@ -7,14 +7,6 @@ use crate::native::boot::runtime::runtime_init;
 #[unsafe(link_section = ".boot2")]
 pub static boot2: [u8; 256] = *include_bytes!("boot2.bin");
 
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    unsafe {
-        core::arch::asm!("bkpt #0");
-    }
-    loop {}
-}
-
 /// asm entry point
 #[unsafe(no_mangle)]
 #[unsafe(naked)]

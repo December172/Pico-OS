@@ -1,8 +1,7 @@
-use crate::util::task::TaskEntry;
+/// Task entry address, with C calling convention `extern "C"`
+pub type TaskEntry = u32;
 
 pub type TaskId = usize;
-
-pub const TASKID_UNASSIGNED: TaskId = TaskId::MAX;
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum TaskState {
@@ -12,11 +11,13 @@ pub enum TaskState {
     Dead,
 }
 
+pub const TASKID_UNASSIGNED: TaskId = TaskId::MAX;
+
 pub struct Task {
     pub id: TaskId,
     pub state: TaskState,
     pub saved_stack_pointer: *mut u32,
 
     pub entry: TaskEntry,
-    pub argument: *mut (),
+    pub argument: u32,
 }

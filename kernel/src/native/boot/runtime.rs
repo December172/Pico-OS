@@ -18,16 +18,8 @@ pub unsafe extern "C" fn runtime_init() {
 
     let data_length = data_end as usize - data_start as usize;
 
-    let mut offset = 0;
-
-    while offset < data_length {
-        let value = unsafe { data_source.wrapping_add(offset).read_volatile() };
-
-        unsafe {
-            data_start.wrapping_add(offset).write_volatile(value);
-        }
-
-        offset += 1;
+    unsafe {
+        core::ptr::copy_nonoverlapping(data_source, data_start, data_length);
     }
 
     // Zero-initialize .bss.
@@ -36,13 +28,7 @@ pub unsafe extern "C" fn runtime_init() {
 
     let bss_length = bss_end as usize - bss_start as usize;
 
-    offset = 0;
-
-    while offset < bss_length {
-        unsafe {
-            bss_start.wrapping_add(offset).write_volatile(0);
-        }
-
-        offset += 1;
+    unsafe {
+        core::ptr::write_bytes(bss_start, 0, bss_length);
     }
 }

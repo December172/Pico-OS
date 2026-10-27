@@ -1,13 +1,13 @@
 use core::cell::UnsafeCell;
 
+use pico_abi::syscall::SyscallError;
+
 use crate::arch::general::asm;
 
-use crate::kernel::syscalls::syscall::*;
-use crate::kernel::tasks::idle_task::IDLE_TASK_ID;
-use crate::kernel::tasks::task::*;
-use crate::kernel::tasks::task_table::*;
+use crate::kernel::tasks::task::{Task, TaskId, TaskState};
+use crate::kernel::tasks::task_table::{MAX_TASKS, TaskTable};
 
-pub const TASK_SELF: TaskId = 0xFF;
+const IDLE_TASK_ID: TaskId = 0;
 
 pub struct Scheduler {
     task_table: TaskTable,
@@ -70,7 +70,7 @@ impl Scheduler {
         return next_task.saved_stack_pointer;
     }
 
-    pub fn yield_current_task(&mut self) {
+    pub fn yield_task(&mut self) {
         let current_task_id = self
             .current_task_id
             .expect("Yielding without a current task");
@@ -90,22 +90,16 @@ impl Scheduler {
         caller_task_id: TaskId,
         target_task_id: TaskId,
     ) -> Result<bool, SyscallError> {
-        let raw_target_task_id = if target_task_id == TASK_SELF {
-            caller_task_id
-        } else {
-            target_task_id
-        };
-
-        if raw_target_task_id == IDLE_TASK_ID {
+        if target_task_id == IDLE_TASK_ID {
             // trying to kill the idle task
             return Err(SyscallError::PermissionDenied);
         }
 
-        let kill_current_task = self.current_task_id == Some(raw_target_task_id);
+        let kill_current_task = self.current_task_id == Some(target_task_id);
 
         let target_task = self
             .task_table
-            .get_mut(raw_target_task_id)
+            .get_mut(target_task_id)
             .ok_or(SyscallError::InvalidHandle)?;
 
         if target_task.state == TaskState::Dead {

@@ -1,3 +1,5 @@
+mod user;
+
 pub mod drivers;
 pub mod managers;
 
