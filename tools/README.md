@@ -173,3 +173,17 @@ hand-written code: it only replaces a file that already carries the
 peripheral folders that do not exist yet. Signal names that have no
 `HAL::PinFunction` equivalent (JTAG, PIO, clocks, USB muxing, HSTX, ...) are
 reported as "unmapped" instead of being emitted.
+`--check` also skips curated files without the marker; a successful check does
+not validate those files. Unchanged generated files are not rewritten.
+
+## PLL calculator
+
+```sh
+python3 tools/vcocalc.py 125
+python3 tools/vcocalc.py --low-vco 125
+python3 tools/vcocalc.py --lock-refdiv 1 125
+```
+
+Frequencies are in MHz. The calculator returns the nearest available result;
+check `Achieved` when an exact frequency is required. Frequency arguments must
+be finite and positive, and a locked reference divider must respect `--ref-min`.
