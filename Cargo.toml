@@ -1,6 +1,10 @@
 [workspace]
 members = [
     "kernel",
+    "crates/pico-abi",
+    "crates/pico-lib",
+    "crates/pico-macros",
+    "crates/pico-runtime",
 ]
 default-members = [
     "kernel",
@@ -13,6 +17,10 @@ edition = "2024"
 
 [workspace.dependencies]
 toml = "0.8"
+pico-macros = { path = "crates/pico-macros" }
+pico-abi = { path = "crates/pico-abi" }
+pico-lib = { path = "crates/pico-lib" }
+pico-runtime = { path = "crates/pico-runtime" }
 
 [profile.dev]
 panic = "abort"

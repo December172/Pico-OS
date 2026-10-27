@@ -2,7 +2,8 @@
 #![no_main]
 #![allow(unused)]
 
-#[cfg(feature = "RP2040")]
+use pico_runtime::current;
+
 mod arch;
 
 mod hal;
@@ -11,7 +12,6 @@ mod native;
 mod util;
 
 /// Rust entry point
-#[unsafe(no_mangle)]
 pub extern "C" fn entry() {
     crate::kernel::kernel::kernel_main();
 }

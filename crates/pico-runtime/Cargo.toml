@@ -1,0 +1,9 @@
+[package]
+name = "pico-runtime"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+path = "src/runtime.rs"
+test = false
+bench = false
