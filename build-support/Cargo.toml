@@ -1,0 +1,12 @@
+[package]
+name = "pico-build-support"
+version = "0.0.1"
+edition = "2024"
+publish = false
+
+[lib]
+path = "layout.rs"
+
+[dependencies]
+toml = "0.8"
+pico-abi = { path = "../crates/pico-abi" }

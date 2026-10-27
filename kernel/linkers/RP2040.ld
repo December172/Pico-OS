@@ -2,6 +2,8 @@ OUTPUT_FORMAT("elf32-littlearm")
 OUTPUT_ARCH(arm)
 ENTRY(_start)
 
+INCLUDE memory.ld
+
 SECTIONS
 {
     /*
@@ -89,6 +91,9 @@ SECTIONS
         __user_image_end = .;
     } > USER_FLASH
 
+    ASSERT(SIZEOF(.user_image) > 0,
+           "base user image is required for the idle task")
+
     ASSERT(__user_image_start == __user_flash_start,
            "user image must start at USER_FLASH origin")
 
@@ -97,7 +102,6 @@ SECTIONS
 
     ASSERT(__user_image_end <= __user_flash_end,
            "user image crosses USER_FLASH boundary")
-
 
     /*
      * VMA: RAM
@@ -115,20 +119,12 @@ SECTIONS
         *(.sdata)
         *(.sdata.*)
 
-        /*
-         * Functions explicitly requested to run from RAM can use
-         * #[link_section = ".ram_func"].
-         */
-        *(.ram_func)
-        *(.ram_func.*)
-
         . = ALIGN(4);
         __data_end = .;
     } > RAM AT> FLASH
 
     __data_load_start = LOADADDR(.data);
     __data_load_end = LOADADDR(.data) + SIZEOF(.data);
-
 
     /*
      * Zeroed by runtimeInit. NOLOAD keeps it out of the flash image.
@@ -151,7 +147,7 @@ SECTIONS
      * Static task stacks. Stack arrays can select this section through
      * #[link_section = ".task_stacks"].
      */
-    .task_stacks (NOLOAD) : ALIGN(8)
+    .task_stacks (NOLOAD) : ALIGN(0x4000)
     {
         __task_stacks_start = .;
 
@@ -166,7 +162,7 @@ SECTIONS
      * This only exposes an unused range. It does not require you to
      * implement a heap now.
      */
-    __heap_start = ALIGN(8);
+    __heap_start = ALIGN(__task_stacks_end, 8);
     __heap_end = ORIGIN(RAM) + LENGTH(RAM);
 
     ASSERT(__heap_start <= __heap_end,
@@ -194,6 +190,8 @@ SECTIONS
     } > SCRATCH_X
 
     __flash_image_end = __data_load_end;
+    /* __flash_image_end remains the kernel payload end for existing consumers. */
+    __combined_flash_image_end = MAX(__flash_image_end, __user_image_end);
 
     ASSERT(__flash_image_end <= ORIGIN(FLASH) + LENGTH(FLASH),
            "flash overflow")
@@ -206,6 +204,11 @@ SECTIONS
 
     /DISCARD/ :
     {
+        *(.ARM.exidx)
+        *(.ARM.exidx.*)
+        *(.ARM.extab)
+        *(.ARM.extab.*)
+
         *(.comment)
         *(.note)
         *(.note.*)

@@ -9,7 +9,6 @@ Cargo's `build.rs` entry points remain in their respective crate directories.
 
 - `build.sh`: run as `bash tools/build.sh dev` or `bash tools/build.sh release`.
   The optional second argument selects `pico` or `pico-16m`; `PICO_BOARD` also works.
-  Add `--test-b` as the third argument to include the independent task B image.
 - `../build-support/layout.rs` and `../build-support/image.rs`: memory layout and shared
   user-image linker inputs, including ABI constants generated from `pico-abi`.
 - `../boards/`: board chip and memory layouts, selected with `PICO_BOARD`
@@ -18,18 +17,25 @@ Cargo's `build.rs` entry points remain in their respective crate directories.
   Multiple ELFs retain their individual headers/CRCs and linked Flash positions.
 - `../user/linkers/user-sections.ld`: shared user image section layout.
 
-The base image is mandatory: it supplies the idle task. `build.sh` builds the
-selected images in one Cargo invocation, packs them once, then links them into
-the kernel using the same board and profile. The optional task B image uses the
-separate `images.app` Flash/RAM slot from `user/images.toml`.
+The base image is mandatory: it supplies the idle task. `build.sh` builds and
+packs it, then links it into the kernel using the same board and profile.
+Its Flash/RAM slot is configured in `user/images.toml`. The kernel scans only the
+linked `.user_image` range, so images left beyond that range by an older firmware
+are not loaded.
 
 The script works from any directory and reads Cargo's actual target directory,
 including `CARGO_TARGET_DIR` and `build.target-dir` overrides. It writes the
-packed images as `output/base-image-<board>-<debug|release>.{bin,o}` or, with
-`--test-b`, `output/user-images-<board>-<debug|release>.{bin,o}`. The final
-`output/kernel.elf`, `output/kernel.uf2`, and `output/disassembly.S` are updated
-after all conversions succeed. `bash tools/build.sh clean` runs `cargo clean`
-and removes `output/`, including hidden staging files.
+packed image as `output/base-image-<board>-<debug|release>.{bin,o}`. The final
+`output/kernel.elf`, `output/kernel.uf2`, `output/kernel-symbols.elf`,
+`output/disassembly.S`, and `output/pico-base-image.elf` are updated after all
+conversions succeed.
+
+Each build also publishes a complete snapshot under
+`output/<board>/<debug|release>/`. The debug configuration uses these files so
+building another board or profile does not replace its firmware or symbols.
+Files directly under `output/` are copies of the latest successful build.
+`bash tools/build.sh clean` runs `cargo clean` and removes `output/`, including
+all snapshots and hidden staging files.
 
 Requirements: Bash, nightly Cargo with the `rust-src` component, Python 3.9+,
 ARM GNU `objcopy`/`objdump`, and picotool. The bundled `tools/picotool` is a Linux
@@ -40,7 +46,7 @@ The current image format uses a 32-byte header, 12-byte task entries, and one 20
 RAM segment record referenced by `segment_offset`. It has no segment count
 or segment table. The RAM address is still the VMA chosen when linking the
 user ELF; runtime RAM allocation and relocation are separate kernel work.
-The image format and kernel ABI versions remain 1 until on-board tests pass.
+The image format and kernel ABI versions are both 1.
 The packer rejects unsupported versions and malformed image metadata before
 replacing its outputs. Multi-image packing uses `.user.header` section addresses,
 which survive symbol stripping; `--nm` supplies a fallback for custom linker
@@ -51,13 +57,24 @@ Run from the workspace root:
 
 ```sh
 bash tools/build.sh dev pico
-bash tools/build.sh dev pico --test-b
 bash tools/build.sh release pico-16m
 ```
 
-The Task B debug configuration in VS Code builds both images and loads both
-user ELFs' symbols. See [the task B guide](../user/pico-test-image/README.md) for
-RAM probes, progress counters, normal return, and deliberate HardFault commands.
+VS Code build tasks build only. The debug configuration does not rebuild or flash:
+build first, BOOTSEL-flash `output/pico/debug/kernel.uf2`, then press F5.
+The supplied launch configuration selects `pico/debug`; change its executable,
+symbol, and `exec-file` paths for another board/profile. The
+installed OpenOCD rejects this board's Flash ID `0x0018405e`; debugging disables
+its GDB memory map, uses hardware breakpoints, and selects only core 0 to avoid
+a core1 GDB/TCL port collision. The launch runs `compare-sections -r` for the
+kernel's read-only loaded sections and `.user_image`; a mismatch is a warning,
+and you must stop and reflash before trusting the session.
+
+GDB uses the original kernel ELF as its executable, but loads kernel symbols
+from a copy without `.user_image` plus the base user ELF snapshot. This
+avoids overlapping section addresses hiding user source lines. All snapshots
+come from the same build, including when Cargo's target directory is overridden.
+Never flash `kernel-symbols.elf`.
 
 To run the individual steps manually:
 
@@ -70,10 +87,6 @@ python3 tools/pack_user_image.py \
 PICO_BOARD=pico PICO_USER_IMAGE=output/base-image.o \
     cargo pico2040 --profile release --offline
 ```
-
-Release user images build and pack successfully. The current Release kernel
-still fails to link because `__aeabi_uread4` and `__aeabi_uread8` are undefined.
-Those runtime helpers belong in the consuming ELF's Rust/runtime code.
 
 ## Adding a board
 

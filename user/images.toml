@@ -1,0 +1,6 @@
+[images.base]
+flash-offset = 0x00000
+flash-size = 0x10000
+ram-offset = 0x0000
+ram-size = 0x4000
+

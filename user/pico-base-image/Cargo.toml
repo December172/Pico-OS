@@ -1,0 +1,19 @@
+[package]
+name = "pico-base-image"
+version.workspace = true
+edition.workspace = true
+build = "build.rs"
+
+[[bin]]
+name = "pico-base-image"
+path = "src/main.rs"
+test = false
+bench = false
+
+[dependencies]
+pico-abi = { workspace = true }
+pico-lib = { workspace = true }
+
+
+[build-dependencies]
+pico-build-support = { path = "../../build-support" }

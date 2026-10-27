@@ -1,0 +1,5 @@
+# Raspberry Pi Pico with 2 MiB of external flash. Sizes are bytes.
+chip = "RP2040"
+flash-size = 0x00200000
+user-flash-size = 0x00040000
+user-ram-size = 0x00010000

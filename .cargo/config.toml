@@ -1,14 +1,9 @@
-# Default target for a bare `cargo build` (RP2040 / Pico 16M).
+# Default target for a bare `cargo build` (RP2040 / Cortex-M0+).
 [build]
 target = "thumbv6m-none-eabi"
 
-# --- Architecture switch ------------------------------------------------------
-# Instead of editing [build] target by hand, pick the chip with an alias:
-#
-#   cargo pico2040 [extra args]   # RP2040 / Cortex-M0+  (Pico, Pico 16M)
-#
-# Extra arguments are appended, e.g. `cargo pico2040 --profile release`.
-# The explicit --target below overrides [build] target, and each alias also
-# selects the matching feature set, so the two builds stay independent.
+# The board config selects the chip through build.rs, without Cargo features.
+# This alias selects the Cargo target; PICO_USER_IMAGE must name the packed
+# base image. Use tools/build.sh to build and pack it automatically.
 [alias]
-pico2040 = "build -p pico-kernel --bin kernel --target thumbv6m-none-eabi -Zbuild-std=core --no-default-features --features RP2040"
+pico2040 = "build -p pico-kernel --bin kernel --target thumbv6m-none-eabi -Zbuild-std=core"
