@@ -1,129 +1,37 @@
 ## Build tools and file placement
 
-Keep command-line tools under `tools/`. Shared Rust build code lives in the host
-crate `build-support/`, and board configurations live under `boards/`.
-Keep shared user linker scripts under `user/linkers/`, kernel linker scripts under
-`kernel/linkers/`, and image-specific linker scripts in their image crate. Add
-workspace-root directories or files only when they need to live at that level.
-Cargo's `build.rs` entry points remain in their respective crate directories.
+See [Build](../README.md#build) for prerequisites, build commands, output
+files, and the flashing workflow.
 
-- `build.sh`: run as `bash tools/build.sh dev` or `bash tools/build.sh release`.
-  The optional second argument selects `pico` or `pico-16m`; `PICO_BOARD` also works.
-- `../build-support/layout.rs` and `../build-support/image.rs`: memory layout and shared
-  user-image linker inputs, including ABI constants generated from `pico-abi`.
-- `../boards/`: board chip and memory layouts, selected with `PICO_BOARD`
-  (default `pico`).
-- `pack_user_image.py`: convert user ELFs into checksummed binaries and a linkable object.
-  Multiple ELFs retain their individual headers/CRCs and linked Flash positions.
-- `../user/linkers/user-sections.ld`: shared user image section layout.
+- `tools/build.sh`: build user images, pack and link them into the kernel,
+  then publish firmware and matching debugger files.
+- `tools/pack_user_image.py`: convert user ELFs into a checksummed binary
+  and a linkable object, preserving each image's header, CRC, and Flash position.
+- `build-support/`: shared Rust build code for memory layouts, linker inputs,
+  and ABI constants.
+- `boards/`: board chip and memory configurations.
+- `user/images.toml`: Flash/RAM slots for user images.
+- `user/linkers/` and `kernel/linkers/`: shared user and kernel linker scripts.
+  Image-specific scripts stay in their image crates.
 
-The base image is mandatory: it supplies the idle task. `build.sh` builds and
-packs it, then links it into the kernel using the same board and profile.
-Its Flash/RAM slot is configured in `user/images.toml`. The kernel scans only the
-linked `.user_image` range, so images left beyond that range by an older firmware
-are not loaded.
+Keep command-line tools under `tools/` and Cargo `build.rs` entry points
+in their respective crates.
 
-The script works from any directory and reads Cargo's actual target directory,
-including `CARGO_TARGET_DIR` and `build.target-dir` overrides. It writes the
-packed image as `output/base-image-<board>-<debug|release>.{bin,o}`. The final
-`output/kernel.elf`, `output/kernel.uf2`, `output/kernel-symbols.elf`,
-`output/disassembly.S`, and `output/pico-base-image.elf` are updated after all
-conversions succeed.
+The mandatory base image supplies the idle task. The build script uses the
+same board and profile for the user images and kernel. Packed intermediates
+are stored at
+`<cargo-target-dir>/pico-images/<board>/<debug|release>/base-image.{bin,o}`.
+Build or conversion failures preserve the previous published output.
 
-Each build also publishes a complete snapshot under
-`output/<board>/<debug|release>/`. The debug configuration uses these files so
-building another board or profile does not replace its firmware or symbols.
-Files directly under `output/` are copies of the latest successful build.
-`bash tools/build.sh clean` runs `cargo clean` and removes `output/`, including
-all snapshots and hidden staging files.
+GDB uses `output/firmware.elf` as its executable and loads symbols from
+`output/symbols/`. The kernel symbol ELF excludes `.user_image` to prevent
+overlapping addresses from hiding user source lines. Files under
+`output/symbols/` are for debugging only.
 
-Requirements: Bash, nightly Cargo with the `rust-src` component, Python 3.9+,
-ARM GNU `objcopy`/`objdump`, and picotool. The bundled `tools/picotool` is a Linux
-x86-64 executable; set `PICOTOOL=/path/to/picotool` to use another installation.
-Set `CARGO_NET_OFFLINE=true` for an offline build with cached dependencies.
-
-The current image format uses a 32-byte header, 12-byte task entries, and one 20-byte
-RAM segment record referenced by `segment_offset`. It has no segment count
-or segment table. The RAM address is still the VMA chosen when linking the
-user ELF; runtime RAM allocation and relocation are separate kernel work.
-The image format and kernel ABI versions are both 1.
-The packer rejects unsupported versions and malformed image metadata before
-replacing its outputs. Multi-image packing uses `.user.header` section addresses,
-which survive symbol stripping; `--nm` supplies a fallback for custom linker
-layouts that only export `__user_image_start`. Gaps are filled with `0xff`, and
-each image retains its own CRC.
-
-Run from the workspace root:
-
-```sh
-bash tools/build.sh dev pico
-bash tools/build.sh release pico-16m
-```
-
-VS Code build tasks build only. The debug configuration does not rebuild or flash:
-build first, BOOTSEL-flash `output/pico/debug/kernel.uf2`, then press F5.
-The supplied launch configuration selects `pico/debug`; change its executable,
-symbol, and `exec-file` paths for another board/profile. The
-installed OpenOCD rejects this board's Flash ID `0x0018405e`; debugging disables
-its GDB memory map, uses hardware breakpoints, and selects only core 0 to avoid
-a core1 GDB/TCL port collision. The launch runs `compare-sections -r` for the
-kernel's read-only loaded sections and `.user_image`; a mismatch is a warning,
-and you must stop and reflash before trusting the session.
-
-GDB uses the original kernel ELF as its executable, but loads kernel symbols
-from a copy without `.user_image` plus the base user ELF snapshot. This
-avoids overlapping section addresses hiding user source lines. All snapshots
-come from the same build, including when Cargo's target directory is overridden.
-Never flash `kernel-symbols.elf`.
-
-To run the individual steps manually:
-
-```sh
-PICO_BOARD=pico cargo build -p pico-base-image \
-    --target thumbv6m-none-eabi -Zbuild-std=core --release --offline
-python3 tools/pack_user_image.py \
-    target/thumbv6m-none-eabi/release/pico-base-image \
-    --output-prefix output/base-image
-PICO_BOARD=pico PICO_USER_IMAGE=output/base-image.o \
-    cargo pico2040 --profile release --offline
-```
-
-## Adding a board
-
-Copy an existing configuration to `boards/<name>.toml`, for example:
-
-```sh
-cp boards/pico.toml boards/my-board.toml
-```
-
-Edit its chip and memory sizes (all sizes are bytes):
-
-```toml
-chip = "RP2040"
-flash-size = 0x00400000       # 4 MiB total external flash
-user-flash-size = 0x00040000  # 256 KiB reserved for the user image
-user-ram-size = 0x00010000    # 64 KiB reserved for user data/BSS
-```
-
-Then build with `bash tools/build.sh dev my-board` or
-`PICO_BOARD=my-board bash tools/build.sh dev`. Board names may contain ASCII
-letters, digits, and hyphens. No generated configuration file is required:
-each image's build script generates its own `OUT_DIR/memory.ld` from the TOML.
-
-User Flash/RAM partitions occupy the end of their respective memories. Their
-sizes must be powers of two, at least 256 bytes, smaller than total memory,
-and their starting addresses must align to their sizes. RP2040 has 256 KiB of
-main SRAM; its two 4 KiB scratch banks are reserved separately for kernel stacks.
-The external Flash size must match the hardware and fit RP2040's 16 MiB XIP range.
-
-`chip` selects `cfg(board_chip = "RP2040")` through `build.rs`; chip Cargo features
-are no longer used. Currently only RP2040 is implemented. Cargo's target triple
-must be selected before build scripts run, so `.cargo/config.toml` and
-`build.sh` still select `thumbv6m-none-eabi`. Supporting another chip requires
-its target selection, architecture/driver code, memory layout, and linker
-script; adding a new chip name to a board file alone does not implement it.
-Build-script cfg values apply only to their own crate, not automatically to
-dependencies.
+The supplied rust-analyzer settings expect
+`target/pico-images/pico/debug/base-image.o`. Build once to generate it;
+adjust `PICO_BOARD` and `PICO_USER_IMAGE` in the workspace settings when
+using another board or Cargo target directory.
 
 ## Constants generation
 Per-peripheral constant blocks under `kernel/src/native/constants/<device>/`

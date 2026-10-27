@@ -41,8 +41,7 @@ build(){
         images+=("$artifact_directory/$binary")
         packages+=(-p "$binary")
     done
-    local image_prefix="output/base-image-$board-$profile"
-    local snapshot_directory="output/$board/$profile"
+    local image_prefix="$target_directory/pico-images/$board/$profile/base-image"
 
     PICO_BOARD="$board" cargo build "${packages[@]}" --bins \
         --target "$target" -Zbuild-std=core --profile "$1"
@@ -52,22 +51,27 @@ build(){
 
     # Publish the final artifacts only after every conversion has succeeded.
     (
-        staging="$(mktemp -d output/.pico-build-XXXXXX)"
+        # Stage under Cargo's target directory; publish firmware and matching
+        # debugger symbols together, independently of the build-cache location.
+        staging="$(mktemp -d "$target_directory/.pico-build-XXXXXX")"
         trap 'rm -rf -- "$staging"' EXIT
-        cp "$artifact_directory/kernel" "$staging/kernel.elf"
-        "$picotool" uf2 convert "$staging/kernel.elf" "$staging/kernel.uf2"
-        arm-none-eabi-objdump -d -Mforce-thumb "$staging/kernel.elf" > "$staging/disassembly.S"
+        mkdir -p "$staging/output/symbols"
+        cp "$artifact_directory/kernel" "$staging/output/firmware.elf"
+        "$picotool" uf2 convert "$staging/output/firmware.elf" "$staging/output/firmware.uf2"
+        arm-none-eabi-objdump -d -Mforce-thumb "$staging/output/firmware.elf" \
+            > "$staging/output/disassembly.kernel.S"
         # The packed section overlaps the independently linked user ELFs and
         # hides their source locations in GDB. Keep it only in the firmware ELF.
         arm-none-eabi-objcopy --remove-section=.user_image \
-            "$staging/kernel.elf" "$staging/kernel-symbols.elf"
+            "$staging/output/firmware.elf" "$staging/output/symbols/firmware.symbols.elf"
         for binary in "${binaries[@]}"; do
-            cp "$artifact_directory/$binary" "$staging/$binary.elf"
+            cp "$artifact_directory/$binary" "$staging/output/symbols/$binary.elf"
+            arm-none-eabi-objdump -d -Mforce-thumb "$staging/output/symbols/$binary.elf" \
+                > "$staging/output/disassembly.user.$binary.S"
         done
-        # Launch configurations use a matching board/profile snapshot.
-        mkdir -p -- "$snapshot_directory"
-        cp -- "$staging/"* "$snapshot_directory/"
-        mv -- "$staging/"* output/
+        # Replace the complete set, removing obsolete output names and layouts.
+        rm -rf -- output
+        mv -- "$staging/output" output
     )
 }
 

@@ -2,15 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            // Recommended: let cortex-debug manage OpenOCD itself.
-            // NOTE: do NOT start OpenOCD manually for this config (port 3333 conflict).
+            // Build Debug and BOOTSEL-flash the matching output/firmware.uf2.
+            // OpenOCD cannot program this board's unknown Flash ID 0x0018405e.
+            // F5 must not rebuild the ELF after that manual flash step.
             "name": "Debug Pico-OS for RP2040",
             "type": "cortex-debug",
             "request": "launch",
             "cwd": "${workspaceFolder}",
 
-            "executable": "${workspaceFolder}/output/kernel.elf",
-            "preLaunchTask": "Pico-OS: Build Debug",
+            "executable": "${workspaceFolder}/output/firmware.elf",
+            "symbolFiles": [
+                "${workspaceFolder}/output/symbols/firmware.symbols.elf",
+                "${workspaceFolder}/output/symbols/pico-base-image.elf"
+            ],
 
             "servertype": "openocd",
             "interface": "swd",
@@ -19,12 +23,22 @@
                 "interface/cmsis-dap.cfg",
                 "target/rp2040.cfg"
             ],
+            "loadFiles": [],
+            "openOCDPreConfigLaunchCommands": [
+                "set USE_CORE 0"
+            ],
             "openOCDLaunchCommands": [
-                "gdb_memory_map disable"
+                "gdb_memory_map disable",
+                "gdb_breakpoint_override hard"
             ],
 
             "gdbPath": "arm-none-eabi-gdb",
             "runToEntryPoint": "entry",
+
+            "preLaunchCommands": [
+                "exec-file \"${workspaceFolder}/output/firmware.elf\""
+            ],
+            "postLaunchCommands": [],
 
             "liveWatch": {
                 "enabled": false
