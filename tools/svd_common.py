@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 
 
-"""Shared helpers for the SVD constant generators.
+"""Shared SVD parsing, naming and register-family helpers.
 
-Both tools/gen_field_ranges.py and tools/gen_enum_values.py (plus
-tools/gen_register_offsets.py) read an SVD through this module so that naming,
-peripheral merging and register-family detection stay identical between the
-generated blocks.
+tools/gen_constants.py generates register addresses, field ranges and enum
+values in one process. tools/gen_pin_capabilities.py shares the device profiles
+and SVD parser defined here.
 
 Device selection
 ----------------
-The active device is chosen with the SVD_DEVICE environment variable (default
-RP2040), which selects the SVD file, the output directory and the peripheral
-merge map:
+Each command selects its device explicitly after parsing its arguments, using
+SVD_DEVICE or RP2040 as the default:
 
-    SVD_DEVICE=RP2350 python tools/gen_field_ranges.py
-
-tools/gen_constants.py drives all three generators for a device.
+    SVD_DEVICE=RP2040 python tools/gen_constants.py
 
 Register families
 -----------------
@@ -47,12 +43,7 @@ import xml.etree.ElementTree as ET
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 KERNEL_SRC = os.path.join(ROOT, "kernel", "src")
 
-# Device profiles.  The active device is selected with the SVD_DEVICE
-# environment variable (default RP2040) so an existing generator invocation
-# keeps working unchanged:
-#
-#     python tools/gen_field_ranges.py
-#     SVD_DEVICE=RP2350 python tools/gen_field_ranges.py
+# Device profiles selected by each command's configure_device() call.
 #
 # `merged` maps the output file stem -> primary peripheral.  Peripherals that
 # share an identical register/field layout are emitted into one file; sibling
@@ -86,14 +77,19 @@ DEVICES = {
     },
 }
 
-DEVICE = os.environ.get("SVD_DEVICE", "RP2040")
-if DEVICE not in DEVICES:
-    raise SystemExit(f"unknown SVD device {DEVICE!r} (known: {', '.join(DEVICES)})")
+def configure_device(device):
+    """Select a device after CLI arguments have overridden the environment."""
+    global DEVICE, SVD, SVD_NAME, CONST_DIR, MERGED
+    if device not in DEVICES:
+        raise SystemExit(f"unknown SVD device {device!r} (known: {', '.join(DEVICES)})")
+    DEVICE = device
+    SVD = DEVICES[device]["svd"]
+    SVD_NAME = os.path.basename(SVD)
+    CONST_DIR = DEVICES[device]["const_dir"]
+    MERGED = DEVICES[device]["merged"]
 
-SVD = DEVICES[DEVICE]["svd"]
-SVD_NAME = os.path.basename(SVD)
-CONST_DIR = DEVICES[DEVICE]["const_dir"]
-MERGED = DEVICES[DEVICE]["merged"]
+
+configure_device("RP2040")
 
 IDENT = re.compile(r"[^0-9A-Za-z_]")
 DIGITS = re.compile(r"\d+")
@@ -104,13 +100,22 @@ BITRANGE = re.compile(r"\[(\d+):(\d+)\]")
 # this canonical order (register addresses, then field bit ranges, then
 # enumerated values) so `upsert_block` can insert a missing block ahead of the
 # later ones.
-REG_BEGIN = "// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_register_offsets.py) ===="
+REG_BEGIN = "// ==== BEGIN AUTO-GENERATED REGISTER OFFSETS (tools/gen_constants.py) ===="
 REG_END = "// ==== END AUTO-GENERATED REGISTER OFFSETS ===="
-FIELD_BEGIN = "// ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_field_ranges.py) ===="
+FIELD_BEGIN = "// ==== BEGIN AUTO-GENERATED FIELD BIT RANGES (tools/gen_constants.py) ===="
 FIELD_END = "// ==== END AUTO-GENERATED FIELD BIT RANGES ===="
-ENUM_BEGIN = "// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_enum_values.py) ===="
+ENUM_BEGIN = "// ==== BEGIN AUTO-GENERATED ENUMERATED VALUES (tools/gen_constants.py) ===="
 ENUM_END = "// ==== END AUTO-GENERATED ENUMERATED VALUES ===="
 BLOCK_ORDER = (REG_BEGIN, FIELD_BEGIN, ENUM_BEGIN)
+
+
+def normalize_blocks(content):
+    """Recognize files produced by the former separate generator commands."""
+    for begin, legacy in zip(BLOCK_ORDER, (
+        "gen_register_offsets.py", "gen_field_ranges.py", "gen_enum_values.py",
+    )):
+        content = content.replace(begin.replace("gen_constants.py", legacy), begin)
+    return content
 
 
 def split_block(content, begin, end):
@@ -120,14 +125,14 @@ def split_block(content, begin, end):
         return content, "", ""
     jdx = content.find(end, idx)
     if jdx < 0:
-        return content[:idx], content[idx + len(begin):], ""
+        raise ValueError(f"missing generated block end marker: {end}")
     return content[:idx], content[idx + len(begin):jdx], content[jdx + len(end):]
 
 
 def upsert_block(content, begin, end, lines):
     """Replace (or insert) the [begin..end] block, preserving every other block.
 
-    Blocks are ordered canonicallly via `BLOCK_ORDER`; a missing block is
+    Blocks are ordered canonically via `BLOCK_ORDER`; a missing block is
     inserted ahead of the first block that should follow it, otherwise appended.
     """
     block = begin + "\n" + "\n".join(lines) + "\n" + end
@@ -151,6 +156,13 @@ def upsert_block(content, begin, end, lines):
     if tail:
         out += "\n\n" + tail
     return out + "\n"
+
+
+def write_if_changed(path, content, previous):
+    """Keep generated files' timestamps intact when their contents are unchanged."""
+    if content != previous:
+        with open(path, "w") as fh:
+            fh.write(content)
 
 
 def sanitize(name: str) -> str:
@@ -198,6 +210,8 @@ def resolve(periphs, name, seen=None):
 
 def parse_svd():
     """Return an ordered {peripheral_name: element} map for the active device SVD."""
+    if not os.path.isfile(SVD):
+        raise SystemExit(f"SVD file is not available: {SVD}")
     root = ET.parse(SVD).getroot()
     return {p.findtext("name"): p for p in root.findall("./peripherals/peripheral")}
 
@@ -205,18 +219,6 @@ def parse_svd():
 def peripheral_base(periphs, name):
     """Return the base address of a peripheral as an int."""
     return int(periphs[name].findtext("baseAddress"), 0)
-
-
-def merge_outputs(periphs):
-    """Return (primary->stem, alias->primary) maps describing the MERGED merges."""
-    primary_stem = {}
-    alias_of = {}
-    for stem, primary in MERGED.items():
-        primary_stem[primary] = stem
-        for name, p in periphs.items():
-            if name != primary and p.get("derivedFrom") == primary:
-                alias_of[name] = primary
-    return primary_stem, alias_of
 
 
 def output_groups(periphs):
@@ -412,11 +414,6 @@ def register_families(registers):
                 used.add(name)
                 families.append(Family(group, union(group), name))
     return families
-
-
-def register_family_names(registers):
-    """Return {register_name: family_token} for every register."""
-    return {reg: family.name for family in register_families(registers) for reg in family.regs}
 
 
 def family_field_tokens(family):

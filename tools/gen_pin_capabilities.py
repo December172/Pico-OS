@@ -195,7 +195,8 @@ def collect_capabilities(pins):
 def hal_variants():
     """Return the PinFunction variants declared in kernel/src/hal/pin.rs."""
     path = os.path.join(KERNEL_SRC, "hal", "pin.rs")
-    text = open(path).read()
+    with open(path) as fh:
+        text = fh.read()
     body = re.search(r"enum\s+PinFunction\s*\{(.*?)\}", text, re.S)
     if not body:
         raise SystemExit(f"cannot find enum PinFunction in {path}")
@@ -290,6 +291,9 @@ def emit(path, current, text, args):
     if not folder_exists:
         print(f"  - skipped   {path} (peripheral folder does not exist)")
         return True
+    if current == text:
+        print(f"  = up to date {path}")
+        return True
     with open(path, "w") as fh:
         fh.write(text)
     print(f"  wrote       {path}")
@@ -298,22 +302,16 @@ def emit(path, current, text, args):
 
 def main():
     args = parse_args()
-    os.environ["SVD_DEVICE"] = args.device or os.environ.get("SVD_DEVICE", "RP2040")
-    if args.device is None:
-        args.device = os.environ["SVD_DEVICE"]
-    sys.path.insert(0, HERE)
+    import svd_common as svd
 
-    # Imported after SVD_DEVICE is set: svd_common resolves the device profile
-    # (SVD path, ...) at import time.
-    from svd_common import SVD_NAME, parse_svd
-
-    device = args.device
-    io_name, pins = collect_pin_mux(parse_svd())
+    device = args.device or os.environ.get("SVD_DEVICE", "RP2040")
+    svd.configure_device(device)
+    io_name, pins = collect_pin_mux(svd.parse_svd())
     tables = collect_capabilities(pins)
     known = hal_variants()
 
     print(f"{device}: {io_name} GPIO{min(pins)}..GPIO{max(pins)} "
-          f"({len(pins)} pins) <- specs/{SVD_NAME}")
+          f"({len(pins)} pins) <- specs/{svd.SVD_NAME}")
 
     unmapped = Counter()
     ok = True
@@ -327,9 +325,13 @@ def main():
             if variant not in known:
                 raise SystemExit(f"{family['name']}: PinFunction::{variant} is not "
                                  f"declared in kernel/src/hal/pin.rs")
-        text = render(device, family, rows, SVD_NAME, io_name)
+        text = render(device, family, rows, svd.SVD_NAME, io_name)
         path = target_path(device, family)
-        current = open(path).read() if os.path.isfile(path) else None
+        if os.path.isfile(path):
+            with open(path) as fh:
+                current = fh.read()
+        else:
+            current = None
         print(f"  {family['name']:4} {len(rows):3} entries")
         ok &= emit(path, current, text, args)
 
