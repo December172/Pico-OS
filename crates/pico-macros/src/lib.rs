@@ -12,5 +12,5 @@ pub fn task_entry(args: TokenStream, item: TokenStream) -> TokenStream {
 
     output.extend([TokenTree::Group(Group::new(Delimiter::Brace, item))]);
 
-    return output;
+    output
 }

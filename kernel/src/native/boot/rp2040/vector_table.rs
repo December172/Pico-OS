@@ -25,6 +25,8 @@ pub struct VectorTable {
     pub irq: [Handler; 32],
 }
 
+#[used]
+#[allow(dead_code)]
 #[unsafe(link_section = ".vector_table")]
 pub static VECTOR_TABLE: VectorTable = VectorTable {
     initial_sp: 0x2004_2000,
@@ -45,6 +47,7 @@ pub static VECTOR_TABLE: VectorTable = VectorTable {
     irq: [default_handler; 32],
 };
 
+#[allow(dead_code)]
 pub extern "C" fn default_handler() -> ! {
     loop {
         unsafe {

@@ -7,20 +7,18 @@ use crate::kernel::tasks::scheduler::SCHEDULER;
 
 unsafe extern "C" fn switch_bridge(current_stack_pointer: *mut u32) -> *mut u32 {
     unsafe {
-        return SCHEDULER.with_exclusive(|scheduler| {
-            return scheduler.schedule_next_task(current_stack_pointer);
-        });
+        return SCHEDULER
+            .with_exclusive(|scheduler| scheduler.schedule_next_task(current_stack_pointer));
     }
 }
 
 unsafe extern "C" fn fresh_start_bridge() -> *mut u32 {
     unsafe {
-        return SCHEDULER.with_exclusive(|scheduler| {
-            return scheduler.start();
-        });
+        return SCHEDULER.with_exclusive(|scheduler| scheduler.start());
     }
 }
 
+#[allow(dead_code)]
 #[unsafe(naked)]
 pub unsafe extern "C" fn pendsv_handler() -> ! {
     core::arch::naked_asm!(

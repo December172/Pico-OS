@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
-#![allow(unused)]
 
+#[allow(unused_imports)]
 use pico_runtime::current;
 
 mod arch;

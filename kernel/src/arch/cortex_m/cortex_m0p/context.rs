@@ -62,5 +62,5 @@ pub fn initialize_task_stack(
         });
     }
 
-    return frame_pointer.cast::<u32>();
+    frame_pointer.cast::<u32>()
 }

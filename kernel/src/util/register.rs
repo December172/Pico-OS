@@ -16,9 +16,7 @@ impl Register {
     }
 
     pub fn read(&self) -> u32 {
-        unsafe {
-            return self.address.read_volatile();
-        }
+        unsafe { self.address.read_volatile() }
     }
 
     // fxxking bitset - i cant understand any of them before
@@ -45,21 +43,21 @@ impl Register {
 
     pub fn bit_get(&self, shift: u32) -> bool {
         let mask: u32 = 0x1 << shift;
-        return self.read() & mask != 0;
+        self.read() & mask != 0
     }
 
     /// An trimmed version of field_set - without the need of width
     pub fn bit_set(&self, shift: u32, state: bool) {
         self.modify(|val| {
             let mask: u32 = 0x1 << shift;
-            return (val & !mask) | ((u32::from(state) << shift) & mask);
+            (val & !mask) | ((u32::from(state) << shift) & mask)
         })
     }
 
     pub fn field_get(&self, high_bit: u32, low_bit: u32) -> u32 {
         let width = high_bit - low_bit + 1;
         let mask = ((1 << width) - 1) << low_bit;
-        return (self.read() & mask) >> low_bit;
+        (self.read() & mask) >> low_bit
     }
 
     /// An easy-to-use method of the bitset universal trick
@@ -76,7 +74,7 @@ impl Register {
             let mask = ((1u32 << width) - 1) << low_bit;
             // shift the field value down to its position (low_bit) and keep
             // only the bits that belong to the field, then splice it in.
-            return (val & !mask) | ((state << low_bit) & mask);
+            (val & !mask) | ((state << low_bit) & mask)
         })
     }
 }

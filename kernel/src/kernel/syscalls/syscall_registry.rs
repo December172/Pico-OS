@@ -101,7 +101,7 @@ impl SyscallRegistryWrapper {
         arguments: RawSyscallArguments,
     ) -> SyscallDispatchResult {
         let registry = unsafe { &*self.inner.get() };
-        return registry.dispatch(table_id, syscall_id, context, arguments);
+        registry.dispatch(table_id, syscall_id, context, arguments)
     }
 }
 

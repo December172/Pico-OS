@@ -61,7 +61,7 @@ impl Scheduler {
 
         self.kill_task(id, id)?;
 
-        return Ok(self.activate_next_ready_task());
+        Ok(self.activate_next_ready_task())
     }
 
     pub fn yield_task(&mut self) {
@@ -102,7 +102,7 @@ impl Scheduler {
 
         target_task.state = TaskState::Dead;
 
-        return Ok(kill_current_task);
+        Ok(kill_current_task)
     }
 
     fn activate_next_ready_task(&mut self) -> *mut u32 {
@@ -166,7 +166,7 @@ impl SchedulerWrapper {
         return asm::with_interrupts_disabled(|| {
             let scheduler = unsafe { &mut *self.inner.get() };
 
-            return method(scheduler);
+            method(scheduler)
         });
     }
 }

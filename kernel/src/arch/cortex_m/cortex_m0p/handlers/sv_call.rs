@@ -53,6 +53,7 @@ unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, fr
 ///
 /// 3. Normal return (non-task syscalls) / tail-chain by pend_pend_sv() (for rescheduling)
 
+#[allow(dead_code)]
 #[unsafe(naked)]
 pub unsafe extern "C" fn svc_handler() -> ! {
     // the bridge between kernel space and user space;

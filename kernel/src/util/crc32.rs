@@ -21,7 +21,7 @@ const fn make_table() -> [u32; 256] {
         index += 1;
     }
 
-    return table;
+    table
 }
 
 static CRC32_TABLE: [u32; 256] = make_table();
@@ -35,5 +35,5 @@ pub fn update(prev_state: u32, bytes: &[u8]) -> u32 {
         current = (current >> 8) ^ CRC32_TABLE[index];
     }
 
-    return !current;
+    !current
 }

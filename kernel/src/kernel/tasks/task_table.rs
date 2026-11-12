@@ -49,14 +49,14 @@ impl TaskTable {
     }
 
     pub fn remove(&mut self, task_id: TaskId) -> Option<Task> {
-        return self.tasks.get_mut(task_id)?.take();
+        self.tasks.get_mut(task_id)?.take()
     }
 
     pub fn get(&self, task_id: TaskId) -> Option<&Task> {
-        return self.tasks.get(task_id)?.as_ref();
+        self.tasks.get(task_id)?.as_ref()
     }
 
     pub fn get_mut(&mut self, task_id: TaskId) -> Option<&mut Task> {
-        return self.tasks.get_mut(task_id)?.as_mut();
+        self.tasks.get_mut(task_id)?.as_mut()
     }
 }

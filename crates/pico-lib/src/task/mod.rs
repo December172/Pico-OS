@@ -8,11 +8,11 @@ pub struct TaskId(u32);
 
 impl TaskId {
     pub(crate) const fn from_abi(value: u32) -> Self {
-        return Self(value);
+        Self(value)
     }
 
     pub(crate) const fn into_abi(self) -> u32 {
-        return self.0;
+        self.0
     }
 }
 
