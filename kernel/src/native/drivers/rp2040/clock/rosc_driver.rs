@@ -1,9 +1,10 @@
+#![allow(dead_code)]
+
 use crate::kernel::drivers::clock_driver::*;
 
 use crate::native::constants::rp2040::clocks::*;
 use crate::native::constants::rp2040::config::ROSC_BASE_FREQ;
 use crate::native::constants::rp2040::rosc::*;
-use crate::native::drivers::rp2040::clock::pll_driver::*;
 use crate::util::register::Register;
 
 pub struct _ROSCDriver {

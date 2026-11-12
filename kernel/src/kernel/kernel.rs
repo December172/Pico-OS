@@ -16,7 +16,7 @@ use crate::native::boot::_init;
 use crate::native::drivers::*;
 
 #[panic_handler]
-fn panic(info: &PanicInfo) -> ! {
+fn panic(_: &PanicInfo) -> ! {
     unsafe {
         core::arch::asm!("wfi");
     }

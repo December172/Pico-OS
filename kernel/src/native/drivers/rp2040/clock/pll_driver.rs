@@ -58,7 +58,7 @@ impl PLLDriver {
     }
 
     pub fn init(&self, source_freq: u32) -> bool {
-        /// Note that all fields with suffix `_PD` mean powerdown - `true` for disable, and `false` for enable
+        // Note that all fields with suffix `_PD` mean powerdown - `true` for disable, and `false` for enable
         self.cs
             .field_set(PLL_CS_REFDIV_HIGH, PLL_CS_REFDIV_LOW, self.config.refdiv);
 

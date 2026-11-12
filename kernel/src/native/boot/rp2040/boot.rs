@@ -1,5 +1,3 @@
-use core::panic::PanicInfo;
-
 use crate::entry;
 use crate::native::boot::runtime::runtime_init;
 

@@ -3,6 +3,7 @@ pub type TaskEntry = u32;
 
 pub type TaskId = usize;
 
+#[allow(dead_code)]
 #[derive(Clone, Copy, PartialEq)]
 pub enum TaskState {
     Ready,

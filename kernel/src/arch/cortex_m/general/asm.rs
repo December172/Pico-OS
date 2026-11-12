@@ -22,7 +22,7 @@ pub fn with_interrupts_disabled<Output>(method: impl FnOnce() -> Output) -> Outp
         );
     }
 
-    return output;
+    output
 }
 
 const SCB_ICSR: *mut u32 = 0xE000_ED04 as *mut u32;
@@ -37,6 +37,7 @@ pub fn pend_pendsv() {
     }
 }
 
+#[inline(always)]
 pub fn pull_idle_task() {
     unsafe {
         core::arch::asm!(

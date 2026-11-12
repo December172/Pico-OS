@@ -24,7 +24,7 @@ unsafe extern "C" fn svc_bridge(frame_ptr: *mut HardwareFrame, table_id: u32, fr
     let current_task_id =
         unsafe { SCHEDULER.with_exclusive(|scheduler| scheduler.get_current_task_id()) };
 
-    let mut context = SyscallContext {
+    let context = SyscallContext {
         current_task_id: current_task_id
             .unwrap_or_else(|| panic!("ordinary SVC entered without a running task")),
     };

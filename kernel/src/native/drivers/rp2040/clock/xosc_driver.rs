@@ -74,7 +74,7 @@ impl ClockDriver for _XOSCDriver {
         }
 
         // verify all plls
-        if (!self.pll_sys_driver.is_locked() || !self.pll_usb_driver.is_locked()) {
+        if !self.pll_sys_driver.is_locked() || !self.pll_usb_driver.is_locked() {
             return false;
         }
 

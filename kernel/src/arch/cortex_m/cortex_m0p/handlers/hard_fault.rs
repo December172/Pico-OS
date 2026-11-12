@@ -1,7 +1,6 @@
 use pico_abi::syscall::SyscallError;
 
 use crate::arch::cortex_m::cortex_m0p::handlers::general::resume_task_context;
-use crate::arch::general::asm::pend_pendsv;
 
 use crate::kernel::tasks::scheduler::SCHEDULER;
 
@@ -31,6 +30,7 @@ unsafe extern "C" fn hard_fault_bridge(exc_return: u32, old_psp: *mut u32) -> *m
     });
 }
 
+#[allow(dead_code)]
 #[unsafe(naked)]
 pub unsafe extern "C" fn hard_fault_handler() -> ! {
     core::arch::naked_asm!(
