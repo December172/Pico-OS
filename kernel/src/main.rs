@@ -6,7 +6,6 @@ use pico_runtime::current;
 
 mod arch;
 
-mod hal;
 mod kernel;
 mod native;
 mod util;

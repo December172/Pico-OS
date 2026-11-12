@@ -1,7 +1,6 @@
 mod user;
 
 pub mod drivers;
-pub mod managers;
 
 #[cfg(board_chip = "RP2040")]
 pub mod tasks;
