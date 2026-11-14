@@ -1,19 +1,24 @@
 use core::panic::PanicInfo;
 use core::ptr::null_mut;
 
-use pico_abi::image::USER_TASK_FLAG_IDLE;
+#[cfg(pico_user_image)]
+use pico_abi::image::USER_TASK_LOAD_FLAG;
+use pico_abi::task::TaskPriority;
 
+use crate::arch::current::mpu::init_mpu;
 use crate::arch::general::asm;
 
 use crate::kernel::drivers::clock_driver::ClockDriver;
 use crate::kernel::syscalls::syscall_registry::SYSCALL_REGISTRY;
 use crate::kernel::tasks::scheduler::SCHEDULER;
 use crate::kernel::tasks::syscalls::TASK_SYSCALL_TABLE;
-use crate::kernel::tasks::task::{TASKID_UNASSIGNED, Task, TaskState};
+use crate::kernel::tasks::task::{TaskDomain, TaskEntry};
+#[cfg(pico_user_image)]
 use crate::kernel::user::IMAGE_REGISTRY;
 
 use crate::native::boot::_init;
 use crate::native::drivers::*;
+use crate::tasks::idle_task::idle_task_entry;
 
 #[panic_handler]
 fn panic(_: &PanicInfo) -> ! {
@@ -47,42 +52,56 @@ pub fn kernel_main() -> ! {
         });
     }
 
+    #[cfg(pico_user_image)]
     IMAGE_REGISTRY.init();
 
     unsafe {
         SCHEDULER.with_exclusive(|scheduler| {
-            IMAGE_REGISTRY.with(|registry| {
-                for (image, entries) in registry.iter_images() {
-                    for entry in entries.iter().flatten() {
-                        if entry.flags & USER_TASK_FLAG_IDLE != 0 {
-                            scheduler.insert_task(Task {
-                                id: 0,
-                                state: TaskState::Ready,
-                                saved_stack_pointer: null_mut(),
-                                entry: image.as_ptr() as u32 + entry.entry_offset,
-                                argument: 0,
-                            });
-                            continue;
-                        }
-                    }
+            // Set up all privileged tasks.
+            // Idle must be created first so it owns reserved task ID 0.
+            scheduler
+                .create_task(
+                    TaskDomain::Kernel,
+                    idle_task_entry as *const () as TaskEntry,
+                    null_mut(),
+                    TaskPriority::Idle,
+                    0,
+                )
+                .expect("Failed to create idle task");
 
-                    for entry in entries.iter().flatten() {
-                        if entry.flags & USER_TASK_FLAG_IDLE != 0 {
+            // Load all user tasks with the `TASK_LOAD` flag when a user image
+            // was linked into the kernel. Without one, only the privileged
+            // tasks above are scheduled.
+            #[cfg(pico_user_image)]
+            IMAGE_REGISTRY.with(|registry| {
+                for (index, image) in registry.iter_images() {
+                    for entry in image.entries.iter().flatten() {
+                        if entry.flags & USER_TASK_LOAD_FLAG == 0 {
                             continue;
                         }
-                        scheduler.insert_task(Task {
-                            id: TASKID_UNASSIGNED,
-                            state: TaskState::Ready,
-                            saved_stack_pointer: null_mut(),
-                            entry: image.as_ptr() as u32 + entry.entry_offset,
-                            argument: 0,
-                        });
+
+                        scheduler
+                            .create_task(
+                                TaskDomain::User(index),
+                                ((image.data.as_ptr() as u32) + entry.entry_offset) as TaskEntry,
+                                null_mut(),
+                                TaskPriority::Normal,
+                                0,
+                            )
+                            .unwrap_or_else(|error| {
+                                // the error should be documented into kernel log in the future
+                                // currently it just causes a panic
+                                unimplemented!("Failed to create task: {}", error as i32);
+                            });
                     }
                 }
             });
         });
     }
 
+    unsafe {
+        init_mpu();
+    }
     asm::pull_idle_task();
 
     unreachable!();

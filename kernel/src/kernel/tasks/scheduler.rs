@@ -1,11 +1,16 @@
 use core::cell::UnsafeCell;
+use core::ptr::null_mut;
 
 use pico_abi::syscall::SyscallError;
+use pico_abi::task::TaskPriority;
 
 use crate::arch::general::asm;
 
-use crate::kernel::tasks::task::{Task, TaskId, TaskState};
+use crate::kernel::memory::layout::{MemoryConfig, MemoryRange};
+use crate::kernel::tasks::task::*;
 use crate::kernel::tasks::task_table::{MAX_TASKS, TaskTable};
+#[cfg(pico_user_image)]
+use crate::kernel::user::IMAGE_REGISTRY;
 
 const IDLE_TASK_ID: TaskId = 0;
 
@@ -22,37 +27,38 @@ impl Scheduler {
         }
     }
 
-    pub fn get_current_task_id(&self) -> Option<TaskId> {
-        return self.current_task_id;
+    pub(crate) fn get_task(&self, task_id: TaskId) -> Option<&Task> {
+        self.task_table.get(task_id)
     }
 
-    pub fn insert_task(&mut self, task: Task) -> TaskId {
-        return self
-            .task_table
-            .insert(task)
-            .unwrap_or_else(|_| panic!("Task table is full"));
+    pub fn get_current_task_id(&self) -> Option<TaskId> {
+        self.current_task_id
     }
 
     /// For the pend_sv bridge use only
     pub fn start(&mut self) -> *mut u32 {
         assert!(self.current_task_id.is_none(), "scheduler already started");
-        return self.activate_next_ready_task();
+        self.activate_next_ready_task()
     }
 
     /// For the pend_sv bridge use only
     pub fn schedule_next_task(&mut self, current_stack_pointer: *mut u32) -> *mut u32 {
         {
             let current_task_id = self.current_task_id.expect("No running task");
-            let current_task = self
-                .task_table
-                .get_mut(current_task_id)
-                .expect("current task is missing in task table");
-            if current_task.state == TaskState::Running {
-                current_task.state = TaskState::Ready;
+            if self.task_table.get(current_task_id).as_ref().unwrap().state == TaskState::Dead {
+                self.task_table.remove(current_task_id);
+            } else {
+                let current_task = self
+                    .task_table
+                    .get_mut(current_task_id)
+                    .expect("current task is missing in task table");
+                if current_task.state == TaskState::Running {
+                    current_task.state = TaskState::Ready;
+                }
+                current_task.saved_stack_pointer = current_stack_pointer;
             }
-            current_task.saved_stack_pointer = current_stack_pointer;
         }
-        return self.activate_next_ready_task();
+        self.activate_next_ready_task()
     }
 
     /// For the hard_fault bridge use only
@@ -60,23 +66,62 @@ impl Scheduler {
         let id = self.current_task_id.ok_or(SyscallError::NotRunning)?;
 
         self.kill_task(id, id)?;
+        self.task_table.remove(id);
 
         Ok(self.activate_next_ready_task())
     }
 
-    pub fn yield_task(&mut self) {
-        let current_task_id = self
-            .current_task_id
-            .expect("Yielding without a current task");
+    pub fn create_task(
+        &mut self,
+        domain: TaskDomain,
+        entry: TaskEntry,
+        argument: *mut (),
+        priority: TaskPriority,
+        parent_id: TaskId,
+    ) -> Result<TaskId, SyscallError> {
+        let map = match domain {
+            TaskDomain::Kernel => None,
+            #[cfg(pico_user_image)]
+            TaskDomain::User(image_id) => Some(IMAGE_REGISTRY.with(|registry| {
+                let image = registry
+                    .images
+                    .get(image_id)
+                    .and_then(Option::as_ref)
+                    .ok_or(SyscallError::InvalidArgument)?;
 
-        let current_task = self
+                // Normalize the address before checking image ownership.
+                if !image.contains_entry(entry) {
+                    return Err(SyscallError::InvalidArgument);
+                }
+
+                Ok(image.mem_map)
+            })?),
+            #[cfg(not(pico_user_image))]
+            TaskDomain::User(_) => return Err(SyscallError::InvalidArgument),
+        };
+
+        return self
             .task_table
-            .get_mut(current_task_id)
-            .expect("current task is missing from task table");
+            .insert_with(|id: TaskId, stack_region: MemoryRange| {
+                let memory_config = match map {
+                    Some(map) => MemoryConfig::user(map, stack_region),
+                    None => MemoryConfig::kernel(),
+                };
 
-        assert!(current_task.state == TaskState::Running);
+                return Task {
+                    id,
+                    state: TaskState::Ready,
+                    domain,
+                    priority,
+                    parent_id,
 
-        current_task.state = TaskState::Ready;
+                    memory_config,
+                    saved_stack_pointer: null_mut(),
+                    entry,
+                    argument: argument as u32,
+                };
+            })
+            .ok_or(SyscallError::OutOfResource);
     }
 
     pub fn kill_task(
@@ -85,22 +130,30 @@ impl Scheduler {
         target_task_id: TaskId,
     ) -> Result<bool, SyscallError> {
         if target_task_id == IDLE_TASK_ID {
-            // trying to kill the idle task
             return Err(SyscallError::PermissionDenied);
         }
 
         let kill_current_task = self.current_task_id == Some(target_task_id);
+
+        let caller_task_domain = self.task_table.get(caller_task_id).unwrap().domain;
 
         let target_task = self
             .task_table
             .get_mut(target_task_id)
             .ok_or(SyscallError::InvalidHandle)?;
 
+        if caller_task_domain != TaskDomain::Kernel && target_task.domain == TaskDomain::Kernel {
+            return Err(SyscallError::PermissionDenied);
+        }
+
         if target_task.state == TaskState::Dead {
             return Err(SyscallError::NotRunning);
         }
 
         target_task.state = TaskState::Dead;
+        if !kill_current_task {
+            self.task_table.remove(target_task_id);
+        }
 
         Ok(kill_current_task)
     }
@@ -142,7 +195,12 @@ impl Scheduler {
         next_task.state = TaskState::Running;
         self.current_task_id = Some(next_task_id);
 
-        return next_task.saved_stack_pointer;
+        next_task.memory_config.apply();
+        match next_task.domain {
+            TaskDomain::Kernel => asm::set_privileged_state(false),
+            TaskDomain::User(_) => asm::set_privileged_state(true),
+        }
+        next_task.saved_stack_pointer
     }
 }
 

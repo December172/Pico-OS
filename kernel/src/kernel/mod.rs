@@ -1,11 +1,10 @@
+#[cfg(pico_user_image)]
 mod user;
 
 pub mod drivers;
 
-#[cfg(board_chip = "RP2040")]
+pub mod memory;
+pub mod syscalls;
 pub mod tasks;
 
-#[cfg(board_chip = "RP2040")]
-pub mod syscalls;
-
-pub mod kernel;
+pub(super) mod kernel;

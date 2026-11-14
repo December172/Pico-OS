@@ -1,13 +1,71 @@
 use std::env;
 use std::fs;
+use std::mem::{offset_of, size_of};
 use std::path::{Path, PathBuf};
 
-mod image;
-pub use image::configure_user_image;
+use pico_abi::image::*;
 
 const FLASH_ORIGIN: u32 = 0x1000_0000;
 const RAM_ORIGIN: u32 = 0x2000_0000;
 const RAM_SIZE: u32 = 256 * 1024;
+
+/// Generate linker inputs shared by independently linked user images.
+pub fn configure_user_image(image_name: &str, binary_name: &str) {
+    let manifest_directory = PathBuf::from(
+        env::var_os("CARGO_MANIFEST_DIR").expect("Cargo did not provide CARGO_MANIFEST_DIR"),
+    );
+    let workspace_root = manifest_directory
+        .parent()
+        .and_then(|parent| parent.parent())
+        .expect("user image is not under user/");
+    crate::write_user_memory_script(workspace_root, image_name);
+
+    for path in [
+        workspace_root.join("build-support/image.rs"),
+        manifest_directory.join("Cargo.toml"),
+        manifest_directory.join("linker.ld"),
+        manifest_directory.join("task-entries.ld"),
+        workspace_root.join("user/linkers/user-sections.ld"),
+    ] {
+        println!("cargo:rerun-if-changed={}", path.display());
+    }
+    for directory in [
+        workspace_root.join("user/linkers"),
+        manifest_directory.clone(),
+    ] {
+        println!("cargo:rustc-link-search=native={}", directory.display());
+    }
+
+    let symbols = [
+        ("__image_magic", u32::from_le_bytes(IMAGE_MAGIC)),
+        ("__image_format_version", u32::from(IMAGE_FORMAT_VERSION)),
+        ("__kernel_abi_version", u32::from(KERNEL_ABI_VERSION)),
+        ("__image_header_size", size_of::<UserImageHeader>() as u32),
+        (
+            "__image_checksum_offset",
+            offset_of!(UserImageHeader, crc32) as u32,
+        ),
+        ("__task_entry_size", size_of::<UserTaskEntry>() as u32),
+        ("__image_segment_size", size_of::<UserImageSegment>() as u32),
+        ("__user_ram_flags", IMAGE_SEGMENT_READ | IMAGE_SEGMENT_WRITE),
+        ("__idle_task_flags", USER_TASK_LOAD_FLAG),
+    ];
+    let definitions: String = symbols
+        .into_iter()
+        .map(|(name, value)| format!("{name} = 0x{value:x};\n"))
+        .collect();
+    let out_directory =
+        PathBuf::from(env::var_os("OUT_DIR").expect("Cargo did not provide OUT_DIR"));
+    fs::write(
+        out_directory.join("image-abi.ld"),
+        format!("/* Generated from pico-abi by build.rs. Do not edit. */\n{definitions}"),
+    )
+    .expect("failed to write image-abi.ld");
+    println!(
+        "cargo:rustc-link-arg-bin={binary_name}=-T{}",
+        manifest_directory.join("linker.ld").display()
+    );
+}
 
 #[derive(Clone, Copy, Debug)]
 struct MemoryRegion {
@@ -152,7 +210,6 @@ fn image_region(
     image_name: &str,
     kind: &str,
     pool: MemoryRegion,
-    alignment: u32,
 ) -> MemoryRegion {
     let offset = nonnegative_u32(image, &format!("{kind}-offset"));
     let size = positive_u32(image, &format!("{kind}-size"));
@@ -163,16 +220,14 @@ fn image_region(
         end <= pool.size,
         "image `{image_name}` {kind} range exceeds the board user pool"
     );
-    assert_eq!(
-        offset % alignment,
-        0,
-        "image `{image_name}` {kind} offset must be aligned to {alignment} bytes"
-    );
     // The bounded relative range fits inside the already validated board pool.
-    MemoryRegion {
+    let region = MemoryRegion {
         origin: pool.origin + offset,
         size,
-    }
+    };
+    assert!(size >= 256 && size.is_power_of_two());
+    assert_eq!(region.origin & (size - 1), 0);
+    region
 }
 
 fn parse_image_layouts(document: &toml::Value, board: &BoardLayout) -> Vec<(String, ImageLayout)> {
@@ -183,8 +238,8 @@ fn parse_image_layouts(document: &toml::Value, board: &BoardLayout) -> Vec<(Stri
     let mut layouts: Vec<(String, ImageLayout)> = Vec::new();
     for (name, image) in images {
         let layout = ImageLayout {
-            flash: image_region(image, name, "flash", board.user_flash, 2),
-            ram: image_region(image, name, "ram", board.user_ram, 8),
+            flash: image_region(image, name, "flash", board.user_flash),
+            ram: image_region(image, name, "ram", board.user_ram),
         };
         // The current build pipeline embeds the base image at USER_FLASH origin.
         if name == "base" {
@@ -242,6 +297,34 @@ __user_ram_end = ORIGIN(USER_RAM) + LENGTH(USER_RAM);
 pub fn write_memory_script(workspace_root: &Path) -> PathBuf {
     let layout = read_board_layout(workspace_root);
     let board = &layout.name;
+    {
+        let document = read_toml(&workspace_root.join("user/images.toml"));
+        let images = parse_image_layouts(&document, &layout);
+        let mut source = String::from(
+            "// Generated from board and image configuration. Do not edit.\n\
+pub const IMAGE_MAPS: &[MemoryMap] = &[\n",
+        );
+
+        for (_, image) in images {
+            source.push_str(&format!(
+                r#"    MemoryMap {{
+flash: MemoryRange {{ base: 0x{:08x}, size: 0x{:x} }},
+ram: MemoryRange {{ base: 0x{:08x}, size: 0x{:x} }},
+                }},
+            "#,
+                image.flash.origin, image.flash.size, image.ram.origin, image.ram.size,
+            ));
+        }
+
+        source.push_str("];\n");
+
+        let out_directory =
+            PathBuf::from(env::var_os("OUT_DIR").expect("Cargo did not provide OUT_DIR"));
+
+        fs::write(out_directory.join("image_layouts.rs"), source)
+            .expect("failed to write image_layouts.rs");
+    }
+
     let flash_end = layout.flash_end;
     let kernel_flash_size = layout.kernel_flash_size;
     let kernel_ram_size = layout.kernel_ram_size;

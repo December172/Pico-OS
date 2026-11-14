@@ -1,5 +1,5 @@
 use pico_abi::syscall::SyscallError;
-use pico_abi::task::{TASK_SYSCALL_TABLE_ID, TaskSyscallId, TASKID_SELF};
+use pico_abi::task::{TASK_SYSCALL_TABLE_ID, TASKID_SELF, TaskSyscallId};
 
 use crate::util::syscall_wrapper;
 
@@ -28,11 +28,11 @@ macro_rules! task_trampoline {
     };
 }
 
-pub fn create_task(entry: u32, argument: u32) -> Result<u32, SyscallError> {
+pub fn create_task(entry: u32, argument: u32, priority: u32) -> Result<u32, SyscallError> {
     let raw_result = unsafe {
         syscall_wrapper::<TASK_SYSCALL_TABLE_ID>(
             TaskSyscallId::Create as u32,
-            [entry, argument, 0, 0],
+            [entry, argument, priority, 0],
         )
     };
 

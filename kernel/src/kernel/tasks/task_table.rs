@@ -1,10 +1,12 @@
 use core::mem::size_of;
 
 use crate::arch::current::context::initialize_task_stack;
+use crate::kernel::memory::layout::MemoryRange;
 use crate::kernel::tasks::task::{Task, TaskId};
 
-pub const MAX_TASKS: usize = 8;
-pub const TASK_STACK_SIZE: usize = 2048;
+pub const MAX_TASKS: usize = TASK_STACK_POOL_SIZE / TASK_STACK_SIZE;
+pub const TASK_STACK_SIZE: usize = 2 * 1024;
+pub const TASK_STACK_POOL_SIZE: usize = 32 * 1024;
 pub const TASK_STACK_WORDS: usize = TASK_STACK_SIZE / size_of::<u32>();
 
 #[repr(align(8))]
@@ -28,24 +30,24 @@ impl TaskTable {
         }
     }
 
-    pub fn insert(&mut self, mut task: Task) -> Result<TaskId, Task> {
-        for task_id in 0..MAX_TASKS {
-            if self.tasks[task_id].is_none() {
-                task.id = task_id;
+    pub fn insert_with(
+        &mut self,
+        prepare: impl FnOnce(TaskId, MemoryRange) -> Task,
+    ) -> Option<TaskId> {
+        let task_id = self.tasks.iter().position(Option::is_none)?;
+        let stack = unsafe { &mut TASK_STACKS.stacks[task_id] };
 
-                self.tasks[task_id] = Some(task);
-                unsafe {
-                    let moved_task = self.tasks[task_id].as_mut().unwrap();
-                    moved_task.saved_stack_pointer = initialize_task_stack(
-                        &mut TASK_STACKS.stacks[task_id],
-                        moved_task.entry,
-                        moved_task.argument,
-                    )
-                }
-                return Ok(task_id);
-            }
-        }
-        return Err(task);
+        let mut task = prepare(
+            task_id,
+            MemoryRange {
+                base: stack.as_ptr() as u32,
+                size: TASK_STACK_SIZE,
+            },
+        );
+
+        task.saved_stack_pointer = initialize_task_stack(stack, task.entry, task.argument);
+        self.tasks[task_id] = Some(task);
+        Some(task_id)
     }
 
     pub fn remove(&mut self, task_id: TaskId) -> Option<Task> {

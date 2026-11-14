@@ -12,7 +12,8 @@ bench = false
 
 [dependencies]
 pico-abi = { workspace = true }
-pico-runtime= {workspace = true }
+pico-runtime = { workspace = true }
+pico-internals = { workspace = true}
 
 [build-dependencies]
 toml = { workspace = true }

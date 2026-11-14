@@ -8,8 +8,9 @@ pub use task_internals::yield_task;
 pub fn create_task(
     entry: TaskEntry,
     argument: *mut (),
+    priority: TaskPriority,
 ) -> Result<TaskId, SyscallError> {
-    return task_internals::create_task(entry as u32, argument as u32,)
+    return task_internals::create_task(entry as u32, argument as u32, priority as u32)
         .map(TaskId::from_abi);
 }
 

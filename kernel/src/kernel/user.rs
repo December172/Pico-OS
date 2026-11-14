@@ -3,10 +3,11 @@ use core::mem::offset_of;
 
 use pico_abi::image::*;
 
+use crate::kernel::memory::layout::*;
 use crate::util::crc32;
 use crate::util::low_level::read_from_bytes;
 
-const MAX_USER_IMAGES: usize = 4;
+const MAX_USER_IMAGES: usize = 3;
 const MAX_USER_TASKS: usize = 2;
 
 unsafe extern "C" {
@@ -17,43 +18,61 @@ unsafe extern "C" {
     static mut __user_ram_end: u8;
 }
 
-#[derive(PartialEq, Eq)]
-enum ImageError {
-    CRC32,
-    General,
+#[derive(Clone, Copy)]
+pub struct Image {
+    pub data: &'static [u8],
+    pub header: UserImageHeader,
+    pub segment: UserImageSegment,
+    pub mem_map: MemoryMap,
+    pub entries: [Option<UserTaskEntry>; MAX_USER_TASKS],
 }
 
 pub struct ImageRegistry {
-    pub images: [Option<&'static [u8]>; MAX_USER_IMAGES],
-    pub entries: [[Option<UserTaskEntry>; MAX_USER_TASKS]; MAX_USER_IMAGES],
+    pub images: [Option<Image>; MAX_USER_IMAGES],
     count: usize,
     sealed: bool,
+}
+
+impl Image {
+    pub(crate) fn contains_entry(&self, entry: u32) -> bool {
+        let Some(offset) = (entry & !1).checked_sub(self.data.as_ptr() as u32) else {
+            return false;
+        };
+
+        self.contains_entry_offset(offset)
+    }
+
+    fn contains_entry_offset(&self, offset: u32) -> bool {
+        (offset as usize) >= size_of::<UserImageHeader>()
+            && offset & 1 == 0
+            && self
+                .data
+                .get(offset as usize..)
+                .is_some_and(|code| code.len() >= 2)
+    }
 }
 
 impl ImageRegistry {
     pub const fn new() -> Self {
         Self {
             images: [None; MAX_USER_IMAGES],
-            entries: [[None; MAX_USER_TASKS]; MAX_USER_IMAGES],
             count: 0,
             sealed: false,
         }
     }
 
     /// Iterate over registered images and their entry slices without exposing array lengths.
-    pub fn iter_images(&self) -> impl Iterator<Item = (&'static [u8], &[Option<UserTaskEntry>])> {
-        return self
-            .images
-            .iter()
-            .zip(&self.entries)
-            .filter_map(|(image, entries)| image.map(|image| (image, entries.as_slice())));
+    pub fn iter_images(&self) -> impl Iterator<Item = (usize, &Image)> + '_ {
+        return self.images.iter().enumerate().filter_map(|(index, slot)| {
+            return slot.as_ref().map(|image| (index, image));
+        });
     }
 
-    pub fn seal(&mut self) {
+    fn seal(&mut self) {
         self.sealed = true;
     }
 
-    pub fn register(&mut self, image: &'static [u8]) {
+    fn register(&mut self, image: Image) {
         if self.sealed {
             return;
         }
@@ -61,57 +80,32 @@ impl ImageRegistry {
         if self.count >= MAX_USER_IMAGES {
             return;
         }
-
-        let header = read_from_bytes::<UserImageHeader>(image).unwrap();
-
-        let entry_table_start = u32::from_le(header.entry_table_offset) as usize;
-        let entry_count = u32::from_le(header.entry_count) as usize;
-        let entry_table_end = entry_table_start + entry_count * size_of::<UserTaskEntry>();
-
-        let entry_table = image.get(entry_table_start..entry_table_end).unwrap();
-
-        for (index, raw_entry) in entry_table
-            .chunks_exact(size_of::<UserTaskEntry>())
-            .take(MAX_USER_TASKS)
-            .enumerate()
-        {
-            let Some(entry) = read_from_bytes::<UserTaskEntry>(raw_entry) else {
-                continue;
-            };
-
-            if !verify_task_entry(image, &entry) {
-                continue;
-            }
-
-            self.entries[self.count][index] = Some(entry);
-        }
-
         self.images[self.count] = Some(image);
 
         self.count += 1;
     }
 }
 
-fn verify_user_image(image: &[u8], registry: &ImageRegistry) -> Result<(), ImageError> {
-    let header = read_from_bytes::<UserImageHeader>(image).unwrap();
+fn verify_user_image(image: &Image) -> bool {
+    let header = image.header;
     // verify crc32 checksum
     {
         const CRC32_START: usize = offset_of!(UserImageHeader, crc32);
 
         let mut state: u32 = 0;
 
-        state = crc32::update(state, &image[..CRC32_START]);
+        state = crc32::update(state, &image.data[..CRC32_START]);
         state = crc32::update(state, &[0; size_of::<u32>()]);
-        state = crc32::update(state, &image[CRC32_START + size_of::<u32>()..]);
+        state = crc32::update(state, &image.data[CRC32_START + size_of::<u32>()..]);
 
         if state != header.crc32 {
-            return Err(ImageError::CRC32);
+            return false;
         }
     }
 
-    if (image.as_ptr() as usize) & 0x1 != 0 {
+    if (image.data.as_ptr() as usize) & 0x1 != 0 {
         // unaligned image
-        return Err(ImageError::General);
+        return false;
     }
 
     // verify entry table
@@ -119,12 +113,12 @@ fn verify_user_image(image: &[u8], registry: &ImageRegistry) -> Result<(), Image
     let entry_count = u32::from_le(header.entry_count) as usize;
 
     if entry_table_start < size_of::<UserImageHeader>() || entry_table_start & 0x1 != 0 {
-        return Err(ImageError::General);
+        return false;
     }
 
     if entry_count == 0 {
         // empty entry table
-        return Err(ImageError::General);
+        return false;
     }
 
     let Some(entry_table_end) = entry_count
@@ -132,112 +126,123 @@ fn verify_user_image(image: &[u8], registry: &ImageRegistry) -> Result<(), Image
         .and_then(|size| entry_table_start.checked_add(size))
     else {
         // overflow
-        return Err(ImageError::General);
+        return false;
     };
 
-    if image.get(entry_table_start..entry_table_end).is_none() {
-        return Err(ImageError::General);
+    if image.data.get(entry_table_start..entry_table_end).is_none() {
+        return false;
     }
 
     // verify segments
     {
         let segment_offset = u32::from_le(header.segment_offset) as usize;
         let Some(segment_end) = segment_offset.checked_add(size_of::<UserImageSegment>()) else {
-            return Err(ImageError::General);
+            return false;
         };
 
         if segment_offset < size_of::<UserImageHeader>()
             || (entry_table_start < segment_end && segment_offset < entry_table_end)
         {
-            return Err(ImageError::General);
+            return false;
         }
 
         let Some(segment) = image
+            .data
             .get(segment_offset..segment_end)
             .and_then(read_from_bytes::<UserImageSegment>)
         else {
-            return Err(ImageError::General);
+            return false;
         };
 
         let src_start = u32::from_le(segment.image_offset) as usize;
-        let dst_start = u32::from_le(segment.memory_address) as usize;
+        let dst_start = u32::from_le(segment.memory_address);
         let file_size = u32::from_le(segment.file_size) as usize;
         let memory_size = u32::from_le(segment.memory_size) as usize;
 
         let Some(src_end) = src_start.checked_add(file_size) else {
-            return Err(ImageError::General);
+            return false;
         };
 
-        let Some(dst_end) = dst_start.checked_add(memory_size) else {
-            return Err(ImageError::General);
+        let Some(dst_end) = dst_start.checked_add(memory_size as u32) else {
+            return false;
         };
 
-        let user_ram_start = unsafe { core::ptr::addr_of_mut!(__user_ram_start) } as usize;
-        let user_ram_end = unsafe { core::ptr::addr_of_mut!(__user_ram_end) } as usize;
+        let mem_map = image.mem_map;
+
+        let user_ram_start = mem_map.ram.base;
+        let user_ram_end = mem_map.ram.base + mem_map.ram.size as u32;
 
         if dst_start < user_ram_start || dst_end > user_ram_end || file_size > memory_size {
             // out of range
-            return Err(ImageError::General);
+            return false;
         }
 
-        if image.get(src_start..src_end).is_none() {
-            return Err(ImageError::General);
-        }
-
-        if memory_size != 0 {
-            // Registered images have already passed the same range checks.
-            for registered_image in registry.images[..registry.count].iter().flatten() {
-                let registered_header =
-                    read_from_bytes::<UserImageHeader>(registered_image).unwrap();
-                let registered_segment = registered_image
-                    .get(u32::from_le(registered_header.segment_offset) as usize..)
-                    .and_then(read_from_bytes::<UserImageSegment>)
-                    .unwrap();
-
-                let registered_size = u32::from_le(registered_segment.memory_size) as usize;
-                if registered_size == 0 {
-                    continue;
-                }
-
-                let registered_start = u32::from_le(registered_segment.memory_address) as usize;
-                let registered_end = registered_start + registered_size;
-                // p: dst_end <= registered_start || registered_end <= dst_start
-                // not p: dst_start < registered_end && registered_start < dst_end
-                if dst_start < registered_end && registered_start < dst_end {
-                    return Err(ImageError::General);
-                }
-            }
+        if image.data.get(src_start..src_end).is_none() {
+            return false;
         }
     }
 
-    return Ok(());
+    true
 }
 
-fn verify_task_entry(image: &[u8], entry: &UserTaskEntry) -> bool {
-    let task_entry_offset = u32::from_le(entry.entry_offset) as usize;
-    if task_entry_offset < size_of::<UserImageHeader>() {
-        return false;
+fn load_image(candidate: &'static [u8], map: MemoryMap) -> Option<Image> {
+    let header = read_from_bytes::<UserImageHeader>(candidate)?;
+
+    if header.magic != IMAGE_MAGIC {
+        return None;
     }
 
-    let Some(code) = image.get(task_entry_offset..) else {
-        return false;
+    if u16::from_le(header.format_version) != IMAGE_FORMAT_VERSION
+        || u16::from_le(header.abi_version) != KERNEL_ABI_VERSION
+    {
+        return None;
+    }
+
+    let image_size = u32::from_le(header.image_size) as usize;
+
+    let data = candidate.get(..image_size)?;
+
+    let segment = data
+        .get(header.segment_offset as usize..)
+        .and_then(read_from_bytes::<UserImageSegment>)?;
+
+    let mut image = Image {
+        data,
+        header,
+        segment,
+        mem_map: map,
+        entries: [None; MAX_USER_TASKS],
     };
 
-    if code.len() < size_of::<u16>() {
-        return false;
+    if !verify_user_image(&image) {
+        return None;
     }
 
-    if task_entry_offset & 1 != 0 {
-        return false;
-    }
+    let start = u32::from_le(header.entry_table_offset) as usize;
+    let count = u32::from_le(header.entry_count) as usize;
+    let end = start.checked_add(count.checked_mul(size_of::<UserTaskEntry>())?)?;
+    let entry_table = image.data.get(start..end)?;
 
-    return true;
+    for (index, raw_entry) in entry_table
+        .chunks_exact(size_of::<UserTaskEntry>())
+        .take(MAX_USER_TASKS)
+        .enumerate()
+    {
+        let Some(entry) = read_from_bytes::<UserTaskEntry>(raw_entry) else {
+            continue;
+        };
+
+        if image.contains_entry_offset(entry.entry_offset) {
+            image.entries[index] = Some(entry);
+        }
+    }
+    Some(image)
 }
 
 fn collect_user_images() -> ImageRegistry {
     // Only scan this firmware's packed images; unused Flash may retain older images.
-    let user_image_start = unsafe { core::ptr::addr_of!(__user_image_start) };
-    let user_image_end = unsafe { core::ptr::addr_of!(__user_image_end) };
+    let user_image_start = core::ptr::addr_of!(__user_image_start);
+    let user_image_end = core::ptr::addr_of!(__user_image_end);
 
     let total_user_image_size = user_image_end as usize - user_image_start as usize;
     let flash: &[u8] =
@@ -245,52 +250,21 @@ fn collect_user_images() -> ImageRegistry {
 
     let mut registry = ImageRegistry::new();
 
-    let mut offset = 0;
+    for map in IMAGE_MAPS {
+        let offset = map.flash.base as usize - user_image_start as usize;
 
-    while flash.len() - offset >= size_of::<UserImageHeader>() {
-        let start = offset;
-        let candidate = &flash[start..];
-
-        offset += 1;
-
-        if !candidate.starts_with(&IMAGE_MAGIC) {
-            continue;
-        }
-
-        let Some(header) = read_from_bytes::<UserImageHeader>(candidate) else {
-            // invaild image header
+        let Some(remaining) = flash.get(offset..) else {
             continue;
         };
 
-        if u16::from_le(header.format_version) != IMAGE_FORMAT_VERSION
-            || u16::from_le(header.abi_version) != KERNEL_ABI_VERSION
-        {
-            continue;
+        let candidate_size = map.flash.size.min(remaining.len());
+        let candidate = &remaining[..candidate_size];
+
+        if let Some(image) = load_image(candidate, *map) {
+            registry.register(image);
         }
-
-        let image_size = u32::from_le(header.image_size) as usize;
-
-        if image_size < size_of::<UserImageHeader>() || image_size > candidate.len() {
-            continue;
-        }
-
-        let image = &candidate[..image_size];
-
-        match verify_user_image(image, &registry) {
-            Ok(()) => registry.register(image),
-            Err(ImageError::CRC32) => {
-                continue;
-            }
-            Err(ImageError::General) => {
-                offset = start + image_size;
-                continue;
-            }
-        }
-
-        offset = start + image_size;
     }
-
-    return registry;
+    registry
 }
 
 pub struct ImageRegistryWrapper {
@@ -315,8 +289,8 @@ impl ImageRegistryWrapper {
 
         *registry = collect_user_images();
 
-        let user_ram_start = unsafe { core::ptr::addr_of_mut!(__user_ram_start) };
-        let user_ram_end = unsafe { core::ptr::addr_of_mut!(__user_ram_end) };
+        let user_ram_start = core::ptr::addr_of_mut!(__user_ram_start);
+        let user_ram_end = core::ptr::addr_of_mut!(__user_ram_end);
 
         let user_ram_length = user_ram_end as usize - user_ram_start as usize;
 
@@ -325,14 +299,8 @@ impl ImageRegistryWrapper {
         }
 
         for image in registry.images.iter().flatten() {
-            let header = read_from_bytes::<UserImageHeader>(image).unwrap();
-
-            let segment = image
-                .get(header.segment_offset as usize..)
-                .and_then(read_from_bytes::<UserImageSegment>)
-                .unwrap();
-
-            let src_start = unsafe { image.as_ptr().add(segment.image_offset as usize) };
+            let segment = &image.segment;
+            let src_start = unsafe { image.data.as_ptr().add(segment.image_offset as usize) };
             let dst_start = segment.memory_address as *mut u8;
             let file_size = segment.file_size as usize;
 
@@ -347,7 +315,7 @@ impl ImageRegistryWrapper {
     pub fn with<Output>(&self, method: impl FnOnce(&ImageRegistry) -> Output) -> Output {
         let registry = unsafe { &*self.registry.get() };
         assert!(registry.sealed, "Image registry is not initialized");
-        return method(&registry);
+        method(&registry)
     }
 }
 

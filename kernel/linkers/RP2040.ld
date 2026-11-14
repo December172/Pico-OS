@@ -73,13 +73,15 @@ SECTIONS
     } > FLASH
 
     /*
-     * Prelinked user image.
+     * Optional prelinked user image.
      *
      * The user ELF is converted to a flat binary and then wrapped in
      * a relocatable object whose input section is named `.user.image`.
      *
      * The user image was already linked for ORIGIN(USER_FLASH), so it
-     * must be placed here without further relocation.
+     * must be placed here without further relocation. When the kernel is
+     * built without PICO_USER_IMAGE this section stays empty and the
+     * kernel runs only its bundled privileged tasks.
      */
     .user_image ORIGIN(USER_FLASH) :
     {
@@ -91,8 +93,9 @@ SECTIONS
         __user_image_end = .;
     } > USER_FLASH
 
-    ASSERT(SIZEOF(.user_image) > 0,
-           "base user image is required for the idle task")
+    /* Keep the symbols available even if the output section is elided. */
+    PROVIDE(__user_image_start = __user_flash_start);
+    PROVIDE(__user_image_end = __user_flash_start);
 
     ASSERT(__user_image_start == __user_flash_start,
            "user image must start at USER_FLASH origin")
@@ -147,7 +150,7 @@ SECTIONS
      * Static task stacks. Stack arrays can select this section through
      * #[link_section = ".task_stacks"].
      */
-    .task_stacks (NOLOAD) : ALIGN(0x4000)
+    .task_stacks (NOLOAD) : ALIGN(0x800)
     {
         __task_stacks_start = .;
 

@@ -1,3 +1,7 @@
+use pico_abi::task::TaskPriority;
+
+use crate::kernel::memory::layout::MemoryConfig;
+
 /// Task entry address, with C calling convention `extern "C"`
 pub type TaskEntry = u32;
 
@@ -12,13 +16,23 @@ pub enum TaskState {
     Dead,
 }
 
-pub const TASKID_UNASSIGNED: TaskId = TaskId::MAX;
+#[allow(dead_code)]
+#[derive(PartialEq, Eq, Clone, Copy)]
+pub enum TaskDomain {
+    Kernel,
+    User(usize),
+}
 
+#[allow(dead_code)]
 pub struct Task {
     pub id: TaskId,
     pub state: TaskState,
-    pub saved_stack_pointer: *mut u32,
+    pub domain: TaskDomain,
+    pub priority: TaskPriority, // reserved
+    pub parent_id: TaskId,      // reserved
 
+    pub memory_config: MemoryConfig,
+    pub saved_stack_pointer: *mut u32,
     pub entry: TaskEntry,
     pub argument: u32,
 }

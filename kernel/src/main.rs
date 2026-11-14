@@ -10,6 +10,8 @@ mod kernel;
 mod native;
 mod util;
 
+mod tasks;
+
 /// Rust entry point
 pub extern "C" fn entry() {
     crate::kernel::kernel::kernel_main();

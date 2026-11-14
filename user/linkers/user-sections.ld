@@ -89,6 +89,12 @@ SECTIONS
 
     __user_ram_used_end = __user_bss_end;
 
+    __user_heap_start = ALIGN(__user_bss_end, 8);
+    __user_heap_end = ORIGIN(USER_RAM) + LENGTH(USER_RAM);
+
+    ASSERT(__user_heap_start <= __user_heap_end,
+        "user RAM has no space for heap")
+
     /*
      * After .bss, '.' is a RAM VMA. Explicitly return to the flash LMA.
      * Materialize a final zero word so objcopy includes the entire declared

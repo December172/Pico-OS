@@ -20,5 +20,6 @@ pub const TASKID_SELF: TaskId = TaskId(RAW_TASKID_SELF);
 
 pub mod wrapper;
 
+pub use pico_abi::task::TaskPriority;
 pub use pico_macros::task_entry;
 pub use wrapper::*;

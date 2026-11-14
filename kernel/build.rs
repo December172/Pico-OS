@@ -25,16 +25,17 @@ fn main() {
         linker_path.display()
     );
 
-    // The base image supplies the idle task and is required for every kernel.
+    // Optional user image linking.
     // Relative paths are resolved from the workspace root, not kernel/.
     println!("cargo:rerun-if-env-changed=PICO_USER_IMAGE");
-    let image = env::var_os("PICO_USER_IMAGE")
-        .filter(|image| !image.is_empty())
-        .expect("PICO_USER_IMAGE is required: build and pack the base image, or run bash tools/build.sh dev");
-    let image_path = workspace_root
-        .join(image)
-        .canonicalize()
-        .expect("PICO_USER_IMAGE must name an existing user image object");
-    println!("cargo:rerun-if-changed={}", image_path.display());
-    println!("cargo:rustc-link-arg-bin=kernel={}", image_path.display());
+    println!("cargo:rustc-check-cfg=cfg(pico_user_image)");
+    if let Some(image) = env::var_os("PICO_USER_IMAGE").filter(|image| !image.is_empty()) {
+        let image_path = workspace_root
+            .join(image)
+            .canonicalize()
+            .expect("PICO_USER_IMAGE must name an existing user image object");
+        println!("cargo:rustc-cfg=pico_user_image");
+        println!("cargo:rerun-if-changed={}", image_path.display());
+        println!("cargo:rustc-link-arg-bin=kernel={}", image_path.display());
+    }
 }
