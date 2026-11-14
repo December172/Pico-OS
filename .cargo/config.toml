@@ -1,9 +1,3 @@
 # Default target for a bare `cargo build` (RP2040 / Cortex-M0+).
 [build]
 target = "thumbv6m-none-eabi"
-
-# The board config selects the chip through build.rs, without Cargo features.
-# This alias selects the Cargo target; PICO_USER_IMAGE must name the packed
-# base image. Use tools/build.sh to build and pack it automatically.
-[alias]
-pico2040 = "build -p pico-kernel --bin kernel --target thumbv6m-none-eabi -Zbuild-std=core"

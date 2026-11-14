@@ -6,8 +6,7 @@
 	],
 	"settings": {
 		"rust-analyzer.cargo.extraEnv": {
-			"PICO_BOARD": "pico",
-			"PICO_USER_IMAGE": "target/pico-images/pico/debug/base-image.o"
-		}
+			"PICO_BOARD": "pico"
+		},
 	}
 }

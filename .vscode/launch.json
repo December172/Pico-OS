@@ -3,17 +3,15 @@
     "configurations": [
         {
             // Build Debug and BOOTSEL-flash the matching output/firmware.uf2.
-            // OpenOCD cannot program this board's unknown Flash ID 0x0018405e.
-            // F5 must not rebuild the ELF after that manual flash step.
             "name": "Debug Pico-OS for RP2040",
             "type": "cortex-debug",
             "request": "launch",
             "cwd": "${workspaceFolder}",
 
             "executable": "${workspaceFolder}/output/firmware.elf",
+            // Add user image symbol files here when debugging a build that links custom user images.
             "symbolFiles": [
-                "${workspaceFolder}/output/symbols/firmware.symbols.elf",
-                "${workspaceFolder}/output/symbols/pico-base-image.elf"
+                "${workspaceFolder}/output/symbols/firmware.symbols.elf"
             ],
 
             "servertype": "openocd",

@@ -3,8 +3,9 @@
 See [Build](../README.md#build) for prerequisites, build commands, output
 files, and the flashing workflow.
 
-- `tools/build.sh`: build user images, pack and link them into the kernel,
-  then publish firmware and matching debugger files.
+- `tools/build.sh`: build the kernel and, unless `--no-user-image` is given,
+  build/pack the base user image and link it into the kernel. Publishes the
+  firmware and matching debugger files.
 - `tools/pack_user_image.py`: convert user ELFs into a checksummed binary
   and a linkable object, preserving each image's header, CRC, and Flash position.
 - `build-support/`: shared Rust build code for memory layouts, linker inputs,
@@ -17,9 +18,13 @@ files, and the flashing workflow.
 Keep command-line tools under `tools/` and Cargo `build.rs` entry points
 in their respective crates.
 
-The mandatory base image supplies the idle task. The build script uses the
-same board and profile for the user images and kernel. Packed intermediates
-are stored at
+The kernel has its own bundled privileged tasks and does not require a user
+image. The base image is built by default for compatibility, but
+`--no-user-image` skips it entirely and links a kernel that schedules only its
+privileged tasks. Set `PICO_USER_IMAGE` to an existing packed object to link
+that image without rebuilding the base image. The build script uses the same
+board and profile for user images and the kernel. Packed intermediates are
+stored at
 `<cargo-target-dir>/pico-images/<board>/<debug|release>/base-image.{bin,o}`.
 Build or conversion failures preserve the previous published output.
 
@@ -27,11 +32,6 @@ GDB uses `output/firmware.elf` as its executable and loads symbols from
 `output/symbols/`. The kernel symbol ELF excludes `.user_image` to prevent
 overlapping addresses from hiding user source lines. Files under
 `output/symbols/` are for debugging only.
-
-The supplied rust-analyzer settings expect
-`target/pico-images/pico/debug/base-image.o`. Build once to generate it;
-adjust `PICO_BOARD` and `PICO_USER_IMAGE` in the workspace settings when
-using another board or Cargo target directory.
 
 ## Constants generation
 Per-peripheral constant blocks under `kernel/src/native/constants/<device>/`

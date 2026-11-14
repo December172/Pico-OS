@@ -7,7 +7,7 @@ members = [
     "crates/pico-runtime",
     "crates/pico-internals",
 
-    "user/pico-base-image",
+    "user/pico-base-image"
 ]
 default-members = [
     "kernel",

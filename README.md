@@ -12,8 +12,8 @@ Small RTOS for Raspberry Pico & Pico 2, using Rust
 - ✅ LED Blink
 - ✅ Clock / Timer 
 - ✅ Task Scheduler
-- 🛠️ Privileged Kernel Model
-- 🛠️ Heap allocation
+- ✅ Privileged Task Model
+- 🛠️ Heap Allocation
 - 🛠️ UART Output
 - ❌ Displaying
 - ❌ Basic Shell
@@ -27,17 +27,22 @@ set `PICOTOOL=/path/to/picotool` to use another installation.
 Run from the repository root:
 
 ```sh
-bash tools/build.sh dev pico       # Debug
-bash tools/build.sh release pico   # Release
-bash tools/build.sh clean          # Remove build artifacts
+bash tools/build.sh dev pico                     # Debug, with base user image
+bash tools/build.sh release pico                 # Release, with base user image
+bash tools/build.sh dev pico --no-user-image     # Kernel-only Debug build
+bash tools/build.sh clean                        # Remove build artifacts
 ```
 
-The board defaults to `pico`. Set `PICO_BOARD` or
-use different board names as second argument
-to select another board. For offline builds with cached
+The board defaults to `pico`. Set `PICO_BOARD` or use different board names 
+as second argument to select another board. For offline builds with cached
 dependencies, set `CARGO_NET_OFFLINE=true`.
 
-The script builds the base user image and links it into the kernel.
+By default the script builds the base user image and links it into the kernel.
+With `--no-user-image`, `PICO_USER_IMAGE` is left unset and the kernel runs
+only its bundled privileged tasks (currently the idle task). You can also set
+`PICO_USER_IMAGE` to an existing packed image object to link that object
+without rebuilding the base image.
+
 Final artifacts are written to `output/`:
 
 ```text
@@ -48,10 +53,11 @@ output/
 ├── disassembly.user.<image-name>.S
 └── symbols/
     ├── firmware.symbols.elf
-    └── <image-name>.elf
+    └── <image-name>.elf       # only when a user image is linked
 ```
 
-Each successful build replaces the previous output. Intermediate files stay
+The user disassembly and `<image-name>.elf` are omitted from a
+`--no-user-image` build. Each successful build replaces the previous output. Intermediate files stay
 in Cargo's target directory, including when `CARGO_TARGET_DIR` is set.
 
 To debug, build Debug, BOOTSEL-flash `output/firmware.uf2`, then press F5
@@ -60,7 +66,6 @@ in VS Code. F5 does not build or flash. Release builds strip symbols.
 See [tools/README.md](tools/README.md) for board configuration and tooling details.
 
 ## Development
-
 
 ### Add a new board with supported chips
 
