@@ -85,9 +85,9 @@ fn get_current_task_id(
 pub static TASK_SYSCALL_TABLE: SyscallTable = SyscallTable {
     id: TASK_SYSCALL_TABLE_ID,
     entries: &[
-        Some(SyscallEntry::new(create_task)),
-        Some(SyscallEntry::new(yield_task)),
-        Some(SyscallEntry::new(kill_task)),
-        Some(SyscallEntry::new(get_current_task_id)),
+        Some(create_task),
+        Some(yield_task),
+        Some(kill_task),
+        Some(get_current_task_id),
     ],
 };

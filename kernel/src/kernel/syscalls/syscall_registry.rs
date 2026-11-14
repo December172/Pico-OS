@@ -67,7 +67,7 @@ impl SyscallRegistry {
             return SyscallError::UnknownSyscall.into();
         };
 
-        return entry.invoke(context, arguments);
+        entry(context, arguments)
     }
 }
 
