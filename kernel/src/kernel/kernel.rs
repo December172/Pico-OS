@@ -1,7 +1,6 @@
 use core::panic::PanicInfo;
 use core::ptr::null_mut;
 
-#[cfg(pico_user_image)]
 use pico_abi::image::USER_TASK_LOAD_FLAG;
 use pico_abi::task::TaskPriority;
 
@@ -13,7 +12,6 @@ use crate::kernel::syscalls::syscall_registry::SYSCALL_REGISTRY;
 use crate::kernel::tasks::scheduler::SCHEDULER;
 use crate::kernel::tasks::syscalls::TASK_SYSCALL_TABLE;
 use crate::kernel::tasks::task::{TaskDomain, TaskEntry};
-#[cfg(pico_user_image)]
 use crate::kernel::user::IMAGE_REGISTRY;
 
 use crate::native::boot::_init;
@@ -52,7 +50,6 @@ pub fn kernel_main() -> ! {
         });
     }
 
-    #[cfg(pico_user_image)]
     IMAGE_REGISTRY.init();
 
     unsafe {
@@ -72,7 +69,6 @@ pub fn kernel_main() -> ! {
             // Load all user tasks with the `TASK_LOAD` flag when a user image
             // was linked into the kernel. Without one, only the privileged
             // tasks above are scheduled.
-            #[cfg(pico_user_image)]
             IMAGE_REGISTRY.with(|registry| {
                 for (index, image) in registry.iter_images() {
                     for entry in image.entries.iter().flatten() {

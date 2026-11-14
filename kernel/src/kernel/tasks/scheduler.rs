@@ -9,7 +9,6 @@ use crate::arch::general::asm;
 use crate::kernel::memory::layout::{MemoryConfig, MemoryRange};
 use crate::kernel::tasks::task::*;
 use crate::kernel::tasks::task_table::{MAX_TASKS, TaskTable};
-#[cfg(pico_user_image)]
 use crate::kernel::user::IMAGE_REGISTRY;
 
 const IDLE_TASK_ID: TaskId = 0;
@@ -81,7 +80,6 @@ impl Scheduler {
     ) -> Result<TaskId, SyscallError> {
         let map = match domain {
             TaskDomain::Kernel => None,
-            #[cfg(pico_user_image)]
             TaskDomain::User(image_id) => Some(IMAGE_REGISTRY.with(|registry| {
                 let image = registry
                     .images
@@ -95,9 +93,7 @@ impl Scheduler {
                 }
 
                 Ok(image.mem_map)
-            })?),
-            #[cfg(not(pico_user_image))]
-            TaskDomain::User(_) => return Err(SyscallError::InvalidArgument),
+            })?)
         };
 
         return self

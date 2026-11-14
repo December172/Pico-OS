@@ -1,4 +1,3 @@
-#[cfg(pico_user_image)]
 mod user;
 
 pub mod drivers;

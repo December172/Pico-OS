@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "pico-base-image"
+]
+default-members = [
+    "pico-base-image",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+
+[workspace.dependencies]
+pico-abi = { path = "../crates/pico-abi" }
+pico-lib = { path = "../crates/pico-lib" }
+
+[profile.dev]
+panic = "abort"
+debug = 2
+opt-level = 0
+
+[profile.release]
+panic = "abort"
+opt-level = "z"
+lto = true
+strip = true

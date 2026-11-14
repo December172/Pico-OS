@@ -6,8 +6,6 @@ members = [
     "crates/pico-macros",
     "crates/pico-runtime",
     "crates/pico-internals",
-
-    "user/pico-base-image"
 ]
 default-members = [
     "kernel",
@@ -23,7 +21,6 @@ edition = "2024"
 toml = "0.8"
 pico-macros = { path = "crates/pico-macros" }
 pico-abi = { path = "crates/pico-abi" }
-pico-lib = { path = "crates/pico-lib" }
 pico-runtime = { path = "crates/pico-runtime" }
 pico-internals = { path = "crates/pico-internals" }
 
