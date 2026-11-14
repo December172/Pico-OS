@@ -18,7 +18,6 @@ impl TaskId {
 
 pub const TASKID_SELF: TaskId = TaskId(RAW_TASKID_SELF);
 
-mod trampoline;
 pub mod wrapper;
 
 pub use pico_macros::task_entry;

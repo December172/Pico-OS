@@ -26,5 +26,5 @@ pub unsafe fn syscall_wrapper<const TABLE_ID: u8>(
         );
     }
 
-    return RawSyscallResult { status, value };
+    RawSyscallResult { status, value }
 }

@@ -1,54 +1,32 @@
-use pico_abi::syscall::SyscallError;
-use pico_abi::task::{TASK_SYSCALL_TABLE_ID, TaskSyscallId};
+use pico_internals::task as task_internals;
 
-use crate::task::{TASKID_SELF, TaskEntry, TaskId};
-use crate::util::wrappers::syscall_wrapper;
+use crate::task::*;
+use crate::util::SyscallError;
 
-pub fn create_task(entry: TaskEntry, argument: *mut ()) -> Result<TaskId, SyscallError> {
-    let raw_result = unsafe {
-        syscall_wrapper::<TASK_SYSCALL_TABLE_ID>(
-            TaskSyscallId::Create as u32,
-            [entry as u32, argument as u32, 0, 0],
-        )
-    };
+pub use task_internals::yield_task;
 
-    if raw_result.status == 0 {
-        return Ok(TaskId::from_abi(raw_result.value));
-    } else {
-        return Err(SyscallError::try_from(raw_result.status).expect("Unknown syscall error"));
-    }
-}
-
-pub fn yield_task() {
-    unsafe {
-        syscall_wrapper::<TASK_SYSCALL_TABLE_ID>(TaskSyscallId::Yield as u32, [0; 4]);
-    }
+pub fn create_task(
+    entry: TaskEntry,
+    argument: *mut (),
+) -> Result<TaskId, SyscallError> {
+    return task_internals::create_task(entry as u32, argument as u32,)
+        .map(TaskId::from_abi);
 }
 
 pub fn kill_task(target: TaskId) -> Result<(), SyscallError> {
-    let raw_result = unsafe {
-        syscall_wrapper::<TASK_SYSCALL_TABLE_ID>(
-            TaskSyscallId::Kill as u32,
-            [target.into_abi(), 0, 0, 0],
-        )
-    };
-
-    if raw_result.status == 0 {
-        return Ok(());
-    }
-
-    return Err(SyscallError::try_from(raw_result.status).expect("Unknown syscall error"));
+    task_internals::kill_task(target.into_abi())
 }
 
 pub fn get_current_task_id() -> TaskId {
-    let raw_result = unsafe {
-        syscall_wrapper::<TASK_SYSCALL_TABLE_ID>(TaskSyscallId::GetCurrentTaskId as u32, [0; 4])
-    };
+    let raw_result = task_internals::get_current_task_id();
 
-    return TaskId::from_abi(raw_result.value);
+    TaskId::from_abi(raw_result)
 }
 
-pub fn exit() {
+pub fn exit() -> ! {
     // we can trigger atexit() handler here... in the future
-    kill_task(TASKID_SELF);
+    match kill_task(TASKID_SELF) {
+        Ok(()) => unreachable!(),
+        Err(error) => panic!("Unexpected error occurred on exit: {}", error as i32),
+    }
 }
